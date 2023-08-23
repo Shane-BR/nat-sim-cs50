@@ -1,0 +1,33 @@
+#ifndef CONSTANTS
+#define CONSTANTS
+
+#define MAP_SIZE 16 // 16 km2
+#define NAT_AMOUNT 4 // 4
+#define START_SPREAD 15 // Minimum distance apart settlements must be on startup.
+#define TICKS_PER_DAY 2
+#define TICK_DELAY 0 // in milliseconds, each tick is half a day (12hrs) in simulation time
+
+// Radius must be odd number
+#define TOWN_BORDER_RADIUS 3
+#define CITY_BORDER_RADIUS 5
+
+#define TOWN 0
+#define CITY 1
+
+#define MAX_BORDER_WORKERS 12
+
+#define MALE 0
+#define FEMALE 1
+#define MIN_CONCEPTION_AGE 16
+#define MAX_CONCEPTION_AGE 55
+#define MIN_WORKING_AGE 14
+#define MAX_WORKING_AGE 70
+#define MEALS_PER_DAY 2
+#define MAX_FOOD_PRODUCED_PER_WORKER 4 // Per tick
+#define MAX_MAT_PRODUCED_PER_WORKER 50 // Per tick
+
+// Resource types
+#define FOOD 0
+#define MATERIALS 1
+
+#endif
