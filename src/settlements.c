@@ -105,9 +105,15 @@ void runPopulationChecks(settlement* stl)
     }
 }
 
+// Removes citizen from border if possible
 void removeCitFromBorder(citizen* cit, settlement* stl)
 {
     border* b = findWorkBorder(cit, stl);
+
+    // Cit not in border
+    if (b == NULL)
+        return;
+
     int index = findWorkerIndexInBorder(b, cit);
 
     // Shuffle workers order in array

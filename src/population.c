@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include "disease.h"
 #include "borders.h"
+#include "settlements.h"
 
 #include <limits.h>
 #include <stdbool.h>
@@ -110,6 +111,9 @@ void removeCitizen(citizen* cit, settlement* stl)
 
     // Update death_list
     addLinkedListNode(&stl->death_list, cit);
+
+    // Remove from border if possible
+    removeCitFromBorder(cit, stl);
 
 }
 

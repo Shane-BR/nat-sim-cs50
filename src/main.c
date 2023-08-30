@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
     while (true)
     {
         runSim();
-        //draw();
+        draw();
         delay(TICK_DELAY);
         ticks++;
     }

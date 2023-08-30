@@ -147,6 +147,9 @@ void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t res
         // Get worst border with workers
         border* worst = worstProducingBorder(stl, resource_type);
         
+        if (worst == NULL)
+            return;
+
         // How much food can one worker produce per tick
         int r_per_worker =  getBorderWorkerProduction(*stl, *worst, resource_type);
 

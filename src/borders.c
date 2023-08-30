@@ -26,7 +26,9 @@ void updateSettlementBorders(settlement* stl) // Add territory for this settleme
     }
 }
 
-// Please note: this will casue a segmentation fault if grid[] doesn't have enough space for all the tiles
+// Please note: this will casue a segmentation fault if grid[] doesn't have enough space for all the tiles.
+// Sets borders for settlement.
+//TODO Handle contested borders.
 void setBorders (int radius, settlement* stl)
 {
     position center = stl->position;
@@ -40,8 +42,7 @@ void setBorders (int radius, settlement* stl)
     {
         for (int x = tl_corner.x; x <= br_corner.x; x++)
         {
-            // TODO Contested borders will be owned by the nation with the largest Military stat
-            if (map[y][x].ruling_nation != -1 || !inMapBounds(newPosition(x, y)) || (x == center.x && y == center.y))
+            if (!inMapBounds(newPosition(x, y)) || (x == center.x && y == center.y))
                 continue;
 
             border new_border;
