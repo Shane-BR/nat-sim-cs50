@@ -2,7 +2,7 @@
 #include "constants.h"
 
 #include <stdbool.h>
-// drmemory "C:\Users\Shane\Documents\Software Projects\VS Projects\final\project\Debug\debug.exe"
+// drmemory "C:\Users\Shane\Documents\Software Projects\VS Projects\nat-sim\Debug\debug.exe"
 void initMapStats(void);
 void initNations(void);
 void initSim(void);

@@ -25,8 +25,8 @@ void manageFood(settlement* stl, int food_net)
             // Disband a settlement party to a better location
     }
 
-    // If too many workers gathering food (Over 20% intake than needed)
-    else if (food_net > MEALS_PER_DAY * stl->local_population*0.2f) 
+    // If too many workers gathering food (Over 10 intake than needed)
+    else if (food_net > 15) 
     {
         organiseSurplusWorkersFromBorders(stl, food_net, FOOD);
     }
@@ -41,12 +41,16 @@ bool organiseMoreFoodWorkers(settlement* stl, int food_required)
         // Find the highest food_abundance border tile that isn't full
         
         border init;
-        border* h_food = &init;
-        h_food->tile.food_abundance = 0;
+        tile init_tile;
+        init.tile = & init_tile;
+        init_tile.food_abundance = 0;
 
-        for (int i = 0; i < getBorderSize(*stl)-1; i++)
+        border* h_food = &init;
+        h_food->tile->food_abundance = 0;
+
+        for (int i = 0; i < getBorderArea(*stl)-1; i++)
         {
-            if (stl->borders[i].tile.food_abundance > h_food->tile.food_abundance 
+            if (stl->borders[i].tile->food_abundance > h_food->tile->food_abundance 
                 && stl->borders[i].workers_count < MAX_BORDER_WORKERS)
             {
                 h_food = &stl->borders[i];
@@ -59,9 +63,9 @@ bool organiseMoreFoodWorkers(settlement* stl, int food_required)
         // Figure out how many extra workers are needed for this tile
         int amt_workers_needed = 
             (food_required == 0 || food_per_worker == 0) ? 0 :
-            (int)(food_required / food_per_worker) + h_food->workers_count >= MAX_BORDER_WORKERS ? 
+            (int)(food_required / food_per_worker) + 1 + h_food->workers_count >= MAX_BORDER_WORKERS ? 
             MAX_BORDER_WORKERS-h_food->workers_count : 
-            (int)(food_required / food_per_worker);
+            (int)(food_required / food_per_worker) + 1;
 
         // Assign workers to new border tile
         int old_worker_count = h_food->workers_count;
@@ -122,8 +126,9 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
                 }
 
                 border_tile->workers[border_tile->workers_count++] = cit;
+                cit->position = border_tile->tile->position;
 
-                continue;
+                break;
             }
 
             // Lazy approach fuck you
@@ -158,6 +163,8 @@ void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t res
             worst->workers_count :
             surplus / r_per_worker;
 
+        if (amt_workers_to_remove <= 0) return;
+
         assignCitizensFromBorderToWorkSettlement(stl, amt_workers_to_remove, worst);
 
         // Update surplus
@@ -179,7 +186,6 @@ void assignCitizensFromBorderToWorkSettlement(settlement* stl, int amount, borde
         citizen* cit = from_border->workers[amount-1 < 0 ? 0 : amount-1];
         removeCitFromBorder(cit, stl);
         cit->citizen_class = CRAFTSMAN;
-        cit->position = stl->position;
     }
 }
 
@@ -194,7 +200,7 @@ border* worstProducingBorder(settlement* stl, uint8_t resource_type)
 {
     border* out = NULL;
     int out_resources = INT32_MAX;
-    for (int i = 0; i < getBorderSize(*stl)-1; i++)
+    for (int i = 0; i < getBorderArea(*stl)-1; i++)
     {
         int tile_resources = -1;
         border* border = &stl->borders[i];
@@ -202,15 +208,15 @@ border* worstProducingBorder(settlement* stl, uint8_t resource_type)
         // TODO make this more dynamic
         if (resource_type == FOOD)
         {
-            tile_resources = border->tile.food_abundance;
+            tile_resources = border->tile->food_abundance;
         }
         else if (resource_type == MATERIALS)
         {
-            tile_resources = border->tile.material_abundance;
+            tile_resources = border->tile->material_abundance;
         }
         else 
         {
-            tile_resources = border->tile.food_abundance + border->tile.material_abundance;
+            tile_resources = border->tile->food_abundance + border->tile->material_abundance;
         }
 
         if (tile_resources < out_resources && border->workers_count > 0)

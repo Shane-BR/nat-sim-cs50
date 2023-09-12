@@ -71,7 +71,7 @@ typedef struct list_node
 typedef struct citizen
 {
     uint8_t age;
-    uint8_t hunger;
+    uint8_t meals_eaten; // Meals eaten this day.  Required meals defined in constants.h
 
     position position;
 
@@ -107,7 +107,7 @@ typedef struct citizen
 
 typedef struct 
 {
-    tile tile;
+    tile* tile;
     citizen* workers[MAX_BORDER_WORKERS];
     unsigned short workers_count;
 } border;
@@ -131,8 +131,8 @@ typedef struct
 
     unsigned int local_population;
 
-    unsigned int food;
-    unsigned int materials;
+    double food;
+    double materials;
 
     uint8_t local_morale;
     uint8_t local_infrastructure;

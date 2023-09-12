@@ -306,8 +306,8 @@ void calcPregnancy(citizen* cit, settlement* stl)
         uint8_t max_children = 4;
         uint8_t child_factor = UINT8_MAX - (uint8_t)(cit->child_num/max_children)*UINT8_MAX;
     
-        int factors = (avg_health + avg_inf_sev + dur_clamped_1byte + getAgeHealthCurve(avg_age) + cit->hunger + child_factor);
-        float preg_rate = ((float)factors / (UINT8_MAX*6) * 100) / calc_period; // PERCENTAGE
+        int factors = (avg_health + avg_inf_sev + dur_clamped_1byte + getAgeHealthCurve(avg_age) + child_factor);
+        float preg_rate = ((float)factors / (UINT8_MAX*5) * 100) / calc_period; // PERCENTAGE
 
         if(runProbability(preg_rate)) 
         {
@@ -499,14 +499,12 @@ uint8_t overallHealth(citizen* cit, uint8_t stl_local_morale)
     // Weighted average for working out overall_health with age being the biggest factor
     float age_weight = 0.5f;
     float conditions_weight = 0.3f;
-    float hunger_weight = 0.1f; // Hunger is only this low because it will start killing the cit when too low anyway
     float morale_weight = 0.1f;
 
     uint8_t overall_health = 
     (
         getAgeHealthCurve(cit->age)*age_weight + 
         cit->living_conditions*conditions_weight + 
-        cit->hunger*hunger_weight + 
         stl_local_morale*morale_weight
     );
 

@@ -21,7 +21,7 @@ void addSettlement(char* nation, position pos)
 
     settlements[tileHash(pos)] = new_stl;
 
-    updateSettlementBorders(&settlements[tileHash(pos)]);
+    updateSettlementBorders(&settlements[tileHash(pos)], 0);
 }
 
 settlement initSettlement(position pos, char* ruling_nation)
@@ -38,7 +38,7 @@ settlement initSettlement(position pos, char* ruling_nation)
     s.active = true;
 
     s.level = 0;
-    s.local_population = 0;
+    s.local_population = 0; // Set after init process
     s.local_morale = 100;
     s.local_infrastructure = 10;
     s.cultivation_efficiency = 0;
@@ -47,9 +47,12 @@ settlement initSettlement(position pos, char* ruling_nation)
     s.borders = NULL;
     s.death_list = NULL;
 
-    int numOfCitizens = 30;
+    // Temp variable
+    int numOfCitizens = 101;
 
     s.citizens = malloc(sizeof(citizen*) * numOfCitizens);
+
+    if (s.citizens == NULL) exit(1);
     
     addRandomCitizens(numOfCitizens, &s);
 
@@ -105,10 +108,23 @@ void runPopulationChecks(settlement* stl)
     }
 }
 
+void updateSettlementStats(settlement* stl)
+{
+    // Update food
+    int net_food = getNetFoodProduced(*stl);
+    stl->food = clamp(stl->food + net_food, 0, INFINITY);
+
+    // Update materials
+
+}
+
 // Removes citizen from border if possible
 void removeCitFromBorder(citizen* cit, settlement* stl)
 {
     border* b = findWorkBorder(cit, stl);
+
+    cit->citizen_class = NONE;
+    cit->position = stl->position;
 
     // Cit not in border
     if (b == NULL)
@@ -126,16 +142,22 @@ void removeCitFromBorder(citizen* cit, settlement* stl)
     b->workers_count--;
 }
 
-int getBorderSize(settlement stl)
+int getBorderRadius(settlement stl)
 {
-    return (stl.level == 0 ? TOWN_BORDER_RADIUS*TOWN_BORDER_RADIUS-1 : CITY_BORDER_RADIUS*CITY_BORDER_RADIUS-1);
+    return (stl.level == 0 ? TOWN_BORDER_RADIUS : stl.level == 1 ? CITY_BORDER_RADIUS : 0);
+}
+
+int getBorderArea(settlement stl)
+{
+    return pow(getBorderRadius(stl), 2)-1;
 }
 
 int getNetFoodProduced(settlement stl)
 {
     int food_demand = stl.local_population*MEALS_PER_DAY; 
     int food_produced = 0;
-    for (int i = 0; i < getBorderSize(stl); i++)
+
+    for (int i = 0; i < getBorderArea(stl); i++)
     {
         food_produced = food_produced + stl.borders[i].workers_count * getBorderWorkerProduction(stl, stl.borders[i], FOOD);
     }
@@ -147,19 +169,17 @@ int getNetFoodProduced(settlement stl)
 void canChangeSettlementLevel(settlement* stl)
 {
 
-    // Reset tiles ruling nation so that we don't leave any as their old nation in the advent of a downgrade
-    for (int i = 0; i < getBorderSize(*stl); i++)
-        stl->borders[i].tile.ruling_nation = -1;
+    int prev_radius = getBorderRadius(*stl);
 
     if (stl->local_population >= 100 && stl->level != CITY)
     {
         stl->level = CITY;
-        updateSettlementBorders(stl);
+        updateSettlementBorders(stl, prev_radius);
     }
     else if (stl->local_population < 100 && stl->level != TOWN)
     {
 
         stl->level = TOWN;
-        updateSettlementBorders(stl);
+        updateSettlementBorders(stl, prev_radius);
     }
 }

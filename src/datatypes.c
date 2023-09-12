@@ -28,7 +28,7 @@ citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2])
     c->age = age;
     c->gender = gender;
     c->health = UINT8_MAX;
-    c->hunger = 200;
+    c->meals_eaten = 0;
     c->living_conditions = 127;
     c->pregnant = false;
     c->days_pregnant = 0;

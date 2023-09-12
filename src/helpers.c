@@ -31,15 +31,15 @@ double randomDouble()
     return (double)rand() / RAND_MAX;
 }
 
-/*
+/**
  * powerLawRandomInt: Generates a random integer from a power law distribution.
- * Parameters:
- *   min: The minimum value of the output range, inclusive. Must be positive.
- *   max: The maximum value of the output range, inclusive. Must be greater than min.
- *   tail_index: The exponent parameter of the power law distribution. Must be positive.
+ *
+ * @param min The minimum value of the output range, inclusive. Must be positive.
+ * @param max: The maximum value of the output range, inclusive. Must be greater than min.
+ * @param tail_index: The exponent parameter of the power law distribution. Must be positive.
  *               A larger tail index means a faster decay of the tail and a more uniform distribution.
  *               A smaller tail index means a slower decay of the tail and a more skewed distribution.
- * Returns:
+ * @returns
  *   A random integer between min and max, drawn from a power law distribution with the given tail index.
  *   If any of the parameters are invalid, returns -1 and prints an error message.
  */
@@ -146,4 +146,23 @@ bool inMapBounds(position pos)
 int tileHash(position pos)
 {
     return pos.x + pos.y * MAP_SIZE;
+}
+
+double clamp(double val, double min, double max)
+{
+    return val > max ? max : val < min ? min : val;
+}
+
+/**
+ * Calculates the value of the logistic function for a given set of parameters.
+ *
+ * @param x The value of the independent variable.
+ * @param L The maximum value of the function.
+ * @param k The logistic growth rate or steepness of the curve.
+ * @param x0 The value of the function's midpoint.
+ * @return The value of the logistic function for the given set of parameters.
+ */
+double logistic(double x, double L, double k, double x0)
+{
+    return L / (1 + exp(-k * (x - x0)));
 }

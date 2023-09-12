@@ -50,6 +50,7 @@ void calcSettlementStats(void)
             runPopulationChecks(s);
             calcCultivationEfficiency(s);
             runNationManagerAI(s);
+            updateSettlementStats(s);
             canChangeSettlementLevel(s);
 
             // Set stats at nation level 
