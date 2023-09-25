@@ -156,6 +156,7 @@ void draw(void) // TODO remove and make frame buffer using OpenGL instead
     // Shitty code that doesn't take MAP_SIZE into account.  who cares, it's a temporary function
     printf("----------------------------YEAR: %i---------\n", ticks / TICKS_PER_DAY / 365);
     printf("SEED: %i\n", seed);
+    printf("MINF: %i\n", nations[1].infrastructure);
     printf("MPOP: %i\n", nations[1].population);
 
     for (int y = 0; y < MAP_SIZE; y++)

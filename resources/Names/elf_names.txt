@@ -1,0 +1,751 @@
+# NAME (MALE/FEMALE/BOTH 0/1/2)
+Elbebion 0
+Merarros 0
+Faramrior 0
+Garemlas
+Calthallad 0
+Carevrior 0
+Niramfal 0
+Lorallas
+Melelor 0
+Arthalad 0
+Erarion 0
+Irarad
+Aneldel 0
+Rilirros 0
+Clarelor 0
+Elbolnar
+Mirillin 0
+Arthalor 0
+Iredlad 0
+Gililorn
+Gilolad 0
+Ganebras 0
+Larenros 0
+Raladdir
+Ilmarion 0
+Meleddel 0
+Eresdir 0
+Relanorn
+Istalras 0
+Erinrond 0
+Ninanthir 0
+Nimolion
+Rinanlin 0
+Claresthir 0
+Finemfal 0
+Nirasrond
+Ilmthalfal 0
+Calesad 0
+Gilthondan 0
+Relesorn
+Laredlin 0
+Merarion 0
+Niroldel 0
+Ganildil
+Cirinnar 0
+Relellad 0
+Carilorn 0
+Marolad
+Erallas 0
+Ninenras 0
+Istasros 0
+Galamion
+Celebros 0
+Caleldir 0
+Ganilrond 0
+Farendir
+Larilnar 0
+Garoldir 0
+Faraldel 0
+Garasdir
+Melevdir 0
+Finerad 0
+Finendel 0
+Ranalras
+Nireblad 0
+Ganindil 0
+Erthonras 0
+Finebrior
+Merardan 0
+Ganesdan 0
+Lorolfal 0
+Calesras
+Anthonras 0
+Liralthir 0
+Ralesfal 0
+Caresrond
+Lorthalrior 0
+Istthalion 0
+Erirdan 0
+Ganoldan
+Rilasrond 0
+Gelebor 0
+Gilenrond 0
+Rilannar
+Carolrod 0
+Lorenorn 0
+Relamros 0
+Arerdan
+Gelolor 0
+Istanfal 0
+Geladion 0
+Lorthalfal
+Niramlas 0
+Ereddel 0
+Cirilion 0
+Claresfal
+Larenor 0
+Inthallin 0
+Anadthir 0
+Claralorn
+Ganesrod 0
+Erlasad 0
+Liresdil 0
+Nirerion
+Ganerad 0
+Lirinrod 0
+Nimasrond 0
+Irelras
+Mararrod 0
+Ilmesrond 0
+Celamras 0
+Merevion
+Gelarlas 0
+Raladdel 0
+Celilorn 0
+Merenorn
+Ralinad 0
+Ilmevras 0
+Estinrod 0
+Calirras
+Geladdel 0
+Rilarlad 0
+Irarlas 0
+Ilminlad
+Irilorn 0
+Estthonorn 0
+Gelinlin 0
+Mirarion
+Rilemdel 0
+Ganildir 0
+Lirinad 0
+Elbelion
+Lirerrior 0
+Rilinad 0
+Galaldan 0
+Elbedad
+Ralamros 0
+Carebrod 0
+Istenor 0
+Ninamthir
+Ciresion 0
+Lareldan 0
+Ninthonros 0
+Raloldir
+Clarolrond 0
+Melebfal 0
+Garenlad 0
+Rilthaldil
+Rinalion 0
+Erleddir 0
+Garadfal 0
+Erelorn
+Lorendir 0
+Inasion 0
+Ciremad 0
+Elberion
+Ranthallin 0
+Galevrod 0
+Calador 0
+Farenlin
+Clarolrior 0
+Finolras 0
+Inemrond 0
+Marevlas
+Erelros 0
+Nirevras 0
+Mirthalrod 0
+Finedlas
+Finollad 0
+Galthonion 0
+Ralinad 0
+Isterlin
+Merilorn 0
+Ninesrond 0
+Ciradros 0
+Esterdel
+Eleddel 0
+Iranion 0
+Rananlas 0
+Celollin
+Erlthalor 0
+Clarerdir 0
+Elbebion 0
+Nirinlin
+Merthonras 0
+Melebad 0
+Arenad 0
+Rilarlin
+Anthalor 0
+Ilmemlin 0
+Mirinras 0
+Celaldan
+Laramnar 0
+Irandan 0
+Ininrond 0
+Ralilion
+Ganolad 0
+Laredlin 0
+Rilevad 0
+Laremnar
+Celenrior 0
+Merilfal 0
+Ganarlad 0
+Melenfal
+Celasor 0
+Ninthaldir 0
+Cirerrior 0
+Maredrond
+Istenion 0
+Ralildel 0
+Faramlad 0
+Rimthonnar
+Aramras 0
+Ralevthir 0
+Celthalor 0
+Ninerorn
+Marolrond 0
+Lararion 0
+Rimanthir 0
+Nirardan
+Ranthaldan 0
+Marilad 0
+Rinarfal 0
+Garenrior
+Erlebion 0
+Ranelorn 0
+Rilerrond 0
+Ciresdan
+Erthaldel 0
+Iramras 0
+Iraldan 0
+Calaslas
+Eledrond 0
+Gilerlas 0
+Ilmelfal 0
+Lirendan
+Farirlin 0
+Erlthonrond 0
+Relarad 0
+Relamion
+Elbenlad 0
+Gilthonion 0
+Garerlas 0
+Clarenrod
+Marelrior 0
+Rinthonthir 0
+Lirinthir 0
+Rinadrior
+Erasorn 0
+Celemlas 0
+Saeredian 1
+Crisolrian 1
+Crisamel 1
+Eltheveth
+Lindemiel 1
+Mindarril 1
+Feanevwen 1
+Seldadrial
+Eltherwen 1
+Theranriel 1
+Seldanwen 1
+Laegebsil
+Nitheredel 1
+Caelanedel 1
+Lindolriel 1
+Nithanrian
+Silmevwen 1
+Saeresiel 1
+Lindasrian 1
+Litheriel
+Thaliledel 1
+Faerevrian 1
+Silmthaliel 1
+Seralril
+Mindemiel 1
+Lindamrien 1
+Aeradiel 1
+Findthonriel
+Aegeseth 1
+Caerarsil 1
+Feanalriel 1
+Eolthonrien
+Saerthalwen 1
+Aesiledel 1
+Thalensil 1
+Lendarien
+Criselriel 1
+Caerelel 1
+Lindasrien 1
+Mithanwen
+Sarenwen 1
+Theleviel 1
+Belenedel 1
+Eolammir
+Thaelarriel 1
+Eolthaledel 1
+Nithamril 1
+Aelebwen
+Mithilmir 1
+Thaerevrian 1
+Elthebwë 1
+Seldasrien
+Thaladien 1
+Saerinien 1
+Thalebiel 1
+Aegolriel
+Laegedel 1
+Sindinrian 1
+Eltharloth 1
+Feanaswen
+Aelenmir 1
+Ithebsil 1
+Maegamloth 1
+Laegenwë
+Thaelinrian 1
+Aetheriel 1
+Rindaniel 1
+Eolebien
+Sarolwen 1
+Therthalwen 1
+Mindilmir 1
+Saranwen
+Thaeladwen 1
+Lendthalril 1
+Earalien 1
+Beloliel
+Rindamiel 1
+Sarthonian 1
+Faerthonloth 1
+Mithamwen
+Belemiel 1
+Feanolroël 1
+Findermir 1
+Nithamien
+Thalilwen 1
+Caelirmir 1
+Elthiledel 1
+Aethasrian
+Minderriel 1
+Aelolwë 1
+Sindelwen 1
+Caerilriel
+Lendevriel 1
+Lithelel 1
+Elthevedel 1
+Aerthaledel
+Thaeredwen 1
+Miththonedel 1
+Rindevroël 1
+Lendamroël
+Aeremien 1
+Laegedwen 1
+Aegeneth 1
+Aeramedel
+Raelarrien 1
+Lindthaliel 1
+Sileliel 1
+Minderwen
+Aelinriel 1
+Sereneth 1
+Seldthonrial 1
+Thaeledwen
+Eoladwë 1
+Caerebriel 1
+Faerilrien 1
+Aerasedel
+Criserroël 1
+Feanthaledel 1
+Seldolwen 1
+Aegevrial
+Theradian 1
+Caerthoneth 1
+Crisebrian 1
+Earalriel
+Theresrian 1
+Laegedsil 1
+Saraledel 1
+Aerevel
+Thelthonrial 1
+Silmaliel 1
+Sindelrial 1
+Elthameth
+Earevian 1
+Ithariel 1
+Seramriel 1
+Silebrial
+Laegalriel 1
+Sindedeth 1
+Belelrien 1
+Earasian
+Elthadiel 1
+Aeladiel 1
+Mindthonsil 1
+Rindanrien
+Thaerolrian 1
+Raelerwen 1
+Aethirwen 1
+Thirilroël
+Aesilril 1
+Saralloth 1
+Eolelroël 1
+Faerebiel
+Earilrial 1
+Ithesel 1
+Feanarriel 1
+Beririel
+Aetherian 1
+Thaerthalroël 1
+Rindamrien 1
+Thaerilmir
+Thaelemedel 1
+Earalrien 1
+Sindeviel 1
+Laegelrien
+Faeririen 1
+Eololroël 1
+Sereswë 1
+Caerilsil
+Eolesriel 1
+Caelesriel 1
+Therthonriel 1
+Thalolroël
+Silmesmir 1
+Belerrian 1
+Belinrien 1
+Thalalwen
+Earanroël 1
+Nithalmir 1
+Thaerthalrien 1
+Crisamien
+Eolinien 1
+Caelebian 1
+Elthanrial 1
+Crisalwen
+Earalrial 1
+Sindthaliel 1
+Aeremian 1
+Liththoniel
+Lindolrien 1
+Laegemel 1
+Aererwë 1
+Laegevien
+Mindesiel 1
+Laegthalrial 1
+Sereviel 1
+Ithilroël
+Ithevriel 1
+Silmamiel 1
+Thaeleveth 1
+Sarthalril
+Seldebian 1
+Aethamloth 1
+Sindolloth 1
+Ithadel
+Mithevril 1
+Crisemroël 1
+Aethariel 1
+Belebwë
+Mindilrian 1
+Laegthonedel 1
+Silthonloth 1
+Sarevel
+Aelevrial 1
+Eololriel 1
+Caeremian 1
+Saralril
+Thirelwen 1
+Thelansil 1
+Sarthonrien 1
+Elththalmir
+Belthonwen 1
+Feanerwen 1
+Earariel 1
+Thalthonril
+Faerthalwen 1
+Thalelwen 1
+Maegeniel 1
+Thaerensil
+Sararian 1
+Lendanedel 1
+Berthaliel 1
+Nithemwen
+Eolelel 1
+Feanelmir 1
+Eareliel 1
+Lenderrien
+Elthadiel 1
+Ithelsil 1
+Crisesroël 1
+Lithamian
+Saerevwen 1
+Silarsil 1
+Sarolwë 1
+Thaerasriel
+Feanthaledel 1
+Aelarmir 1
+Seldinroël 1
+Ithalriel
+Faerolriel 1
+Seraniel 1
+Nithevfal 2
+Ithindel 2
+Lendardan 2
+Saerelrond
+Mitherdir 2
+Laegamfal 2
+Feanoldel 2
+Sararnar
+Niththonad 2
+Maegardil 2
+Berilorn 2
+Crisolrod
+Aethesdil 2
+Rindesfal 2
+Sililor 2
+Nitholras
+Laegemrior 2
+Faeredlad 2
+Therolros 2
+Saeredion
+Sindadras 2
+Aesirros 2
+Silmemdel 2
+Faerilrior
+Sarthalrod 2
+Raelinlad 2
+Silmasros 2
+Feanadlad
+Serolthir 2
+Mindemdel 2
+Rindeddan 2
+Thaerenlad
+Faeredlas 2
+Findevthir 2
+Aetheldan 2
+Faeralrond
+Therebrond 2
+Belirdel 2
+Elthildel 2
+Elthardel
+Lendevion 2
+Raelarthir 2
+Saerelorn 2
+Lindedrod
+Nithilion 2
+Aethanlas 2
+Ithasad 2
+Aesardil
+Thaelevdan 2
+Silmesion 2
+Therelor 2
+Beredrond
+Aeladras 2
+Aeladdan 2
+Thaerolnar 2
+Belinrior
+Earenrior 2
+Aegilad 2
+Therasnar 2
+Feananion
+Saereborn 2
+Lendanthir 2
+Aeramros 2
+Sileldir
+Thalelros 2
+Serenrond 2
+Caerarrior 2
+Faerinras
+Sarasion 2
+Aerirdil 2
+Seranthir 2
+Earedthir
+Silemras 2
+Caelarorn 2
+Beredrior 2
+Findedor
+Sindevad 2
+Theraslas 2
+Silamad 2
+Aesirnar
+Aegolnar 2
+Criselion 2
+Thirirdel 2
+Serinfal
+Ithelros 2
+Ithirlin 2
+Mindthonnar 2
+Sindinorn
+Raelerion 2
+Aethallad 2
+Belesthir 2
+Sarilthir
+Thalthalrond 2
+Thiraldil 2
+Caerevion 2
+Caelarfal
+Thiramthir 2
+Silmadnar 2
+Nitholdil 2
+Lendilfal
+Mithedion 2
+Mithalrior 2
+Aegandel 2
+Aesthalorn
+Thaererdil 2
+Seradrond 2
+Aethasras 2
+Crisednar
+Thaeranrod 2
+Lithirlas 2
+Rindardan 2
+Lindinlas
+Serasthir 2
+Belendel 2
+Elthasrond 2
+Rindthalion
+Lithirion 2
+Caelthonros 2
+Lithanros 2
+Therebdel
+Berthonion 2
+Thirerthir 2
+Berevorn 2
+Sindasorn
+Thirernar 2
+Earerrond 2
+Sindilad 2
+Saresdel
+Thaeraldil 2
+Sindolnar 2
+Findardan 2
+Thalesrior
+Nithesrond 2
+Theremor 2
+Niththonlas 2
+Aegthalad
+Thaelamion 2
+Aeranfal 2
+Sindedrior 2
+Minderorn
+Earollin 2
+Theranras 2
+Findelrond 2
+Mindador
+Serirthir 2
+Crisedad 2
+Findamdir 2
+Theledion
+Lindesion 2
+Lithardir 2
+Saerenros 2
+Laegebrond
+Lithelrior 2
+Thirthonros 2
+Raelevlas 2
+Thaeranorn
+Mithasor 2
+Caelarorn 2
+Elthadrond 2
+Faereddel
+Aegeddil 2
+Serirad 2
+Rindennar 2
+Feanemion
+Thelardel 2
+Lithildir 2
+Aeraslad 2
+Theleror
+Aeladrod 2
+Mindevdir 2
+Thelasrior 2
+Maegevlad
+Silmilfal 2
+Faeresthir 2
+Aeganorn 2
+Aesevros
+Crisedrond 2
+Thalirrond 2
+Laegthonnar 2
+Aetheldan
+Seldaslad 2
+Ithilras 2
+Mindelion 2
+Crisamion
+Aethirrod 2
+Itherlas 2
+Thelarlas 2
+Mitharthir
+Nithildan 2
+Faerolor 2
+Caeredras 2
+Ithasrior
+Eltherrod 2
+Laegadion 2
+Silmendel 2
+Caerelras
+Itherrior 2
+Maegallin 2
+Aesirras 2
+Laegirnar
+Aereslad 2
+Eololthir 2
+Feanasros 2
+Lendadrod
+Theladorn 2
+Thaelesrior 2
+Earadion 2
+Laegeddil
+Elthanlas 2
+Lendthonion 2
+Elthedad 2
+Berevthir
+Elthalion 2
+Lithanorn 2
+Rindamdil 2
+Aeraldir
+Feanevdir 2
+Nithanlad 2
+Ithevad 2
+Rindollas
+Therthalion 2
+Aeresor 2
+Aethirdir 2
+Aerildel
+Thirilor 2
+Berevdan 2
+Silasdel 2
+Eolilrior
+Findedrior 2
+Ithinras 2
+Cristhalion 2
+Therolrond
+Feanthallas 2
+Seldirras 2
+Caerinlin 2
+Feanarad
+Aegebfal 2
+Earadlin 2
+Thaererfal 2
+Aesasras
+Aesemdel 2
+Thirthonrior 2
+Thalinlas 2
+Caerilrod
+Rindenrond 2
+Mindesrond 2
+Theramion 2
+Eolelor
+Caerilion 2
+Maeganad

@@ -4,5 +4,6 @@
 #include "datatypes.h"
 
 void manageFood(settlement* stl, int food_net);
+void manageSettlementWorkers(settlement* stl);
 
 #endif

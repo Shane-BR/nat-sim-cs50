@@ -23,6 +23,7 @@ void runSim(void)
 void runNationManagerAI(settlement* stl)
 {
     manageFood(stl, getNetFoodProduced(*stl));
+    manageSettlementWorkers(stl);
 }
 
 void calcSettlementStats(void)

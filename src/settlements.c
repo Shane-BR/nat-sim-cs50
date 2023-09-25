@@ -14,6 +14,8 @@ extern nation nations[NAT_AMOUNT];
 extern unsigned int ticks;
 settlement settlements[MAP_SIZE*MAP_SIZE]; // Simple hash table of settlements
 
+int getGrossResourceProduced(settlement stl, int resource_type);
+
 void addSettlement(char* nation, position pos)
 {
     int i = getNationIndex(nation);
@@ -114,8 +116,62 @@ void updateSettlementStats(settlement* stl)
     int net_food = getNetFoodProduced(*stl);
     stl->food = clamp(stl->food + net_food, 0, INFINITY);
 
-    // Update materials
+    // Update materials.  Deduct later.
+    stl->materials = clamp(stl->materials + 
+        getGrossResourceProduced(*stl, MATERIALS), 0, INFINITY);
 
+    // Calc infrastructure growth/decline
+
+    // Max amount of craftsmen to reach highest target rate
+    const int max_amt_craftsmen = stl->local_population / 2;
+    int craftsmen = 0;
+
+    // Count all craftsmen
+    for (int i = 0; i < stl->local_population; i++)
+    {
+        if (stl->citizens[i]->citizen_class == CRAFTSMAN) 
+            craftsmen++;
+    }
+
+    // Update local infrastructure target
+    int li_target = (craftsmen / (double)max_amt_craftsmen) * UINT8_MAX;
+
+    // Max amount of mat needed this tick to achieve full speed infrastructure growth
+    int max_mat_needed = MAX_MAT_PRODUCED_PER_WORKER * craftsmen;
+
+    // Take as much as 90%, to integer, of materials.
+    int take_amt = clamp(stl->materials * 0.9f, 0, max_mat_needed);
+    stl->materials = stl->materials - take_amt;
+
+    // Max growth per tick
+    double max_growth_tick = 0.035;  // 0.035 = 255 over 10 years at max growth speed 
+    
+    double growth_tick;
+
+    if (max_mat_needed < 1 || take_amt < 1)
+    {
+        growth_tick = max_growth_tick;
+    }
+    else 
+    {
+        growth_tick = (take_amt / (double)max_mat_needed) * max_growth_tick;
+    }
+
+    uint8_t clamp_min = 0;
+    uint8_t clamp_max = UINT8_MAX;
+
+    // Are we decreasing infrastructure?
+    if (li_target >  stl->local_infrastructure)
+    {
+        clamp_max = li_target;
+    }
+    else if (li_target < stl->local_infrastructure) 
+    {
+        growth_tick = growth_tick * -1;
+        clamp_min = li_target;
+    }
+
+    stl->local_infrastructure = clamp(stl->local_infrastructure + growth_tick, clamp_min, clamp_max);
 }
 
 // Removes citizen from border if possible
@@ -155,14 +211,21 @@ int getBorderArea(settlement stl)
 int getNetFoodProduced(settlement stl)
 {
     int food_demand = stl.local_population*MEALS_PER_DAY; 
-    int food_produced = 0;
+    int food_produced = getGrossResourceProduced(stl, FOOD);
+
+    return food_produced - food_demand;
+}
+
+int getGrossResourceProduced(settlement stl, int resource_type)
+{
+    int produce = 0;
 
     for (int i = 0; i < getBorderArea(stl); i++)
     {
-        food_produced = food_produced + stl.borders[i].workers_count * getBorderWorkerProduction(stl, stl.borders[i], FOOD);
+        produce = produce + stl.borders[i].workers_count * getBorderWorkerProduction(stl, stl.borders[i], resource_type);
     }
 
-    return food_produced - food_demand;
+    return produce;
 }
 
 // Checks to see if the settlement can upgrade/downgrade

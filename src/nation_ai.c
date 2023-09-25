@@ -3,7 +3,7 @@
 #include "borders.h"
 #include "settlements.h"
 
-void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile);
+void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile, int max_class_priority);
 bool organiseMoreFoodWorkers(settlement* stl, int food_net);
 void assignCitizensFromBorderToWorkSettlement(settlement* stl, int amount, border* from_border);
 void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t resource_type);
@@ -25,10 +25,30 @@ void manageFood(settlement* stl, int food_net)
             // Disband a settlement party to a better location
     }
 
-    // If too many workers gathering food (Over 10 intake than needed)
+    // If too many workers gathering food (Over 15 intake than needed)
     else if (food_net > 15) 
     {
         organiseSurplusWorkersFromBorders(stl, food_net, FOOD);
+    }
+}
+
+void manageMaterials(settlement* stl)
+{
+    
+}
+
+void manageSettlementWorkers(settlement* stl)
+{
+    // Convert all working age NONE classed citizens to CRAFTSMEN
+
+    // Find all NONE citizens
+    for (int i = 0; i < stl->local_population; i++)
+    {
+        if (stl->citizens[i]->citizen_class == NONE && stl->citizens[i]->age >= MIN_WORKING_AGE)
+        {
+            // Convert to CRAFTSMEN
+            stl->citizens[i]->citizen_class = CRAFTSMAN;
+        }
     }
 }
 
@@ -69,7 +89,7 @@ bool organiseMoreFoodWorkers(settlement* stl, int food_required)
 
         // Assign workers to new border tile
         int old_worker_count = h_food->workers_count;
-        assignCitizensToWorkBorder(stl, amt_workers_needed, h_food);
+        assignCitizensToWorkBorder(stl, amt_workers_needed, h_food, GATHERER);
 
         // Check if workers added
         out_of_reassignable_workers = old_worker_count - h_food->workers_count == 0;
@@ -82,7 +102,7 @@ bool organiseMoreFoodWorkers(settlement* stl, int food_required)
 }
 
 // Assigns an amount of workers to work a border tile area.
-void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile)
+void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile, int max_class_priority)
 {
     while (amount-- > 0)
     {
@@ -132,7 +152,7 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
             }
 
             // Lazy approach fuck you
-            if (i == stl->local_population && class_priority != GATHERER)
+            if (i == stl->local_population && class_priority < max_class_priority)
             {
                 class_priority++;
                 i = 0;

@@ -1,0 +1,25 @@
+# NAME (MALE/FEMALE/BOTH 0/1/2)
+Edwald 0
+Mark 0
+Thomas 0
+James 0
+Albert 0
+Alden 0
+Alfred 0
+Angus 0
+Arthur 0
+Ashton 0
+Gerolt 0
+Acacia 1
+Adelyn 1
+Bernadine 1
+Kimberley 1
+Evelyn 1
+Faithe 1
+Ferne 1
+Brianna 1
+Rohese 1
+Ethledreda 1
+Ethelfleda 1
+Aldith 1
+Isabell 1

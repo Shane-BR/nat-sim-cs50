@@ -24,7 +24,7 @@
 #define MAX_WORKING_AGE 70
 #define MEALS_PER_DAY 2
 #define MAX_FOOD_PRODUCED_PER_WORKER 4 // Per tick
-#define MAX_MAT_PRODUCED_PER_WORKER 50 // Per tick
+#define MAX_MAT_PRODUCED_PER_WORKER 10 // Per tick
 
 // Resource types
 #define FOOD 0

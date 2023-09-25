@@ -1,0 +1,501 @@
+# NAME (MALE/FEMALE/BOTH 0/1/2) 0
+Gromlin 0
+Nori 0
+Thundror 0
+Gormdin 0
+Gunddin 0
+Hornrin 0
+Sturrin 0
+Throlin 0
+Drallin 0
+Ormin 0
+Bruvir 0
+Durmi 0
+Gromnir 0
+Bordin 0
+Gurin 0
+Gondi 0
+Bali 0
+Skanddin 0
+Sundvor 0
+Burrur 0
+Duri 0
+Dar 0
+Drimdin 0
+Durnnir 0
+Durin 0
+Grodrin 0
+Bornin 0
+Skandin 0
+Brodli 0
+Norlin 0
+Brodor 0
+Guldli 0
+Throldin 0
+Sundri 0
+Gromin 0
+Grimi 0
+Skandi 0
+Gundvir 0
+Gromrin 0
+Thrur 0
+Bromrin 0
+Gondlin 0
+Gundi 0
+Strombor 0
+Thorni 0
+Stornri 0
+Gurnir 0
+Fromi 0
+Drimbor 0
+Dormvor 0
+Drimnir 0
+Grimrin 0
+Horni 0
+Bordi 0
+Thrar 0
+Gormi 0
+Funddin 0
+Throlvi 0
+Dolgvi 0
+Stornbor 0
+Sundvor 0
+Thorni 0
+Frombor 0
+Narok 0
+Fuldi 0
+Skandli 0
+Bromdin 0
+Fuldrok 0
+Bordnir 0
+Thror 0
+Gondlin 0
+Dromri 0
+Fundbor 0
+Thranir 0
+Dori 0
+Gondor 0
+Balri 0
+Dralnir 0
+Dormri 0
+Guri 0
+Buror 0
+Grimror 0
+Sundi 0
+Thrurli 0
+Skandi 0
+Durnvor 0
+Burnir 0
+Dolgvir 0
+Dali 0
+Burllin 0
+Horni 0
+Bornor 0
+Buri 0
+Borni 0
+Thruvir 0
+Thrurli 0
+Sturvor 0
+Brimlin 0
+Thrali 0
+Dolgor 0
+Skondbor 0
+Dormdin 0
+Balnir 0
+Throli 0
+Grimin 0
+Bornrin 0
+Nain 0
+Duri 0
+Thorlin 0
+Brimli 0
+Norvor 0
+Dar 0
+Stornvor 0
+Fromdin 0
+Ormi 0
+Gundrur 0
+Brokkir 0
+Throllin 0
+Gromror 0
+Gondvir 0
+Dabor 0
+Gurdin 0
+Thradin 0
+Sturlrur 0
+Gordvor 0
+Bordi 0
+Brokki 0
+Brimrin 0
+Guldli 0
+Burlin 0
+Ormi 0
+Dolgri 0
+Brimli 0
+Burlri 0
+Dormli 0
+Dalin 0
+Nar 0
+Sturlrok 0
+Hordin 0
+Drimlin 0
+Nain 0
+Hordi 0
+Guldbor 0
+Gurror 0
+Grimrur 0
+Skondrin 0
+Norri 0
+Dorvir 0
+Storni 0
+Bromrur 0
+Throli 0
+Borndin 0
+Throlbor 0
+Durnir 0
+Hordin 0
+Norvi 0
+Gunddin 0
+Bromin 0
+Sunddin 0
+Brokklin 0
+Fundri 0
+Dromdin 0
+Dralri 0
+Gromrin 0
+Dar 0
+Thornir 0
+Storndin 0
+Gordi 0
+Sturror 0
+Durmin 0
+Stromror 0
+Fuldlin 0
+Brodi 0
+Drali 0
+Hrain 0
+Gordvi 0
+Gundli 0
+Drali 0
+Thravor 0
+Guldin 0
+Hraor 0
+Gondi 0
+Balrok 0
+Grimi 0
+Skandrur 0
+Horni 0
+Ormror 0
+Fromli 0
+Burlbor 0
+Skondin 0
+Hraor 0
+Stornri 0
+Storndin 0
+Gimbor 0
+Skondri 0
+Gordvi 0
+Glorur 0
+Balir 0
+Gondli 0
+Glorin 0
+Thundli 0
+Nar 0
+Brokki 0
+Storndin 0
+Burlor 0
+Gradrok 0
+Bromvi 0
+Grimi 0
+Brodli 0
+Thrubor 0
+Grodvor 0
+Gorddin 0
+Dormvi 0
+Drali 0
+Burir 0
+Fundir 0
+Throbor 0
+Fundin 0
+Gundli 0
+Bruor 0
+Stornvor 0
+Durnrin 0
+Thrurbor 0
+Dorli 0
+Thruri 0
+Grimdin 0
+Nordri 0
+Dormin 0
+Grimi 0
+Glori 0
+Drimrin 0
+Bromin 0
+Bordrur 0
+Grimri 0
+Brimvir 0
+Gurri 0
+Sturlbor 0
+Skandi 0
+Balir 0
+Gordin 0
+Borni 0
+Ormi 0
+Guldrur 0
+Dalvor 0
+Sundbor 0
+Gormir 0
+Brodir 0
+Bromin 0
+Sundi 0
+Dralli 0
+Dolgis 1
+Fuldna 1
+Gunda 1
+Drallis
+Guldnis 1
+Thrornis 1
+Nora 1
+Bruris
+Gonddis 1
+Sundvis 1
+Bura 1
+Strombis
+Grodlis 1
+Dormrun 1
+Norna 1
+Guldris
+Nais 1
+Thrulis 1
+Dala 1
+Brurun
+Throla 1
+Drimdis 1
+Hordlis 1
+Hradis
+Dadis 1
+Grimrith 1
+Durmvis 1
+Dordis
+Throllif 1
+Sundda 1
+Gima 1
+Nana
+Orma 1
+Skandga 1
+Sturldis 1
+Gondnis
+Groddis 1
+Throra 1
+Fundda 1
+Frorvis
+Grodrun 1
+Thrara 1
+Throrda 1
+Froma
+Dalris 1
+Grodlis 1
+Stura 1
+Skandna
+Sturlhild 1
+Gondlif 1
+Nadis 1
+Borndis
+Sturis 1
+Durna 1
+Dorna 1
+Gundis
+Dadis 1
+Brodnis 1
+Gura 1
+Thradis
+Thrura 1
+Brimga 1
+Brokkdis 1
+Norris
+Horda 1
+Sturdis 1
+Gura 1
+Burlrith
+Drala 1
+Gromga 1
+Throris 1
+Brurun
+Hranis 1
+Gradga 1
+Norga 1
+Durma
+Burlis 1
+Guldnis 1
+Storndis 1
+Skandis
+Skandlif 1
+Stornis 1
+Baldis 1
+Gorda
+Brulis 1
+Bornlif 1
+Gundrun 1
+Norbis
+Durmdis 1
+Gurhild 1
+Gimrun 1
+Durmdis
+Gormhild 1
+Durnga 1
+Grodlind 1
+Dorma
+Funda 1
+Dromris 1
+Gradlind 1
+Gurris
+Burvis 1
+Thrura 1
+Hordlind 1
+Thornbis
+Hordlis 1
+Orma 1
+Stornrun 1
+Drimdis
+Droma 1
+Guldda 1
+Thradis 1
+Durmlif
+Dora 1
+Dralis 1
+Brura 1
+Throllis
+Nordbis 1
+Thunda 1
+Frombis 1
+Thornvis
+Fulda 1
+Gimga 1
+Grimis 1
+Fundrun
+Sturllind 1
+Dalga 1
+Drima 1
+Ormna
+Brokka 1
+Gordrun 1
+Gradbis 1
+Throrga
+Sundrun 1
+Skonda 1
+Thralis 1
+Skondrun
+Fuldhild 1
+Dala 1
+Burlis 1
+Bromlis
+Balnis 1
+Gondrun 1
+Thundna 1
+Throrun
+Gunddis 1
+Sunddis 1
+Frora 1
+Groddis
+Hornga 1
+Horda 1
+Throris 1
+Throrga
+Thornrith 1
+Durnvis 1
+Thrurdis 1
+Gondrun
+Bura 1
+Naris 1
+Sturlif 1
+Dormrith
+Fuldrun 1
+Dorma 1
+Dorga 1
+Throlnis
+Frorrun 1
+Gura 1
+Ormrith 1
+Sturlrun
+Dormga 1
+Throrrith 1
+Brokklind 1
+Thornlif
+Glodis 1
+Thrurlif 1
+Dolgbis 1
+Skandnis
+Frorhild 1
+Thorda 1
+Sunddis 1
+Hordlind
+Durma 1
+Borndis 1
+Davis 1
+Drimga
+Drimris 1
+Brimbis 1
+Thrara 1
+Grodga
+Dorhild 1
+Frora 1
+Borddis 1
+Stura
+Thruda 1
+Thordis 1
+Gimis 1
+Thrurrun
+Fromnis 1
+Dormris 1
+Hornbis 1
+Sturlis
+Hornris 1
+Horndis 1
+Brokka 1
+Thrura
+Thrurdis 1
+Norrith 1
+Thundhild 1
+Glora
+Brodris 1
+Fuldis 1
+Durris 1
+Dorris
+Thrudis 1
+Darun 1
+Thraga 1
+Guldbis
+Sturda 1
+Hradis 1
+Thrurda 1
+Gurlis
+Hornlif 1
+Sundlif 1
+Dormdis 1
+Thornrun
+Gonda 1
+Hordrun 1
+Brurith 1
+Brodna
+Durga 1
+Thora 1
+Throrna 1
+Brima
+Frordis 1
+Thundnis 1
+Broma 1
+Brodvis
+Gromrun 1
+Hordis 1
+Storna 1
+Sundrith
+Gimrun 1
+Bura 1
+Nordlif 1
+Gradis
+Borddis 1
+Hordlis 1
+Thorris 1
+Dura
+Burlbis 1
+Gromhild 1

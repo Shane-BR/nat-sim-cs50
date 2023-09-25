@@ -71,8 +71,6 @@ typedef struct list_node
 typedef struct citizen
 {
     uint8_t age;
-    uint8_t meals_eaten; // Meals eaten this day.  Required meals defined in constants.h
-
     position position;
 
     float health;
@@ -134,8 +132,8 @@ typedef struct
     double food;
     double materials;
 
+    double local_infrastructure;
     uint8_t local_morale;
-    uint8_t local_infrastructure;
     uint8_t cultivation_efficiency;
 
 } settlement;
