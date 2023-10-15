@@ -21,6 +21,7 @@ int8_t getNationIndex(char* nation_name);
 char* getNationName(int8_t index);
 bool runProbability(float percent_chance);
 bool inMapBounds(position pos);
+tile getMapTile(position pos);
 int tileHash(position pos);
 double clamp(double val, double min, double max);
 double logistic(double x, double L, double k, double x0);

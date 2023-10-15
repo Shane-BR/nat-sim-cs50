@@ -108,6 +108,26 @@ void addLinkedListNode(list_node** head, void* data)
     *head = new;
 }
 
+void removeLinkedListNode(list_node** head, list_node* remove, bool free_pointer)
+{
+    if (*head == NULL) return;
+
+    if (*head == remove) 
+    {
+        *head = remove->next;
+        if(free_pointer) free(remove);
+        return;
+    }
+    else if ((*head)->next != NULL && (*head)->next == remove) 
+    {
+        (*head)->next = remove->next;
+        if(free_pointer) free(remove);
+        return;
+    }
+
+    removeLinkedListNode(&((*head)->next), remove, free_pointer);
+}
+
 void eraseLinkedList(list_node* head)
 {
     if (head == NULL) return;

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 extern nation nations[NAT_AMOUNT];
+extern tile map[MAP_SIZE][MAP_SIZE];
 
 void delay(int milliseconds)
 {
@@ -140,6 +141,12 @@ bool runProbability(float percent_chance)
 bool inMapBounds(position pos)
 {
     return pos.y >= 0 && pos.y <= MAP_SIZE && pos.x >= 0 && pos.x <= MAP_SIZE;
+}
+
+// Returns 0,0 if out of bounds
+tile getMapTile(position pos)
+{
+    return  inMapBounds(pos) ? map[pos.y][pos.x] : map[0][0];
 }
 
 // Returns a unique hash code for every possible position on the map

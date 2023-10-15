@@ -103,12 +103,26 @@ typedef struct citizen
 
 } citizen;
 
+typedef struct
+{
+    position position;
+
+    citizen* settlers[10];
+
+} settler_caravan;
+
 typedef struct 
 {
     tile* tile;
     citizen* workers[MAX_BORDER_WORKERS];
     unsigned short workers_count;
 } border;
+
+typedef struct path_node
+{
+    position pos;
+    struct path_node* prev_node;
+} path_node;
 
 typedef struct
 {
@@ -144,6 +158,7 @@ void addDictNode(dict_node** dict, int* dict_size, char* key, int value);
 void eraseDict(dict_node* dict, int* dict_size);
 int dictFind(dict_node* dict, int dict_size, char* key);
 void addLinkedListNode(list_node** head, void* data);
+void removeLinkedListNode(list_node** head, list_node* remove, bool free_pointer);
 void eraseLinkedList(list_node* head);
 
 #endif
