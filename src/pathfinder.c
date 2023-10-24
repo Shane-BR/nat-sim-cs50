@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-path_node* lowestCost(list_node* list);
+path_node* lowestCost(list_node* list, position start, position goal);
 list_node* getListNodeFromData(list_node* head, void* data);
 
-// Erase and free the list after use please
+// Erase and free the path list after use please
 list_node* getPath(position start, position goal, int search_area_size, tile search_area[search_area_size][search_area_size])
 {
 
@@ -39,14 +39,20 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
     // Add the start node to the open_list
     addLinkedListNode(&open_list, &start_node);
 
+    bool found_goal = false;
+
+    // Dijkstra's algorithm
     while (open_list != NULL) 
     {
-        cur = lowestCost(open_list);
+        cur = lowestCost(open_list, start, goal);
         removeLinkedListNode(&open_list, getListNodeFromData(open_list, cur), false);
         addLinkedListNode(&closed_list, cur);
 
         if (comparePosition(cur->pos, goal))
+        {
+            found_goal = true;
             break;
+        }
 
         // Add neighbors to the open_list
         for (int i = 0; i < DIRECTIONS_SIZE; i++)
@@ -67,6 +73,7 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
             neighbor->prev_node = cur;
 
             // if not in bounds
+            // TODO add non-traversable exception too
             if 
             (
                 neighbor->pos.x < search_area[0][0].position.x ||
@@ -91,18 +98,21 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
         }
     }
 
+    // Clear lists
     eraseLinkedList(open_list);
     eraseLinkedList(closed_list);
 
+    if (!found_goal) return NULL;
+
     // Create path
-    list_node* head;
+    list_node* head = NULL;
 
     // write the path to the linked list
     while (!comparePosition(cur->pos, start))
     {
         // By default linked list nodes are added to the FRONT of the list.
         // We are also getting the path positions in reverse order.
-        // So, by nature our linked list should come out in the correct order.
+        // So, by nature our linked list should arrange itself in the correct order.
         // finally! some fucking convenience for once.
         addLinkedListNode(&head, &cur->pos);
         cur = cur->prev_node;
@@ -110,11 +120,8 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
     return head;
 }
 
-
-
-
 // Return the losest cost position in the open_list
-path_node* lowestCost(list_node* list)
+path_node* lowestCost(list_node* list, position start, position goal)
 {
     list_node* cur = list;
     path_node* lowest;
@@ -123,10 +130,16 @@ path_node* lowestCost(list_node* list)
     while (cur != NULL) 
     {
         path_node* cur_node = (path_node*)cur->data;
-        if (getMapTile(cur_node->pos).traversability < current_lowest_cost) 
+        int c = 
+            // FIXME magic numbers
+            (((float)getMapTile(cur_node->pos).traversability / 4) * MAP_SIZE) +
+            distanceBetweenPositions(cur_node->pos, start) +
+            distanceBetweenPositions(cur_node->pos, goal);
+
+        if (c < current_lowest_cost) 
         {
             lowest = cur_node;
-            current_lowest_cost = getMapTile(cur_node->pos).traversability;
+            current_lowest_cost = c;
         }
 
         cur = cur->next;

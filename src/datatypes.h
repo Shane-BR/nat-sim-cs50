@@ -26,26 +26,6 @@ typedef struct
 
 typedef struct
 {
-    char* name;
-
-    unsigned int population;
-
-    unsigned int money;
-
-    uint8_t health;
-    uint8_t trade;
-    uint8_t magic;
-    uint8_t morale;
-    uint8_t fear;
-    uint8_t infamy;
-    uint8_t infrastructure;
-    uint8_t military;
-    uint8_t artifacts;
-
-} nation;
-
-typedef struct
-{
     bool active;
     unsigned short int days_to_recover;
     uint8_t incubation_period;
@@ -67,6 +47,11 @@ typedef struct list_node
     void* data;
     struct list_node* next;
 } list_node;
+
+typedef enum
+{
+    NONE, CRAFTSMAN, WARRIOR, GATHERER
+} CitClass;
 
 typedef struct citizen
 {
@@ -99,17 +84,31 @@ typedef struct citizen
     // Parent array
     struct citizen* parents[2];
 
-    enum {NONE, CRAFTSMAN, WARRIOR, GATHERER} citizen_class; // LEAST TO MOST IMPORTANT
+    CitClass citizen_class; // LEAST TO MOST IMPORTANT
 
 } citizen;
+
+typedef enum
+{
+    SETTLER,
+    MILITARY
+} UnitClass;
 
 typedef struct
 {
     position position;
+    uint8_t nation;
 
-    citizen* settlers[10];
+    // Defines the behaviour of the unit
+    UnitClass unit_class;
 
-} settler_caravan;
+    list_node* path; // Must be a list of path_nodes
+    int current_traversability; // Keeps track of the current tiles traversability minus move_speed each tick
+    int move_speed;
+
+    citizen** citizens;
+
+} unit;
 
 typedef struct 
 {
@@ -151,6 +150,29 @@ typedef struct
     uint8_t cultivation_efficiency;
 
 } settlement;
+
+typedef struct
+{
+    char* name;
+
+    unit** units;
+    int units_amt;
+
+    unsigned int population;
+
+    unsigned int money;
+
+    uint8_t health;
+    uint8_t trade;
+    uint8_t magic;
+    uint8_t morale;
+    uint8_t fear;
+    uint8_t infamy;
+    uint8_t infrastructure;
+    uint8_t military;
+    uint8_t artifacts;
+
+} nation;
 
 position newPosition(int x, int y);
 citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2]);

@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "settlements.h"
 #include "nation_ai.h"
+#include "units.h"
 
 extern unsigned int ticks;
 extern tile map[MAP_SIZE][MAP_SIZE]; // 2D array for easy lookup
@@ -18,6 +19,15 @@ void runNationManagerAI(settlement* stl);
 void runSim(void)
 {
     calcSettlementStats();
+
+    // Update all units
+    for (int i = 0; i < NAT_AMOUNT; i++)
+    {
+        for (int j = 0; j < nations[i].units_amt; j++)
+        {
+            updateUnit(nations[i].units[j]);
+        }
+    }
 }
 
 void runNationManagerAI(settlement* stl)

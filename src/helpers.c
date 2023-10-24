@@ -149,6 +149,40 @@ tile getMapTile(position pos)
     return  inMapBounds(pos) ? map[pos.y][pos.x] : map[0][0];
 }
 
+// Add unit to unit array
+void addToUnitArray(unit*** arr, int* size, unit* add)
+{
+    *arr = realloc(*arr, sizeof(unit *) * (++*size));
+    *arr[(*size)-1] = add;
+}
+
+// Add unit to unit array
+void removeToUnitArray(unit*** arr, int* size, unit* remove)
+{
+    
+    // Find the unit to remove
+
+    bool found = false;
+    for (int i = 0; i < *size; i++)
+    {
+        if (*arr[i] == remove)
+        {
+            // Move to front
+            // Don't shuffle all units. Order in the array doesn't matter
+            unit* swap = *arr[i];
+            *arr[i] = *arr[(*size)-1];
+            *arr[(*size)-1] = swap;
+            free(swap); // TODO Might not free so we can record unit info
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) return;
+
+    *arr = realloc(*arr, sizeof(unit *) * (--*size));
+}
+
 // Returns a unique hash code for every possible position on the map
 int tileHash(position pos)
 {

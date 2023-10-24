@@ -147,8 +147,8 @@ position initSettlementPosition(int8_t nation_index)
 
 void draw(void) // TODO remove and make frame buffer using OpenGL instead
 {
-    if (ticks / TICKS_PER_DAY % 365 != 0)
-        return;
+    //if (ticks / TICKS_PER_DAY % 365 != 0)
+        //return;
 
     system("cls");
 
@@ -163,7 +163,24 @@ void draw(void) // TODO remove and make frame buffer using OpenGL instead
     {
         for (int x = 0; x < MAP_SIZE; x++)
         {
-            if (map[y][x].ruling_nation == -1)
+            unit* u = NULL;
+            for (int i = 0; i < NAT_AMOUNT; i++)
+            {
+                for (int j = 0; j < nations[i].units_amt; j++)
+                {
+                    if (comparePosition(nations[i].units[j]->position, newPosition(x, y)))
+                    {
+                        u = nations[i].units[j];
+                        break;
+                    }
+                }
+            }
+
+            if (u != NULL)
+            {
+                printf("W");
+            }
+            else if (map[y][x].ruling_nation == -1)
             {
                 printf("%i", map[y][x].traversability);
             }

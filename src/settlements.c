@@ -50,7 +50,7 @@ settlement initSettlement(position pos, char* ruling_nation)
     s.death_list = NULL;
 
     // Temp variable
-    int numOfCitizens = 101;
+    int numOfCitizens = 10;
 
     s.citizens = malloc(sizeof(citizen*) * numOfCitizens);
 
