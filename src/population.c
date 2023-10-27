@@ -31,7 +31,7 @@ uint8_t overallHealth(citizen* cit, uint8_t stl_local_morale);
 void breakup(citizen* cit);
 
 // Adds a bunch of random citizens between the ages of 18 and 50
-void addRandomCitizens(int num, settlement* stl)
+void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int* cur_size)
 {
     int minAge = 18;
     int maxAge = 50;
@@ -43,29 +43,28 @@ void addRandomCitizens(int num, settlement* stl)
         uint8_t gender = randomInt(MALE, FEMALE);
         
         citizen* c = newCitizen(age, gender, NULL);
+        c->position = init_pos;
 
-        addCitizen(c, stl);
+        addCitizen(c, arr, cur_size);
 
     }
 }
 
 // Add a citizen to current population
-void addCitizen(citizen* cit, settlement* stl)
+void addCitizen(citizen* cit, citizen*** arr, unsigned int* size)
 {
-    citizen** tmp = stl->citizens;
+    citizen** tmp = *arr;
 
-    stl->citizens = realloc(stl->citizens, sizeof(citizen * ) * (stl->local_population+1));
+    *arr = realloc(*arr, sizeof(citizen * ) * (++(*size)));
         
-    if (stl->citizens == NULL)
+    if (*arr == NULL)
     {
         printf("Failed to Re-allocate memory when adding a citizen");
-        stl->citizens = tmp;
+        *arr = tmp;
         return;
     }
 
-    stl->citizens[stl->local_population] = cit;
-    cit->position = stl->position;
-    stl->local_population++;
+    (*arr)[(*size)-1] = cit;
 }
 
 void removeCitizen(citizen* cit, settlement* stl)
@@ -427,7 +426,7 @@ void giveBirth(citizen* parents[2], settlement* stl, uint8_t mother_overall_heal
     citizen* child = parents[0]->unborn_child;
 
     // Add citizen to this settlements population
-    addCitizen(child, stl);
+    addCitizen(child, &stl->citizens, &stl->local_population);
 
     parents[0]->unborn_child = NULL;
 

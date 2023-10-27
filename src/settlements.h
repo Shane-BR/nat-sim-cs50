@@ -3,8 +3,8 @@
 
 #include "datatypes.h"
 
-void addSettlement(char* nation, position pos);
-settlement initSettlement(position pos, char* ruling_nation);
+void addSettlement(char* nation, position pos, citizen** citizens, int cit_size);
+settlement initSettlement(position pos, char* ruling_nation, citizen** citizens, int cit_size);
 settlement* getSettlementFromPosition(position pos);
 settlement** getAllSettlements(int8_t nation_index);
 void calcCultivationEfficiency(settlement* stl);

@@ -5,6 +5,10 @@
 #include "settlements.h"
 #include "borders.h"
 
+#include "units.h"
+#include "population.h"
+#include "pathfinder.h"
+
 #include <ctype.h>
 #include <math.h>
 #include <stdint.h>
@@ -114,10 +118,24 @@ void initNations(void)
 void initSim(void)
 {
     // Set and initialize a settlement for each nation
-    for (int i = 0; i < NAT_AMOUNT; i++)
-    {
-        addSettlement(nations[i].name, initSettlementPosition(i));
-    }
+    //for (int i = 0; i < NAT_AMOUNT; i++)
+    //{
+        //addSettlement(nations[i].name, initSettlementPosition(i), NULL);
+    //}
+
+    unsigned int size = 0;
+    citizen** cits = malloc(sizeof(citizen*)*size);
+    if (cits == NULL) exit(1);
+
+    position start_pos = newPosition(8, 8);
+
+    addRandomCitizens(15, start_pos, &cits, &size);
+
+    unit* new = newUnit(start_pos, 1, SETTLER, NULL, 1, cits, size);
+    addToUnitArray(&nations[1].units, &nations[1].units_amt, new);
+
+    list_node* path = getPath(new->position, newPosition(4, 4), MAP_SIZE, map);
+    updatePath(new, path);
 }
 
 // TODO A bit lazy, maybe try another algorithm  for final release
@@ -178,7 +196,9 @@ void draw(void) // TODO remove and make frame buffer using OpenGL instead
 
             if (u != NULL)
             {
+                printf("\033[1;34m");
                 printf("W");
+                printf("\033[0;0m");
             }
             else if (map[y][x].ruling_nation == -1)
             {

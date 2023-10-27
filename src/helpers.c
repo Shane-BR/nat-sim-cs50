@@ -157,7 +157,7 @@ void addToUnitArray(unit*** arr, int* size, unit* add)
 }
 
 // Add unit to unit array
-void removeToUnitArray(unit*** arr, int* size, unit* remove)
+void removeFromUnitArray(unit*** arr, int* size, unit* remove)
 {
     
     // Find the unit to remove

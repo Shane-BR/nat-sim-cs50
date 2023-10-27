@@ -107,6 +107,7 @@ typedef struct
     int move_speed;
 
     citizen** citizens;
+    unsigned int cits_amt;
 
 } unit;
 

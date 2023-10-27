@@ -1,15 +1,17 @@
 #include "units.h"
 #include "helpers.h"
 #include "pathfinder.h"
+#include "settlements.h"
+
 #include <stdint.h>
 
 void followPath(unit* unit);
-void updatePath(unit* unit, list_node* path);
 
 extern tile map[MAP_SIZE][MAP_SIZE];
+extern nation nations[NAT_AMOUNT];
 
 
-unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* path, int move_speed, citizen** citizens)
+unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* path, int move_speed, citizen** citizens, unsigned int cit_amt)
 {
     unit* new = malloc(sizeof(unit));
     new->position = pos;
@@ -21,6 +23,7 @@ unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* pat
     
     new->move_speed = move_speed;
     new->citizens = citizens;
+    new->cits_amt = cit_amt;
 
     return new;
 }
@@ -54,6 +57,19 @@ void updatePath(unit* unit, list_node* path)
     }
 }
 
+void settleOnPosition(unit* unit)
+{
+    if (unit->unit_class != SETTLER) return;
+
+    if (getMapTile(unit->position).ruling_nation == -1 || getMapTile(unit->position).ruling_nation == unit->nation)
+    {
+        addSettlement(getNationName(unit->nation), unit->position, unit->citizens, unit->cits_amt);
+    
+        // Remove unit
+        removeFromUnitArray(&nations[unit->nation].units, &nations[unit->nation].units_amt, unit);
+    }
+}
+
 // LIST NODES MUST CONTAIN POSITIONS ONLY
 void followPath(unit* unit)
 {
@@ -68,9 +84,18 @@ void followPath(unit* unit)
             unit->position = next_pos;
             unit->path = unit->path->next;
             unit->current_traversability = getMapTile(next_pos).traversability;
+
+            // Move citizens if any
+            for (int i = 0; i < unit->cits_amt; i++)
+            {
+                unit->citizens[i]->position = unit->position;
+            }
         }
     }
 
     if (unit->path == NULL) 
+    {
+        settleOnPosition(unit);
         eraseLinkedList(unit->path);
+    }
 }

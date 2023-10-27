@@ -42,7 +42,15 @@ void calcSettlementStats(void)
     // TODO redo this system
     for (int n = 0; n < NAT_AMOUNT; n++)
     {
-        nations[n].population = 0;
+
+        // Add units before calculating settlement population
+        int units_population = 0;
+        for (int i = 0; i < nations[n].units_amt; i++)
+        {
+            units_population += nations[n].units[i]->cits_amt;
+        }
+
+        nations[n].population = units_population;
         nations[n].morale = 0;
         nations[n].infrastructure = 0;
     }

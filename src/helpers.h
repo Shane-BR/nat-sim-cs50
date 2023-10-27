@@ -23,7 +23,7 @@ bool runProbability(float percent_chance);
 bool inMapBounds(position pos);
 tile getMapTile(position pos);
 void addToUnitArray(unit*** arr, int* size, unit* add);
-void removeToUnitArray(unit*** arr, int* size, unit* remove);
+void removeFromUnitArray(unit*** arr, int* size, unit* remove);
 int tileHash(position pos);
 double clamp(double val, double min, double max);
 double logistic(double x, double L, double k, double x0);

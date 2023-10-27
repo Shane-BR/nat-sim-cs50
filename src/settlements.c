@@ -16,17 +16,17 @@ settlement settlements[MAP_SIZE*MAP_SIZE]; // Simple hash table of settlements
 
 int getGrossResourceProduced(settlement stl, int resource_type);
 
-void addSettlement(char* nation, position pos)
+void addSettlement(char* nation, position pos, citizen** citizens, int cit_size)
 {
     int i = getNationIndex(nation);
-    settlement new_stl = initSettlement(pos, nation);
+    settlement new_stl = initSettlement(pos, nation, citizens, cit_size);
 
     settlements[tileHash(pos)] = new_stl;
 
     updateSettlementBorders(&settlements[tileHash(pos)], 0);
 }
 
-settlement initSettlement(position pos, char* ruling_nation)
+settlement initSettlement(position pos, char* ruling_nation, citizen** citizens, int cit_size)
 {
     settlement s;
     int8_t nat_index = getNationIndex(ruling_nation);
@@ -49,14 +49,21 @@ settlement initSettlement(position pos, char* ruling_nation)
     s.borders = NULL;
     s.death_list = NULL;
 
-    // Temp variable
-    int numOfCitizens = 10;
+    if (citizens == NULL)
+    {
+        int numOfCitizens = 10;
 
-    s.citizens = malloc(sizeof(citizen*) * numOfCitizens);
+        s.citizens = malloc(sizeof(citizen*) * numOfCitizens);
 
-    if (s.citizens == NULL) exit(1);
+        if (s.citizens == NULL) exit(1);
     
-    addRandomCitizens(numOfCitizens, &s);
+        addRandomCitizens(numOfCitizens, s.position, &s.citizens, &s.local_population);
+    }
+    else 
+    {
+        s.citizens = citizens;
+        s.local_population = cit_size;
+    }
 
     return s;
 }
