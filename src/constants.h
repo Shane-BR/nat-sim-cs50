@@ -5,7 +5,7 @@
 #define NAT_AMOUNT 4 // 4
 #define START_SPREAD 15 // Minimum distance apart settlements must be on startup.
 #define TICKS_PER_DAY 2
-#define TICK_DELAY 100 // in milliseconds, each tick is half a day (12hrs) in simulation time
+#define TICK_DELAY 50 // in milliseconds, each tick is half a day (12hrs) in simulation time
 
 // Radius must be odd number
 #define TOWN_BORDER_RADIUS 3
@@ -23,6 +23,7 @@
 #define MIN_WORKING_AGE 14
 #define MAX_WORKING_AGE 70
 #define MEALS_PER_DAY 2
+#define STARVE_PERIOD 30 // How many days before DEATH by starvation
 #define MAX_FOOD_PRODUCED_PER_WORKER 4 // Per tick
 #define MAX_MAT_PRODUCED_PER_WORKER 10 // Per tick
 

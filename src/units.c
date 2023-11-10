@@ -20,7 +20,7 @@ unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* pat
 
     new->path = NULL;
     updatePath(new, path);
-    
+
     new->move_speed = move_speed;
     new->citizens = citizens;
     new->cits_amt = cit_amt;
@@ -53,7 +53,7 @@ void updatePath(unit* unit, list_node* path)
         unit->path = path;
         
         position start = *(position*)(path->data);
-        unit->current_traversability = getMapTile(start).traversability;
+        unit->current_traversability = getMapTile(start)->traversability;
     }
 }
 
@@ -61,7 +61,7 @@ void settleOnPosition(unit* unit)
 {
     if (unit->unit_class != SETTLER) return;
 
-    if (getMapTile(unit->position).ruling_nation == -1 || getMapTile(unit->position).ruling_nation == unit->nation)
+    if (getMapTile(unit->position)->ruling_nation == -1 || getMapTile(unit->position)->ruling_nation == unit->nation)
     {
         addSettlement(getNationName(unit->nation), unit->position, unit->citizens, unit->cits_amt);
     
@@ -83,7 +83,7 @@ void followPath(unit* unit)
             position next_pos = *(position*)(unit->path->data);
             unit->position = next_pos;
             unit->path = unit->path->next;
-            unit->current_traversability = getMapTile(next_pos).traversability;
+            unit->current_traversability = getMapTile(next_pos)->traversability;
 
             // Move citizens if any
             for (int i = 0; i < unit->cits_amt; i++)

@@ -133,9 +133,6 @@ void initSim(void)
 
     unit* new = newUnit(start_pos, 1, SETTLER, NULL, 1, cits, size);
     addToUnitArray(&nations[1].units, &nations[1].units_amt, new);
-
-    list_node* path = getPath(new->position, newPosition(4, 4), MAP_SIZE, map);
-    updatePath(new, path);
 }
 
 // TODO A bit lazy, maybe try another algorithm  for final release

@@ -132,7 +132,7 @@ path_node* lowestCost(list_node* list, position start, position goal)
         path_node* cur_node = (path_node*)cur->data;
         int c = 
             // FIXME magic numbers
-            (((float)getMapTile(cur_node->pos).traversability / 4) * MAP_SIZE) +
+            (((float)getMapTile(cur_node->pos)->traversability / 4) * MAP_SIZE) +
             distanceBetweenPositions(cur_node->pos, start) +
             distanceBetweenPositions(cur_node->pos, goal);
 

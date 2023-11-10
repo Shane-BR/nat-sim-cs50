@@ -1,10 +1,13 @@
 // Handles updates on tick
 
+#include <stdlib.h>
+
 #include "sim.h"
 #include "datatypes.h"
 #include "constants.h"
 #include "settlements.h"
 #include "nation_ai.h"
+#include "helpers.h"
 #include "units.h"
 
 extern unsigned int ticks;
@@ -25,14 +28,16 @@ void runSim(void)
     {
         for (int j = 0; j < nations[i].units_amt; j++)
         {
-            updateUnit(nations[i].units[j]);
+            unit* unit = nations[i].units[j];
+            updateUnit(unit);
+            manageSettlerUnit(unit);
         }
     }
 }
 
 void runNationManagerAI(settlement* stl)
 {
-    manageFood(stl, getNetFoodProduced(*stl));
+    manageFood(stl, getEstimateNetFoodProduced(*stl));
     manageSettlementWorkers(stl);
 }
 
@@ -60,24 +65,45 @@ void calcSettlementStats(void)
     {
         settlement* s = &settlements[i];
 
+        // active this tick?
+        bool was_active = s->active;
+
         // Should settlement be active?
         s->active = s->local_population > 0;
 
-        if (s->active)
+        if (!s->active)
         {
-            // Handle calculations
-            runPopulationChecks(s);
-            calcCultivationEfficiency(s);
-            runNationManagerAI(s);
-            updateSettlementStats(s);
-            canChangeSettlementLevel(s);
+            if (was_active)
+            {
+                // Set borders and stl back to neutral
+                // Free all heap memory from stl
+                for (int i = 0; i < getBorderArea(*s); i++)
+                {
+                    if (s->borders[i] == NULL)
+                        continue;
 
-            // Set stats at nation level 
-            // TODO REDO
-            int n = s->nation;
-            nations[n].population           += s->local_population;
-            nations[n].morale               += s->local_morale;
-            nations[n].infrastructure       += s->local_infrastructure;
+                    s->borders[i]->tile->ruling_nation = -1;
+                    free(s->borders[i]);
+                }
+                getMapTile(s->position)->ruling_nation = -1;
+                free(s->borders);
+                free(s->citizens);
+            }
+            continue;
         }
+
+        // Handle calculations
+        runPopulationChecks(s);
+        calcCultivationEfficiency(s);
+        runNationManagerAI(s);
+        updateSettlementStats(s);
+        canChangeSettlementLevel(s);
+
+        // Set stats at nation level 
+        // TODO REDO
+        int n = s->nation;
+        nations[n].population           += s->local_population;
+        nations[n].morale               += s->local_morale;
+        nations[n].infrastructure       += s->local_infrastructure;
     }
 }

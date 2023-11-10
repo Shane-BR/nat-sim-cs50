@@ -22,6 +22,7 @@ void meetPartner(citizen* cit, citizen* partner, int local_morale, int num_peopl
 void spreadDisease(citizen* carrier, citizen* suspect);
 bool ofConceptionAge(int age);
 void passiveHeal(citizen* cit, uint8_t overall_health);
+void damageCitizen(citizen *cit, uint8_t amt);
 void calcPregnancy(citizen* cit, settlement* stl);
 void calcBreakup(citizen* cit);
 void updatePregnancy(citizen* cit, settlement* stl);
@@ -178,12 +179,30 @@ void healthCheck(citizen* cit, settlement* stl)
         return;
     }
 
+    // Eat
+    if (stl->food > 0)
+    {
+        cit->meals_eaten_day++;
+        stl->food--;
+    }
+
+    // Update hunger
     // Elderly death calculations
     oldAgeDeath(cit, stl, overall_health);
 
     // Update pregnancy if applicable
     if (cit->pregnant)
         updatePregnancy(cit, stl);
+
+    // Check starvation
+    if (ticks % TICKS_PER_DAY) 
+    {
+        if (cit->meals_eaten_day <= 0)
+        {
+            damageCitizen(cit, UINT8_MAX / STARVE_PERIOD);
+        }
+        cit->meals_eaten_day = 0;
+    }
 
     passiveHeal(cit, overall_health);
 }
@@ -232,7 +251,8 @@ void passiveHeal(citizen* cit, uint8_t overall_health)
         cit->health < UINT8_MAX && 
         overall_health > 50 &&
         !cit->disease.active &&
-        cit->disease.immunity_period <= 0
+        cit->disease.immunity_period <= 0 &&
+        cit->meals_eaten_day >= MEALS_PER_DAY
         ;
 
     int min_rand_div = 90;
@@ -240,6 +260,11 @@ void passiveHeal(citizen* cit, uint8_t overall_health)
 
     if (allow_heal)
         cit->health += ((float)overall_health / randomInt(min_rand_div, max_rand_div));
+}
+
+void damageCitizen(citizen *cit, uint8_t amt)
+{
+    cit->health -= amt;
 }
 
 // Updates stats of citizens in relationships

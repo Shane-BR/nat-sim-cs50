@@ -143,10 +143,10 @@ bool inMapBounds(position pos)
     return pos.y >= 0 && pos.y <= MAP_SIZE && pos.x >= 0 && pos.x <= MAP_SIZE;
 }
 
-// Returns 0,0 if out of bounds
-tile getMapTile(position pos)
+// Returns NULL if out of bounds
+tile* getMapTile(position pos)
 {
-    return  inMapBounds(pos) ? map[pos.y][pos.x] : map[0][0];
+    return  inMapBounds(pos) ? &map[pos.y][pos.x] : NULL;
 }
 
 // Add unit to unit array

@@ -13,7 +13,7 @@ void updateSettlementStats(settlement* stl);
 void removeCitFromBorder(citizen* cit, settlement* stl);
 int getBorderRadius(settlement stl);
 int getBorderArea(settlement stl);
-int getNetFoodProduced(settlement stl);
+int getEstimateNetFoodProduced(settlement stl);
 void canChangeSettlementLevel(settlement* stl);
 
 #endif

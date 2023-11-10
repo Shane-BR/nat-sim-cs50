@@ -2,12 +2,19 @@
 #include "constants.h"
 #include "borders.h"
 #include "settlements.h"
+#include "helpers.h"
+#include "pathfinder.h"
+#include "units.h"
+#include <stdint.h>
 
 void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile, int max_class_priority);
 bool organiseMoreFoodWorkers(settlement* stl, int food_net);
 void assignCitizensFromBorderToWorkSettlement(settlement* stl, int amount, border* from_border);
 void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t resource_type);
 border* worstProducingBorder(settlement* stl, uint8_t resource_type);
+tile getBestSettlerTile(position origin, int unit_nat);
+
+extern tile map[MAP_SIZE][MAP_SIZE];
 
 // Decision tree based system for managing food.
 // food_net = food netted this tick.  Negitive if demand outways supply.
@@ -30,6 +37,81 @@ void manageFood(settlement* stl, int food_net)
     {
         organiseSurplusWorkersFromBorders(stl, food_net, FOOD);
     }
+}
+
+void manageSettlerUnit(unit* settler)
+{
+
+    if (settler->unit_class != SETTLER)
+        return;
+
+    // TODO This is a simplified version.
+    // I need to get this done damn it.
+
+    if (settler->path == NULL)
+    {
+        // Find best uncontrolled tile
+        tile best = getBestSettlerTile(settler->position, settler->nation);
+
+        // Get path to tile
+        list_node* path = getPath(settler->position, best.position, MAP_SIZE, map);
+    
+        // Update path
+        updatePath(settler, path);
+    }
+}
+
+tile getBestSettlerTile(position origin, int unit_nat)
+{
+
+    tile best;
+    int cur_best = 0;
+    const int MAX_DIST_BORDER = 2; // Minimum amount of tiles away the new settlement should be
+
+    // Loop through all positions
+    for (int y = 0; y < MAP_SIZE; y++) 
+    {
+        for (int x = 0; x < MAP_SIZE; x++) 
+        {
+            tile t = *getMapTile(newPosition(x, y));
+            
+            // Is there a border in the min radius
+            position tile_tl_corner = newPosition(t.position.x - MAX_DIST_BORDER, t.position.y - MAX_DIST_BORDER);
+            position tile_br_corner = newPosition(t.position.x + MAX_DIST_BORDER, t.position.y + MAX_DIST_BORDER);
+            bool border_in_radius = false;
+            for (int y2 = tile_tl_corner.y; y2 <= tile_br_corner.y; y2++)
+            {
+                for (int x2 = tile_tl_corner.x; x2 <= tile_br_corner.x; x2++)
+                {
+                    if (getBorderFromPosition(newPosition(x2, y2)))
+                    {
+                        border_in_radius = true;
+                        break;
+                    }   
+                }
+
+                if (border_in_radius)
+                {
+                    break;
+                }
+            }
+            
+            if (border_in_radius) 
+            {
+                continue;
+            }
+
+            int tr = t.food_abundance + t.material_abundance + t.survivability;
+            int score = tr - (distanceBetweenPositions(t.position, origin) / (MAP_SIZE-1) * UINT8_MAX);
+            if (score > cur_best)
+            {
+                cur_best = score;
+                best = t;
+            }
+        }
+    }
+    
+    return best;
 }
 
 void manageMaterials(settlement* stl)
@@ -70,10 +152,13 @@ bool organiseMoreFoodWorkers(settlement* stl, int food_required)
 
         for (int i = 0; i < getBorderArea(*stl)-1; i++)
         {
-            if (stl->borders[i].tile->food_abundance > h_food->tile->food_abundance 
-                && stl->borders[i].workers_count < MAX_BORDER_WORKERS)
+            if (stl->borders[i] == NULL)
+                continue;
+
+            if (stl->borders[i]->tile->food_abundance > h_food->tile->food_abundance 
+                && stl->borders[i]->workers_count < MAX_BORDER_WORKERS)
             {
-                h_food = &stl->borders[i];
+                h_food = stl->borders[i];
             }
         }
 
@@ -223,7 +308,7 @@ border* worstProducingBorder(settlement* stl, uint8_t resource_type)
     for (int i = 0; i < getBorderArea(*stl)-1; i++)
     {
         int tile_resources = -1;
-        border* border = &stl->borders[i];
+        border* border = stl->borders[i];
 
         // TODO make this more dynamic
         if (resource_type == FOOD)

@@ -119,9 +119,11 @@ void runPopulationChecks(settlement* stl)
 
 void updateSettlementStats(settlement* stl)
 {
-    // Update food
-    int net_food = getNetFoodProduced(*stl);
-    stl->food = clamp(stl->food + net_food, 0, INFINITY);
+
+    // Update gross food product.
+    // Food is deducted in population.c by individual citizens
+    stl->food = clamp(stl->food + 
+        getGrossResourceProduced(*stl, FOOD), 0, INFINITY);
 
     // Update materials.  Deduct later.
     stl->materials = clamp(stl->materials + 
@@ -215,7 +217,7 @@ int getBorderArea(settlement stl)
     return pow(getBorderRadius(stl), 2)-1;
 }
 
-int getNetFoodProduced(settlement stl)
+int getEstimateNetFoodProduced(settlement stl)
 {
     int food_demand = stl.local_population*MEALS_PER_DAY; 
     int food_produced = getGrossResourceProduced(stl, FOOD);
@@ -229,7 +231,10 @@ int getGrossResourceProduced(settlement stl, int resource_type)
 
     for (int i = 0; i < getBorderArea(stl); i++)
     {
-        produce = produce + stl.borders[i].workers_count * getBorderWorkerProduction(stl, stl.borders[i], resource_type);
+        if (stl.borders[i] == NULL)
+            continue;
+
+        produce = produce + stl.borders[i]->workers_count * getBorderWorkerProduction(stl, *stl.borders[i], resource_type);
     }
 
     return produce;

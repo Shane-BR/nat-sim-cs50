@@ -59,12 +59,8 @@ typedef struct citizen
     position position;
 
     float health;
-    //bool inflicted;
+    uint8_t meals_eaten_day; // How many meals eaten this day?
 
-    //short int days_inflicted;
-    //short int days_to_recover;
-
-    //uint8_t infliction_severity; // 0-100%   100% = FATAL
     disease disease;
     int med_history_size;
     dict_node* medical_history; // Dynamic array containing a dictonary of this citizen's medical history.  The keys are diseases/injury and value is the tick it took place.
@@ -105,7 +101,7 @@ typedef struct
     list_node* path; // Must be a list of path_nodes
     int current_traversability; // Keeps track of the current tiles traversability minus move_speed each tick
     int move_speed;
-
+    
     citizen** citizens;
     unsigned int cits_amt;
 
@@ -134,7 +130,7 @@ typedef struct
     // A bool that indicates if the settlement is active.  Used for protection against listing non-existant settlements in the settlements hash table
     bool active;
 
-    border* borders;
+    border** borders;
 
     // Local stats
     citizen** citizens; // Dynamic array of pointers to citizens

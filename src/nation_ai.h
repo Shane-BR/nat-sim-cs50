@@ -3,7 +3,8 @@
 
 #include "datatypes.h"
 
-void manageFood(settlement* stl, int food_net);
 void manageSettlementWorkers(settlement* stl);
+void manageFood(settlement* stl, int food_net);
+void manageSettlerUnit(unit* settler);
 
 #endif

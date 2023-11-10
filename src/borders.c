@@ -45,12 +45,12 @@ void setBorders (int radius, int prev_radius, settlement* stl)
         for (int i = prev_radius*prev_radius-2; i >= target_arr_size; i--)
         {
             // Reset tile
-            stl->borders[i].tile->ruling_nation = -1;
+            stl->borders[i]->tile->ruling_nation = -1;
 
             // Reassign workers
-            for (int j = 0; j < stl->borders[i].workers_count; j++)
+            for (int j = 0; j < stl->borders[i]->workers_count; j++)
             {
-                citizen* worker = stl->borders[i].workers[j];
+                citizen* worker = stl->borders[i]->workers[j];
 
                 if (worker != NULL) removeCitFromBorder(worker, stl);
             }
@@ -75,13 +75,16 @@ void setBorders (int radius, int prev_radius, settlement* stl)
         {
             for (int x = tl_corner.x; x <= br_corner.x; x++) 
             {
+
+                position pos = newPosition(x, y);
+
                 // Is already in border array?
                 if (prev_radius > 0)
                 {
                     bool skip_tile = false;
                     for (int i = 0; i < prev_radius*prev_radius-1; i++)
                     {
-                        if (comparePosition(stl->borders[i].tile->position, newPosition(x, y)))
+                        if (comparePosition(stl->borders[i]->tile->position, pos))
                         {
                             skip_tile = true;
                             break;
@@ -91,14 +94,24 @@ void setBorders (int radius, int prev_radius, settlement* stl)
                     if (skip_tile) continue;
                 }
 
-                if (!inMapBounds(newPosition(x, y)) || comparePosition(center, newPosition(x, y)))
+                if (comparePosition(center, pos))
                     continue;
 
-                border new_border;
-                new_border.tile = &map[y][x];
-                new_border.workers_count = 0;
+                tile* t = getMapTile(pos);
 
-                map[y][x].ruling_nation = stl->nation; // Might be sussy idk, faster than looking up the linked list though
+                border* new_border;
+                if (t == NULL || t->ruling_nation != -1)
+                {
+                    // Move cursor but add NULL pointer to array
+                    new_border = NULL;
+                }
+                else 
+                {
+                    t->ruling_nation = stl->nation;
+                    new_border = malloc(sizeof(border));
+                    new_border->tile = t;
+                    new_border->workers_count = 0;
+                }
                 stl->borders[cur++] = new_border;
             }
         }
@@ -108,17 +121,16 @@ void setBorders (int radius, int prev_radius, settlement* stl)
 // Finds the border where the citizen is working
 border* findWorkBorder(citizen* cit, settlement* stl)
 {
-    for 
-    (int i = 0; 
-        i < (stl->level == 0 ? 
-            TOWN_BORDER_RADIUS*TOWN_BORDER_RADIUS : 
-            CITY_BORDER_RADIUS*CITY_BORDER_RADIUS)-1; i++)
+    for (int i = 0; i < getBorderArea(*stl); i++)
     {
-        for (int j = 0; j < stl->borders[i].workers_count; j++)
+        if (stl->borders[i] == NULL)
+            continue;
+
+        for (int j = 0; j < stl->borders[i]->workers_count; j++)
         {
-            if (stl->borders[i].workers[j] == cit)
+            if (stl->borders[i]->workers[j] == cit)
             {
-                return &stl->borders[i];
+                return stl->borders[i];
             }
         }
     }
@@ -128,6 +140,9 @@ border* findWorkBorder(citizen* cit, settlement* stl)
 
 border* getBorderFromPosition(position pos)
 {
+    if (!inMapBounds(pos))
+        return NULL;
+
     int search_radious = (CITY_BORDER_RADIUS*CITY_BORDER_RADIUS);
     position search_pos;
 
@@ -146,8 +161,11 @@ border* getBorderFromPosition(position pos)
 
             for (int j = 0; j < getBorderArea(*stl); j++)
             {
-                border* b = &stl->borders[j];
+                border* b = stl->borders[j];
                 
+                if (b == NULL || b->tile == NULL)
+                    continue;
+
                 if (comparePosition(b->tile->position, pos))
                 {
                     return b;
