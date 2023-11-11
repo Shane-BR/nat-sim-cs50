@@ -140,7 +140,7 @@ bool runProbability(float percent_chance)
 
 bool inMapBounds(position pos)
 {
-    return pos.y >= 0 && pos.y <= MAP_SIZE && pos.x >= 0 && pos.x <= MAP_SIZE;
+    return pos.y >= 0 && pos.y <= MAP_SIZE-1 && pos.x >= 0 && pos.x <= MAP_SIZE-1;
 }
 
 // Returns NULL if out of bounds
