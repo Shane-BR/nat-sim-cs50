@@ -42,7 +42,7 @@ settlement initSettlement(position pos, char* ruling_nation, citizen** citizens,
     s.level = 0;
     s.local_population = 0; // Set after init process
     s.local_morale = 100;
-    s.local_infrastructure = 10;
+    s.local_infrastructure = 0;
     s.cultivation_efficiency = 0;
     s.food = 140; // Lasts 3.5 days at population of 10
 
@@ -132,7 +132,8 @@ void updateSettlementStats(settlement* stl)
     // Calc infrastructure growth/decline
 
     // Max amount of craftsmen to reach highest target rate
-    const int max_amt_craftsmen = stl->local_population / 2;
+    const int MAX_CRAFTSMEN = 200; 
+
     int craftsmen = 0;
 
     // Count all craftsmen
@@ -143,7 +144,8 @@ void updateSettlementStats(settlement* stl)
     }
 
     // Update local infrastructure target
-    int li_target = (craftsmen / (double)max_amt_craftsmen) * UINT8_MAX;
+    // Scale with population
+    int li_target = (craftsmen / (double)MAX_CRAFTSMEN) * UINT8_MAX;
 
     // Max amount of mat needed this tick to achieve full speed infrastructure growth
     int max_mat_needed = MAX_MAT_PRODUCED_PER_WORKER * craftsmen;

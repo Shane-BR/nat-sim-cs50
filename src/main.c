@@ -162,8 +162,8 @@ position initSettlementPosition(int8_t nation_index)
 
 void draw(void) // TODO remove and make frame buffer using OpenGL instead
 {
-    //if (ticks / TICKS_PER_DAY % 365 != 0)
-        //return;
+    if (ticks / TICKS_PER_DAY % 365 != 0)
+        return;
 
     system("cls");
 

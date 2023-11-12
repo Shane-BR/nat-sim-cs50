@@ -66,47 +66,39 @@ tile getBestSettlerTile(position origin, int unit_nat)
 
     tile best;
     int cur_best = 0;
-    const int MAX_DIST_BORDER = 2; // Minimum amount of tiles away the new settlement should be
 
     // Loop through all positions
     for (int y = 0; y < MAP_SIZE; y++) 
     {
         for (int x = 0; x < MAP_SIZE; x++) 
         {
-            tile t = *getMapTile(newPosition(x, y));
-            
-            // Is there a border in the min radius
-            position tile_tl_corner = newPosition(t.position.x - MAX_DIST_BORDER, t.position.y - MAX_DIST_BORDER);
-            position tile_br_corner = newPosition(t.position.x + MAX_DIST_BORDER, t.position.y + MAX_DIST_BORDER);
-            bool border_in_radius = false;
-            for (int y2 = tile_tl_corner.y; y2 <= tile_br_corner.y; y2++)
-            {
-                for (int x2 = tile_tl_corner.x; x2 <= tile_br_corner.x; x2++)
-                {
-                    if (getBorderFromPosition(newPosition(x2, y2)))
-                    {
-                        border_in_radius = true;
-                        break;
-                    }   
-                }
+            tile* search_tile = getMapTile(newPosition(x, y));
 
-                if (border_in_radius)
-                {
-                    break;
-                }
+            if (search_tile == NULL) continue;
+
+            int tr = 0;
+            
+            // Combine resources of all potential border tiles to get the total
+            for (int i = 0; i < (CITY_BORDER_RADIUS*CITY_BORDER_RADIUS); i++)
+            {
+                int tx = x + ((i % CITY_BORDER_RADIUS) - CITY_BORDER_RADIUS/2);
+                int ty = y + ((i / CITY_BORDER_RADIUS) - CITY_BORDER_RADIUS/2);
+                tile* t = getMapTile(newPosition(tx, ty));
+
+                if (t == NULL || t->ruling_nation != -1)
+                    continue;
+
+                tr += t->food_abundance + t->material_abundance + t->survivability;
             }
             
-            if (border_in_radius) 
-            {
-                continue;
-            }
 
-            int tr = t.food_abundance + t.material_abundance + t.survivability;
-            int score = tr - (distanceBetweenPositions(t.position, origin) / (MAP_SIZE-1) * UINT8_MAX);
+            int score = tr - (distanceBetweenPositions(search_tile->position, origin) / (MAP_SIZE-1) * UINT8_MAX) *
+                                (CITY_BORDER_RADIUS*CITY_BORDER_RADIUS);
+            
             if (score > cur_best)
             {
                 cur_best = score;
-                best = t;
+                best = *search_tile;
             }
         }
     }
