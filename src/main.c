@@ -5,6 +5,8 @@
 #include "settlements.h"
 #include "borders.h"
 
+#include "screen.h"
+
 #include "units.h"
 #include "population.h"
 #include "pathfinder.h"
@@ -48,6 +50,7 @@ int main(int argc, char* argv[])
     initMapStats();
     initNations();
     initSim();
+    initScreen();
 
     // // TEMP
     // int x = 0;
@@ -162,80 +165,18 @@ position initSettlementPosition(int8_t nation_index)
 
 void draw(void) // TODO remove and make frame buffer using OpenGL instead
 {
-    if (ticks / TICKS_PER_DAY % 365 != 0)
-        return;
+    // Convert map to string
+    // char map_str[(MAP_SIZE*3)*MAP_SIZE+1];
 
-    system("cls");
+    // for (int i = 0; i < (MAP_SIZE*3)*MAP_SIZE; i+=3)
+    // {
+    //     map_str[i] = '0';
+    //     map_str[i+1] = ' ';
+    //     map_str[i+2] = ' ';
+    // }
 
-    // Print header and stats above map view
-    // Shitty code that doesn't take MAP_SIZE into account.  who cares, it's a temporary function
-    printf("----------------------------YEAR: %i---------\n", ticks / TICKS_PER_DAY / 365);
-    printf("SEED: %i\n", seed);
-    printf("MINF: %i\n", nations[1].infrastructure);
-    printf("MPOP: %i\n", nations[1].population);
+    // map_str[(MAP_SIZE*3)*MAP_SIZE] = '\0';
 
-    for (int y = 0; y < MAP_SIZE; y++)
-    {
-        for (int x = 0; x < MAP_SIZE; x++)
-        {
-            unit* u = NULL;
-            for (int i = 0; i < NAT_AMOUNT; i++)
-            {
-                for (int j = 0; j < nations[i].units_amt; j++)
-                {
-                    if (comparePosition(nations[i].units[j]->position, newPosition(x, y)))
-                    {
-                        u = nations[i].units[j];
-                        break;
-                    }
-                }
-            }
-
-            if (u != NULL)
-            {
-                printf("\033[1;34m");
-                printf("W");
-                printf("\033[0;0m");
-            }
-            else if (map[y][x].ruling_nation == -1)
-            {
-                printf("%i", map[y][x].traversability);
-            }
-            else 
-            {
-                char nat_char = getNationName(map[y][x].ruling_nation)[0];
-                switch (nat_char) 
-                {
-                    case 'e':
-                        printf("\033[1;36m");
-                        break;
-
-                    case 'm':
-                        printf("\033[1;34m");
-                        break;
-
-                    case 'g':
-                        printf("\033[1;32m");
-                        break;
-
-                    case 'd':
-                        printf("\033[1;31m");
-                        break;
-                }
-
-                border* b = getBorderFromPosition(newPosition(x, y));
-                if (getSettlementFromPosition(newPosition(x, y)) != NULL)
-                    printf("%c", nat_char - 32);
-                else if (b != NULL)
-                    printf("%x", b->workers_count);
-                else
-                    printf("%i", map[y][x].traversability);
-                
-                printf("\033[0;0m");
-            }
-
-            printf("  ");
-        }
-        printf("\n");
-    }
+    // drawChars(map_str, 0, 0, MAP_SIZE*3, true);
+    drawScreen();
 }

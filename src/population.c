@@ -128,7 +128,7 @@ void calcMetToday(citizen* cit, settlement* stl)
     num_people_met = cit->disease.active ? num_people_met/2 : num_people_met;
 
     // Doesn't account for getting the same person twice... But I don't think I care.
-    // TODO maybe fix this later I don't fucking know
+    // TODO maybe fix this later I don't know
     for (int i = 0; i < num_people_met; i++)
     {
         citizen* rand_c = stl->citizens[randomInt(0, stl->local_population-1)];
@@ -139,7 +139,6 @@ void calcMetToday(citizen* cit, settlement* stl)
             continue;
         }
 
-        // FIXME NO GAYS
         if (cit->partner == NULL && rand_c->partner == NULL && rand_c->gender != cit->gender && cit->age > 14)
         {
             meetPartner(cit, rand_c, stl->local_morale, num_people_met);
@@ -284,7 +283,7 @@ void updateRelationship(citizen* cit, settlement* stl)
 
 void calcPregnancy(citizen* cit, settlement* stl)
 {
-    int calc_period = 1461*TICKS_PER_DAY; // DAYS
+    int calc_period = 1095*TICKS_PER_DAY; // DAYS
 
     if (cit->gender != FEMALE)
         return;
@@ -312,7 +311,8 @@ void calcPregnancy(citizen* cit, settlement* stl)
         int max_inf_sev = 150;
 
         if ((cit->health < min_health || partner->health < min_health) || 
-        (cit->disease.severity > max_inf_sev || partner->disease.severity > max_inf_sev))
+        ((cit->disease.active && cit->disease.severity > max_inf_sev) 
+        || (cit->disease.active && partner->disease.severity > max_inf_sev)))
             return;
 
         // Average stats between both partners
