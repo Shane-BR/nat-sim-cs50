@@ -27,7 +27,7 @@ void initScreen()
         }
         else 
         {
-            screen_layers[i][LAYERS-1] = '0';
+            screen_layers[i][LAYERS-1] = ' ';
         }
 
         updateFinalScreenAtIndex(i);
@@ -39,13 +39,14 @@ void initScreen()
 
 /**
  * Draws a string of characters on the screen.
- * Will override any current characters at that position.
+ * Will override any current characters at that position and layer.
  *
  * @param str        - A pointer to the string of characters to be drawn.
  * @param x          - The x-coordinate of the starting point of the string.
  * @param y          - The y-coordinate of the starting point of the string.
  * @param max_length - The maximum length of the string before it either overflows or is clipped off.  Setting this to less than or equal to 0 will have it equal the screen size. 
  * @param overflow   - A boolean value that specifies whether the text should be clipped if it extends beyond the bounds of the graphics context.
+ * @param layer      - The layer, from front to back, where the character are rendered.
  */
 void drawChars(char* str, int x, int y, int max_length, bool overflow, int layer)
 {
@@ -57,9 +58,8 @@ void drawChars(char* str, int x, int y, int max_length, bool overflow, int layer
         drawSingleChar(str[i], x, y, layer);
 
         // Increase position
-        int x_increase = (x + 1) % max_length;
-        int y_increase = (x + 1) / max_length;
-
+        int x_increased = (x + 1) % max_length;
+        int y_increase =  (x + 1) / max_length;
 
         // Handle overflow
         if (y_increase > 0)
@@ -74,7 +74,7 @@ void drawChars(char* str, int x, int y, int max_length, bool overflow, int layer
             }
         }
 
-        x = x_increase;
+        x = x_increased;
 
         // Check for max height being exceded
         if (y >= SCREEN_SIZE_Y)
@@ -103,8 +103,7 @@ const int getScreenSizeY()
 // Returns array position of X and Y.
 int getScreenPos(int x, int y)
 {
-    int newline_shifter = y > 0 ? 1: 0; // Maybe not the best approach but it works
-    return x + (y*SCREEN_SIZE_X) + newline_shifter; 
+    return x + (y*SCREEN_SIZE_X) + y; 
 }
 
 // Returns -1 if none are empty
@@ -130,6 +129,7 @@ void updateFinalScreenAtIndex(int element_index)
         if (screen_layers[element_index][i] != '\0')
         {
             screen_final[element_index] = screen_layers[element_index][i];
+            break;
         }
     }
 }

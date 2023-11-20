@@ -52,19 +52,24 @@ int main(int argc, char* argv[])
     initSim();
     initScreen();
 
-    // // TEMP
-    // int x = 0;
-    // int y = 0;
-    // printf("X: ");
-    // scanf_s("%i", &x);
+    // Add map to screen
+    int mltp = 3; // To account for two space gaps between the tiles
+    char map_s[(MAP_SIZE*mltp)*MAP_SIZE+1];
 
-    // printf("Y: ");
-    // scanf_s("%i", &y);
+    int i = 0;
+    for (int y = 0; y < MAP_SIZE; y++)
+    {
+        for (int x = 0; x < MAP_SIZE; x++)
+        {
+            map_s[i++] = (char)(map[y][x].traversability + 48);
+            map_s[i++] = ' ';
+            map_s[i++] = ' '; 
+        }
+    }
 
-    // printf("Ruling nation: %s\n", map[y][x].ruling_nation == -1 ? "None" : getNationName(map[y][x].ruling_nation));
-    // printf("Resources: %i\n", map[y][x].resources);
-    // printf("Traversability: %i\n", map[y][x].traversability);
-    // printf("Survivability: %i\n", map[y][x].survivability);
+    map_s[(MAP_SIZE*mltp)*MAP_SIZE] = '\0';
+
+    drawChars(map_s, 0, 0, (MAP_SIZE*mltp), true, 2);
 
     // Handle tick events
     while (true)
@@ -165,18 +170,5 @@ position initSettlementPosition(int8_t nation_index)
 
 void draw(void) // TODO remove and make frame buffer using OpenGL instead
 {
-    // Convert map to string
-    // char map_str[(MAP_SIZE*3)*MAP_SIZE+1];
-
-    // for (int i = 0; i < (MAP_SIZE*3)*MAP_SIZE; i+=3)
-    // {
-    //     map_str[i] = '0';
-    //     map_str[i+1] = ' ';
-    //     map_str[i+2] = ' ';
-    // }
-
-    // map_str[(MAP_SIZE*3)*MAP_SIZE] = '\0';
-
-    // drawChars(map_str, 0, 0, MAP_SIZE*3, true);
     drawScreen();
 }
