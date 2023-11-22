@@ -9,8 +9,16 @@
                 "-fansi-escape-codes",
                 "-g",
                 "${workspaceFolder}\\src\\*.c",
+                "C:\\Users\\Shane\\Documents\\CLibs\\glad\\src\\glad.c",
                 "-o",
-                "${workspaceFolder}\\Debug\\debug.exe"
+                "${workspaceFolder}\\Debug\\debug.exe",
+                "-IC:/Users/Shane/Documents/CLibs/GLFW/include",
+                "-IC:/Users/Shane/Documents/CLibs/cglm/include",
+                "-IC:/Users/Shane/Documents/CLibs/glad/include",
+                "-LC:/Users/Shane/Documents/CLibs/GLFW/lib-vc2022",
+                "-lopengl32",
+                "-lglfw3dll",
+                "-lgdi32"
             ],
             "options": {
                 "cwd": "C:/Program Files/LLVM/bin"
