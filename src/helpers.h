@@ -14,7 +14,7 @@ int randomInt(int min, int max);
 double randomDouble();
 int powerLawRandomInt(int min, int max, double tail_index);
 int strToInt(char* str);
-bool compareString(char* str1, char* str2); // Returns false if strings do not match
+bool compareString(const char* str1, const char* str2); // Returns false if strings do not match
 bool comparePosition(position pos1, position pos2);
 int distanceBetweenPositions(position pos1, position pos2);
 int8_t getNationIndex(char* nation_name);
@@ -27,5 +27,6 @@ void removeFromUnitArray(unit*** arr, int* size, unit* remove);
 int tileHash(position pos);
 double clamp(double val, double min, double max);
 double logistic(double x, double L, double k, double x0);
+void convertMat4(float m4[4][4], float dest[16]);
 
 #endif

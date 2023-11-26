@@ -1,7 +1,7 @@
 -I
-C:\Users\Shane\Documents\CLibs\GLFW\include
+lib\GLFW\include
 -I
-C:\Users\Shane\Documents\CLibs\cglm\include
+lib\cglm\include
 -I
-C:\Users\Shane\Documents\CLibs\glad\include
+lib\glad\include
 -lglfw3

@@ -53,7 +53,7 @@ citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2])
 }
 
 // Creates and adds a new node to the given dictonary.  Updates dict_size
-void addDictNode(dict_node** dict, int* dict_size, char* key, int value)
+void addDictNode(dict_node** dict, int* dict_size, const char* key, int value)
 {
     dict_node node;
     node.key = key;
@@ -79,7 +79,7 @@ void eraseDict(dict_node* dict, int* dict_size)
 }
 
 // Returns the index of a given key if found.  Returns -1 if no element with that key is found.
-int dictFind(dict_node* dict, int dict_size, char* key)
+int dictFind(dict_node* dict, int dict_size, const char* key)
 {
 
     if (dict == NULL || dict_size <= 0) return -1;

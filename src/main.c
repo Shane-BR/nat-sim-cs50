@@ -5,7 +5,7 @@
 #include "settlements.h"
 #include "borders.h"
 
-#include "screen.h"
+#include "window.h"
 
 #include "units.h"
 #include "population.h"
@@ -50,35 +50,19 @@ int main(int argc, char* argv[])
     initMapStats();
     initNations();
     initSim();
-    initScreen();
-
-    // Add map to screen
-    int mltp = 3; // To account for two space gaps between the tiles
-    char map_s[(MAP_SIZE*mltp)*MAP_SIZE+1];
-
-    int i = 0;
-    for (int y = 0; y < MAP_SIZE; y++)
-    {
-        for (int x = 0; x < MAP_SIZE; x++)
-        {
-            map_s[i++] = (char)(map[y][x].traversability + 48);
-            map_s[i++] = ' ';
-            map_s[i++] = ' '; 
-        }
-    }
-
-    map_s[(MAP_SIZE*mltp)*MAP_SIZE] = '\0';
-
-    drawChars(map_s, 0, 0, (MAP_SIZE*mltp), true, 2);
+    initWindow();
 
     // Handle tick events
-    while (true)
+    while (!shouldWindowClose())
     {
         runSim();
-        draw();
+        updateWindow();
         delay(TICK_DELAY);
         ticks++;
     }
+
+    terminateWindow();
+    return 0;
 }
 
 void initMapStats(void)
@@ -166,9 +150,4 @@ position initSettlementPosition(int8_t nation_index)
     }
 
     return newPosition(0, 0);
-}
-
-void draw(void) // TODO remove and make frame buffer using OpenGL instead
-{
-    drawScreen();
 }

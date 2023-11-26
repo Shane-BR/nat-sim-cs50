@@ -38,7 +38,7 @@ typedef struct
 
 typedef struct 
 {
-    char* key;
+    const char* key;
     int value;
 } dict_node;
 
@@ -173,9 +173,9 @@ typedef struct
 
 position newPosition(int x, int y);
 citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2]);
-void addDictNode(dict_node** dict, int* dict_size, char* key, int value);
+void addDictNode(dict_node** dict, int* dict_size, const char* key, int value);
 void eraseDict(dict_node* dict, int* dict_size);
-int dictFind(dict_node* dict, int dict_size, char* key);
+int dictFind(dict_node* dict, int dict_size, const char* key);
 void addLinkedListNode(list_node** head, void* data);
 void removeLinkedListNode(list_node** head, list_node* remove, bool free_pointer);
 void eraseLinkedList(list_node* head);

@@ -73,7 +73,7 @@ int strToInt(char* str)
     return is_neg ? val*-1 : val;
 }
 
-bool compareString(char* str1, char* str2)
+bool compareString(const char* str1, const char* str2)
 {
     if (str1 == NULL || str2 == NULL)
         return false;
@@ -206,4 +206,16 @@ double clamp(double val, double min, double max)
 double logistic(double x, double L, double k, double x0)
 {
     return L / (1 + exp(-k * (x - x0)));
+}
+
+// Used in graphics
+void convertMat4(float m4[4][4], float dest[16])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            dest[(i*4)+j] = m4[i][j];
+        }
+    }
 }
