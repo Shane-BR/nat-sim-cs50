@@ -14,12 +14,16 @@
 
 #define GLEW_STATIC
 
+#define START_RES_W 1024
+#define START_RES_H 768
+
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void errorCallback(int code, const char* error);
 GLFWwindow* window = NULL;
 
-int windowWidth = 1024;
-int windowHeight = 768;
+int windowWidth = START_RES_W;
+int windowHeight = START_RES_H;
 
 mat4 projection;
 
@@ -50,6 +54,8 @@ void initWindow(void)
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetErrorCallback(errorCallback);
     initSpriteRenderer();
+
+    glm_mat4_identity(projection);
     setProjectionMatrix();
 
 }
@@ -64,8 +70,8 @@ void updateWindow(void)
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    vec2 pos = {0.1f, 0.1f};
-    vec2 size = {1.0f, 1.0f};
+    vec2 pos = {200.0f, 200.0f};
+    vec2 size = {100.0f, 100.0f};
     vec3 color = {0, 0, 0};
     
     drawSprite("tile_0", pos, size, color);
@@ -81,7 +87,7 @@ void terminateWindow(void)
 
 void setProjectionMatrix(void)
 {
-    glm_ortho_default((float)windowWidth / windowHeight, projection);
+    glm_ortho(0.0f, windowWidth, windowHeight, 0.0f, -1.0f, 1.0f, projection);
 
     // Update shaders
     int shader_id = getShader("sprite");
@@ -93,8 +99,9 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     windowHeight = height;
     windowWidth = width;
-    setProjectionMatrix();
     glViewport(0, 0, windowWidth, windowHeight);
+
+    setProjectionMatrix();
 }   
 
 void errorCallback(int code, const char* error)
