@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
-#include "stdio.h"
+#include <stdio.h>
 
 #include "borders.h"
 #include "constants.h"

@@ -1,4 +1,8 @@
 -I
+includes\nat-sim
+-I
+includes
+-I
 includes\GLFW
 -I
 includes\cglm
