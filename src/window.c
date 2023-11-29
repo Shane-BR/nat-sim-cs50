@@ -70,8 +70,8 @@ void updateWindow(void)
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    vec2 pos = {200.0f, 200.0f};
-    vec2 size = {100.0f, 100.0f};
+    vec2 pos = {0.0f, 0.0f};
+    vec2 size = {1.0f, 1.0f};
     vec3 color = {0, 0, 0};
     
     drawSprite("tile_0", pos, size, color);
@@ -87,7 +87,8 @@ void terminateWindow(void)
 
 void setProjectionMatrix(void)
 {
-    glm_ortho(0.0f, windowWidth, windowHeight, 0.0f, -1.0f, 1.0f, projection);
+    //glm_ortho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f, projection);
+    glm_ortho_default((float)windowWidth / windowHeight, projection);
 
     // Update shaders
     int shader_id = getShader("sprite");

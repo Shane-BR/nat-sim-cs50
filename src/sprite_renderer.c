@@ -18,10 +18,10 @@ void initSpriteRenderer(void)
         // Position                         Tex Coords
         
         // positions
-        -1.0f, 1.0f, 0.0f,     0.0f, 1.0f,    // Top left
-        -1.0f, -1.0f, 0.0f,      0.0f, 0.0f,    // Bottom left
-        1.0f, 1.0f, 0.0f,    1.0f, 1.0f,   // Top right
-        1.0f, -1.0f, 0.0f,   1.0f, 0.0f    // Bottom right
+        -0.5f, 0.5f, 0.0f,     0.0f, 1.0f,    // Top left
+        -0.5f, -0.5f, 0.0f,      0.0f, 0.0f,    // Bottom left
+        0.5f, 0.5f, 0.0f,    1.0f, 1.0f,   // Top right
+        0.5f, -0.5f, 0.0f,   1.0f, 0.0f    // Bottom right
     };
  
     unsigned int indices[] = 
@@ -51,7 +51,7 @@ void initSpriteRenderer(void)
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);   
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     loadSpriteTextures();
 
