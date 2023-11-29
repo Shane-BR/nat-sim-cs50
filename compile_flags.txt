@@ -1,7 +1,7 @@
 -I
-lib\GLFW\include
+includes\GLFW
 -I
-lib\cglm\include
+includes\cglm
 -I
-lib\glad\include
+includes\glad
 -lglfw3
