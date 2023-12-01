@@ -3,7 +3,9 @@
 #include "sprite_renderer.h"
 #include "helpers.h"
 #include "shaders.h"
+#include "render.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cglm/cglm.h>
@@ -12,11 +14,8 @@
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 
-#define GLEW_STATIC
-
 #define START_RES_W 1024
 #define START_RES_H 768
-
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void errorCallback(int code, const char* error);
@@ -48,16 +47,16 @@ void initWindow(void)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         printf("Failed to initialize GLAD");
+        exit(4);
     }
 
     glViewport(0, 0, windowWidth, windowHeight);
+
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetErrorCallback(errorCallback);
-    initSpriteRenderer();
-
     glm_mat4_identity(projection);
+    initSpriteRenderer();
     setProjectionMatrix();
-
 }
 
 int shouldWindowClose(void)
@@ -67,14 +66,16 @@ int shouldWindowClose(void)
 
 void updateWindow(void)
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.2f, 0.5f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    vec2 pos = {0.0f, 0.0f};
-    vec2 size = {1.0f, 1.0f};
-    vec3 color = {0, 0, 0};
+    // vec2 pos = {0.0f, 0.0f};
+    // vec2 size = {1.0f, 1.0f};
+    // vec3 color = {0, 0, 0};
     
-    drawSprite("tile_0", pos, size, color);
+    // drawSprite("tile_0", pos, size, color);
+
+    render();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -87,8 +88,9 @@ void terminateWindow(void)
 
 void setProjectionMatrix(void)
 {
-    //glm_ortho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f, projection);
-    glm_ortho_default((float)windowWidth / windowHeight, projection);
+
+    glm_ortho(0.0f, windowWidth, windowHeight, 0.0f, -1.0f, 1.0f, projection);
+    //glm_ortho_default_rh_no((float)windowWidth / windowHeight, projection);
 
     // Update shaders
     int shader_id = getShader("sprite");

@@ -5,6 +5,7 @@
 #include "borders.h"
 #include "constants.h"
 #include "helpers.h"
+#include "map.h"
 #include "settlements.h"
 
 extern tile map[MAP_SIZE][MAP_SIZE];

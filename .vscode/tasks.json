@@ -18,9 +18,9 @@
                 "-I${workspaceFolder}/includes/cglm",
                 "-I${workspaceFolder}/includes/glad",
                 "-L${workspaceFolder}/lib/GLFW/lib-vc2022",
-                "-lopengl32",
                 "-lglfw3dll",
-                "-lgdi32"
+                "-lgdi32",
+                "-lopengl32"
             ],
             "options": {
                 "cwd": "C:/Program Files/LLVM/bin"

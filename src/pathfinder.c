@@ -1,5 +1,6 @@
 #include "pathfinder.h"
 #include "helpers.h"
+#include "map.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>

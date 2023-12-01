@@ -3,6 +3,7 @@
 #include "borders.h"
 #include "settlements.h"
 #include "helpers.h"
+#include "map.h"
 #include "pathfinder.h"
 #include "units.h"
 #include <stdint.h>

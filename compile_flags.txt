@@ -8,4 +8,3 @@ includes\GLFW
 includes\cglm
 -I
 includes\glad
--lglfw3

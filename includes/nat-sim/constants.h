@@ -5,7 +5,7 @@
 #define NAT_AMOUNT 4 // 4
 #define START_SPREAD 15 // Minimum distance apart settlements must be on startup.
 #define TICKS_PER_DAY 2
-#define TICK_DELAY 1 // in milliseconds, each tick is half a day (12hrs) in simulation time
+#define TICK_DELAY 50 // in milliseconds, each tick is half a day (12hrs) in simulation time
 
 // Radius must be odd number
 #define TOWN_BORDER_RADIUS 3

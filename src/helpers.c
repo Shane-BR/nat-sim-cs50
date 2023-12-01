@@ -124,6 +124,11 @@ char* getNationName(int8_t index)
     return nations[index].name;
 }
 
+nation* getNation(int8_t index)
+{
+    return &nations[index];
+}
+
 // Randomly returns true given the probability.
 bool runProbability(float percent_chance)
 {   
@@ -136,17 +141,6 @@ bool runProbability(float percent_chance)
     float rand_num = randomDouble()*100;
 
     return rand_num <= percent_chance;
-}
-
-bool inMapBounds(position pos)
-{
-    return pos.y >= 0 && pos.y <= MAP_SIZE-1 && pos.x >= 0 && pos.x <= MAP_SIZE-1;
-}
-
-// Returns NULL if out of bounds
-tile* getMapTile(position pos)
-{
-    return  inMapBounds(pos) ? &map[pos.y][pos.x] : NULL;
 }
 
 // Add unit to unit array

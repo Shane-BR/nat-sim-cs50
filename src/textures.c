@@ -14,7 +14,6 @@ dict_node textures[ARRAY_SIZE];
 unsigned int loadTexture(const char* path, const char* name)
 {
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(1);
     unsigned char* data = stbi_load(path, &width, &height, &nrChannels, STBI_rgb_alpha);
    
     if (!data)

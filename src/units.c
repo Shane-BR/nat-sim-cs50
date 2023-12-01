@@ -1,5 +1,6 @@
 #include "units.h"
 #include "helpers.h"
+#include "map.h"
 #include "pathfinder.h"
 #include "settlements.h"
 

@@ -4,9 +4,19 @@ out vec4 fragColor;
 in vec2 texCoords;
 
 uniform sampler2D spriteTexture;
-uniform vec3 color;
+uniform vec4 color;
 
 void main()
 {
-    fragColor = texture(spriteTexture, texCoords);
+    vec4 tex = texture(spriteTexture, texCoords);
+    float colorMix = color.a;
+
+    if (tex.a < 0.1)
+        discard;
+
+    // Exclude pure black from color mixing
+    if (tex.rgb == vec3(0, 0, 0))
+        colorMix = 0.0;
+
+    fragColor = mix(tex, vec4(color.rgb, 1.0), colorMix);
 }

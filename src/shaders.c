@@ -161,3 +161,8 @@ void setShaderVec3(unsigned int shader_id, const char* name, vec3 value)
 {
     glUniform3fv(glGetUniformLocation(shader_id, name), 1, value); 
 }
+
+void setShaderVec4(unsigned int shader_id, const char* name, vec4 value)
+{
+    glUniform4fv(glGetUniformLocation(shader_id, name), 1, value); 
+}

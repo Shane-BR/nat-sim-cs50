@@ -1,25 +1,19 @@
 #include "main.h"
 #include "helpers.h"
-#include "borders.h"
 #include "sim.h"
 #include "settlements.h"
+#include "map.h"
 #include "borders.h"
 
 #include "window.h"
 
 #include "units.h"
 #include "population.h"
-#include "pathfinder.h"
 
-#include <ctype.h>
-#include <math.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 int unsigned ticks = 0;
 int seed = 0;
-tile map[MAP_SIZE][MAP_SIZE]; // 2D array for easy lookup
 
 extern nation nations[NAT_AMOUNT];
 extern settlement settlements[MAP_SIZE*MAP_SIZE];
@@ -63,24 +57,6 @@ int main(int argc, char* argv[])
 
     terminateWindow();
     return 0;
-}
-
-void initMapStats(void)
-{
-    for (int y = 0; y < MAP_SIZE; y++)
-    {
-        for (int x = 0; x < MAP_SIZE; x++)
-        {
-            map[y][x].food_abundance = randomInt(0, 255);
-            map[y][x].material_abundance = randomInt(0, 255);
-            map[y][x].traversability = randomInt(0, 4);
-            map[y][x].survivability = randomInt(0, 255);
-            map[y][x].ruling_nation = -1;
-
-            // Set the tiles position stat
-            map[y][x].position = newPosition(x, y);
-        }
-    }
 }
 
 void initNations(void)
@@ -127,7 +103,7 @@ void initSim(void)
     addToUnitArray(&nations[1].units, &nations[1].units_amt, new);
 }
 
-// TODO A bit lazy, maybe try another algorithm  for final release
+// TODO A bit lazy, maybe try something else for final release
 position initSettlementPosition(int8_t nation_index)
 {
     char* name = getNationName(nation_index);

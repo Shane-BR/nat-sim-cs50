@@ -8,6 +8,7 @@
 #include "settlements.h"
 #include "nation_ai.h"
 #include "helpers.h"
+#include "map.h"
 #include "units.h"
 
 extern unsigned int ticks;

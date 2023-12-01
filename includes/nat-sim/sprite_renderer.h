@@ -4,5 +4,5 @@
 #include <cglm/types.h>
 
 void initSpriteRenderer(void);
-void drawSprite(const char* texture, vec2 position, vec2 size, vec3 color);
+void drawSprite(const char* texture, vec2 position, vec2 size, vec4 color, float rotate_degrees);
 #endif

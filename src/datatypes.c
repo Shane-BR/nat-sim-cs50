@@ -9,7 +9,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-extern tile map[MAP_SIZE][MAP_SIZE];
 extern settlement settlements[MAP_SIZE*MAP_SIZE]; // Simple hash table of settlements
 nation nations[NAT_AMOUNT];
 
