@@ -11,12 +11,16 @@
 #include "population.h"
 
 #include <stdio.h>
+#include <GLFW/glfw3.h>
 
 int unsigned ticks = 0;
 int seed = 0;
 
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+float timeElapsed = 0.0f;
+
 extern nation nations[NAT_AMOUNT];
-extern settlement settlements[MAP_SIZE*MAP_SIZE];
 
 int main(int argc, char* argv[])
 {   
@@ -49,10 +53,21 @@ int main(int argc, char* argv[])
     // Handle tick events
     while (!shouldWindowClose())
     {
-        runSim();
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame; 
+
+        timeElapsed += deltaTime;        
+        
+        if (timeElapsed >= (1.0f / TPS))
+        {
+            runSim();
+            timeElapsed -= (1.0f / TPS);
+            ticks++;
+        }
+
         updateWindow();
-        delay(TICK_DELAY);
-        ticks++;
+
     }
 
     terminateWindow();
@@ -126,4 +141,9 @@ position initSettlementPosition(int8_t nation_index)
     }
 
     return newPosition(0, 0);
+}
+
+float getDeltaTime()
+{
+    return deltaTime;
 }

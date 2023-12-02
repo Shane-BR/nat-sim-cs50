@@ -76,7 +76,7 @@ void updateWindow(void)
     // drawSprite("tile_0", pos, size, color);
 
     render();
-
+    
     glfwSwapBuffers(window);
     glfwPollEvents();
 }

@@ -11,7 +11,6 @@
 #include "map.h"
 #include "units.h"
 
-extern unsigned int ticks;
 extern tile map[MAP_SIZE][MAP_SIZE]; // 2D array for easy lookup
 extern nation nations[NAT_AMOUNT];
 extern settlement settlements[MAP_SIZE*MAP_SIZE];
