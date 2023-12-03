@@ -1,9 +1,9 @@
 #include "render.h"
 #include "constants.h"
-#include "helpers.h"
-#include "sprite_renderer.h"
 #include "map.h"
 #include "settlements.h"
+#include "cursor.h"
+#include <math.h>
 #include <stdint.h>
 
 
@@ -11,15 +11,16 @@ void renderMapTile(vec2 screenPos, vec4 color, tile* tile);
 void renderSettlement(vec2 screenPos, vec4 color, settlement* stl);
 void renderBorder(vec2 screenPos, vec4 color, tile* border_tile);
 void renderUnit(vec2 screenPos, vec4 color, unit* unit);
+void renderCursor();
 void getNationColor(uint8_t nation, vec4* dest, float mix);
 void setColor(vec4 color, vec4* dest);
-void convertToScreenPosition(position pos, vec2* dest);
 
 vec4 colorBlue  = {0.0f, 0.0f, 1.0f, 1.0f};
 vec4 colorRed   = {1.0f, 0.0f, 0.0f, 1.0f};
 vec4 colorGreen = {0.0f, 1.0f, 0.0f, 1.0f};
 vec4 colorCyan  = {0.0f, 0.4f, 0.4f, 1.0f};
 vec4 colorNone  = {0.0f, 0.0f, 0.0f, 0.0f};
+vec4 colorGray  = {0.5f, 0.5f, 0.5f, 1.0f};
 
 const vec2 mapOriginPos = {50.0f, 50.0f};
 
@@ -74,6 +75,8 @@ void render(void)
             renderUnit(tilePos, color, unit);
         }
     }
+
+    renderCursor();
 
 }
 
@@ -158,6 +161,26 @@ void renderUnit(vec2 screenPos, vec4 color, unit* unit)
     drawSprite(texture, screenPos, tileSize, color, 0);
 }
 
+void renderCursor()
+{
+    vec2 position;
+    vec4 color;
+
+    if (isCursorPressed())
+        setColor(colorGray, &color);
+    else
+        setColor(colorNone, &color);
+
+    if (isCursorFocused())
+    {
+        convertToScreenPosition(getCursorFocusPoint(), &position);
+        drawSprite("cursor_focus", position, tileSize, colorNone, 0);
+    }
+
+    convertToScreenPosition(getCursorPos(), &position);
+    drawSprite("cursor", position, tileSize, color, 0);
+}
+
 void getNationColor(uint8_t nation, vec4* dest, float mix)
 {
     switch (nation) 
@@ -198,4 +221,12 @@ void convertToScreenPosition(position pos, vec2* dest)
 {
     (*dest)[0] = mapOriginPos[0] + (stride*pos.x);
     (*dest)[1] = mapOriginPos[1] + (stride*pos.y);
+}
+
+position getMapPositionFromScreenPos(vec2 screenPos)
+{
+    position pos;
+    pos.x = round((screenPos[0] - mapOriginPos[0]) / stride);
+    pos.y = round((screenPos[1] - mapOriginPos[1]) / stride);
+    return pos;
 }

@@ -69,6 +69,8 @@ void loadSpriteTextures()
     loadTexture("..\\resources\\textures\\city.png", "city");
     loadTexture("..\\resources\\textures\\border_line.png", "border");
     loadTexture("..\\resources\\textures\\settler_horse.png", "settler");
+    loadTexture("..\\resources\\textures\\cursor.png", "cursor");
+    loadTexture("..\\resources\\textures\\cursor_focus.png", "cursor_focus");
 }
 
 void drawSprite(const char* texture, vec2 position, vec2 size, vec4 color, float rotate_degrees)

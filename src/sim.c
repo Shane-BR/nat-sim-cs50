@@ -18,7 +18,6 @@ extern settlement settlements[MAP_SIZE*MAP_SIZE];
 void calcSettlementStats(void);
 void runNationManagerAI(settlement* stl);
 
-
 void runSim(void)
 {
     calcSettlementStats();

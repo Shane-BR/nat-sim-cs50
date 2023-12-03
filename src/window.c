@@ -1,18 +1,16 @@
+#include <glad/glad.h> 
+#include <GLFW/glfw3.h>
+
 #include "window.h"
 #include "cglm/cam.h"
 #include "sprite_renderer.h"
-#include "helpers.h"
 #include "shaders.h"
 #include "render.h"
+#include "input.h"
 
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
 #include <cglm/types.h>
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h>
 
 #define START_RES_W 1024
 #define START_RES_H 768
@@ -52,7 +50,13 @@ void initWindow(void)
 
     glViewport(0, 0, windowWidth, windowHeight);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetKeyCallback(window, processInputCallback);
+    glfwSetCursorPosCallback(window, processMousePositionCallback);
+    glfwSetMouseButtonCallback(window, processMouseButtonCallback);
     glfwSetErrorCallback(errorCallback);
     glm_mat4_identity(projection);
     initSpriteRenderer();
@@ -76,7 +80,7 @@ void updateWindow(void)
     // drawSprite("tile_0", pos, size, color);
 
     render();
-    
+
     glfwSwapBuffers(window);
     glfwPollEvents();
 }

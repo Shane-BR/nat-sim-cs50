@@ -1,11 +1,13 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#define VERSION "1.0.0-alpha1"
+
 #define MAP_SIZE 16 // 16 km2
 #define NAT_AMOUNT 4 // 4
 #define START_SPREAD 15 // Minimum distance apart settlements must be on startup.
 #define TICKS_PER_DAY 2
-#define TPS 10 // Ticks per second, each tick is half a day (12hrs) in simulation time
+#define TPS 20 // Ticks per second, each tick is half a day (12hrs) in simulation time
 
 // Radius must be odd number
 #define TOWN_BORDER_RADIUS 3
