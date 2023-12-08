@@ -5,6 +5,8 @@ static position cursorPos = {0, 0};
 static position focusPoint = {0, 0};
 static bool focusedOnPos = false;
 static bool cursorPressed = false;
+static bool mouseInMapBounds = true;
+static bool cursorVisable = true;
 
 position getCursorPos(void)
 {
@@ -13,40 +15,33 @@ position getCursorPos(void)
 
 void setCursorPosition(position pos)
 {
-    if (inMapBounds(pos))
+    mouseInMapBounds = inMapBounds(pos);
+    if (mouseInMapBounds)
         cursorPos = pos;
 }
 
 void incrementCursorX(void)
 {
     position newPos = cursorPos; newPos.x++;
-
-    if (inMapBounds(newPos))
-        cursorPos = newPos;
+    setCursorPosition(newPos);
 }
 
 void incrementCursorY(void)
 {
     position newPos = cursorPos; newPos.y++;
-
-    if (inMapBounds(newPos))
-        cursorPos = newPos;
+    setCursorPosition(newPos);
 }
 
 void decrementCursorX(void)
 {
     position newPos = cursorPos; newPos.x--;
-
-    if (inMapBounds(newPos))
-        cursorPos = newPos;
+    setCursorPosition(newPos);
 }
 
 void decrementCursorY(void)
 {
     position newPos = cursorPos; newPos.y--;
-
-    if (inMapBounds(newPos))
-        cursorPos = newPos;
+    setCursorPosition(newPos);
 }
 
 position getFocusPoint(void)
@@ -56,7 +51,7 @@ position getFocusPoint(void)
 
 void setCursorFocusPoint(position pos)
 {
-    if (inMapBounds(pos))
+    if (mouseInMapBounds)
     {
         focusPoint = pos;
         focusedOnPos = true;

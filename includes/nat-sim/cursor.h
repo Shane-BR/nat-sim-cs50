@@ -17,6 +17,4 @@ void setCursorPressedState(bool pressed);
 bool isCursorVisable(void);
 void setCursorVisable(bool visable);
 position getCursorFocusPoint(void);
-void setCursorStayVisableWhenOutOfBounds(bool state);
-
 #endif

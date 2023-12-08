@@ -1,4 +1,5 @@
 #include "render_utils.h"
+#include "shaders.h"
 #include <math.h>
 
 extern vec2 mapOriginPos;
@@ -109,3 +110,9 @@ void constructTexturedQuad(vec2 quadPos, vec2 quadDimensions, vec2 texturePortio
     dest[22] = (texturePortionPos[0] + texturePortionDimensions[0]) / textureFullRes[0];
     dest[23] = (texturePortionPos[1] + texturePortionDimensions[1]) / textureFullRes[1];
 } 
+
+void setShaderProjectionMatrix(unsigned int shader, mat4 projection)
+{
+    useShader(shader);
+    setShaderMat4(shader, "projection", projection);
+}

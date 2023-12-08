@@ -19,4 +19,5 @@ float getTileStride();
 void convertToScreenPosition(position pos, vec2* dest);
 position getMapPositionFromScreenPos(vec2 screenPos);
 void constructTexturedQuad(vec2 screenPos, vec2 screenDimensions, vec2 texturePos, vec2 textureDimensions, vec2 textureFullRes, float dest[QUAD_FLOAT_AMT]);
+void setShaderProjectionMatrix(unsigned int shader, mat4 projection);
 #endif

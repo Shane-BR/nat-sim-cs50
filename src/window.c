@@ -8,6 +8,7 @@
 #include "render.h"
 #include "input.h"
 #include "text_renderer.h"
+#include "render_utils.h"
 
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
@@ -93,13 +94,9 @@ void setProjectionMatrix(void)
     //glm_ortho_default_rh_no((float)windowWidth / windowHeight, projection);
 
     // Update shaders
-    int shader_id = getShader(SPRITE_SHADER_NAME);
-    useShader(shader_id);
-    setShaderMat4(shader_id, "projection", projection);
+    setShaderProjectionMatrix(getShader(TEXT_SHADER_NAME), projection);
+    setShaderProjectionMatrix(getShader(SPRITE_SHADER_NAME), projection);
 
-    shader_id = getShader(TEXT_SHADER_NAME);
-    useShader(shader_id);
-    setShaderMat4(shader_id, "projection", projection);
 }
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)

@@ -115,7 +115,7 @@ void loadFontDescription(const char* path)
 
             else if (compareString(buffer, "yoffset"))
                 param = &characters[(int)curIndex].offsetY;
-            
+
             else 
             {
                 i = 0;
