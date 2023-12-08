@@ -15,7 +15,7 @@
 extern unsigned int ticks;
 extern tile map[MAP_SIZE][MAP_SIZE];
 
-citizen* people_met[30]; 
+static citizen* people_met[30]; 
 
 void calcMetToday(citizen* cit, settlement* stl);
 void meetPartner(citizen* cit, citizen* partner, int local_morale, int num_people_met);

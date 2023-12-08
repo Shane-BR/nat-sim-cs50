@@ -5,12 +5,12 @@
 #include <math.h>
 
 // Constants to base the infliction severity and disease infectivity off of (out of 0-255)
-const int LOW = 50;
-const int MID = 75;
-const int HIGH = 150;
-const int EXTREME = 200;
+static const int LOW = 50;
+static const int MID = 75;
+static const int HIGH = 150;
+static const int EXTREME = 200;
 
-const int DAMAGE_DIVISOR_MIN = 10, DAMAGE_DIVISOR_MAX = 28;
+static const int DAMAGE_DIVISOR_MIN = 10, DAMAGE_DIVISOR_MAX = 28;
 
 extern unsigned int ticks;
 

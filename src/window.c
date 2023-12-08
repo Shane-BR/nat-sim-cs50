@@ -7,6 +7,7 @@
 #include "shaders.h"
 #include "render.h"
 #include "input.h"
+#include "text_renderer.h"
 
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
@@ -60,6 +61,7 @@ void initWindow(void)
     glfwSetErrorCallback(errorCallback);
     glm_mat4_identity(projection);
     initSpriteRenderer();
+    loadFont();
     setProjectionMatrix();
 }
 
@@ -73,12 +75,6 @@ void updateWindow(void)
     glClearColor(0.2f, 0.5f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    // vec2 pos = {0.0f, 0.0f};
-    // vec2 size = {1.0f, 1.0f};
-    // vec3 color = {0, 0, 0};
-    
-    // drawSprite("tile_0", pos, size, color);
-
     render();
 
     glfwSwapBuffers(window);
@@ -97,7 +93,11 @@ void setProjectionMatrix(void)
     //glm_ortho_default_rh_no((float)windowWidth / windowHeight, projection);
 
     // Update shaders
-    int shader_id = getShader("sprite");
+    int shader_id = getShader(SPRITE_SHADER_NAME);
+    useShader(shader_id);
+    setShaderMat4(shader_id, "projection", projection);
+
+    shader_id = getShader(TEXT_SHADER_NAME);
     useShader(shader_id);
     setShaderMat4(shader_id, "projection", projection);
 }

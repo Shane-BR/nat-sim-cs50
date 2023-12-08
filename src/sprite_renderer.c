@@ -1,3 +1,4 @@
+#include "sprite_renderer.h"
 #include "shaders.h"
 #include "textures.h"
 
@@ -5,8 +6,8 @@
 #include <cglm/cglm.h>
 #include <cglm/mat4.h>
 
-unsigned int spriteVAO;
-unsigned int shader;
+static unsigned int spriteVAO;
+static unsigned int spriteShader;
 
 void loadSpriteTextures();
 
@@ -31,7 +32,7 @@ void initSpriteRenderer(void)
     };
 
     // Init shader
-    shader = newShader("..\\resources\\shaders\\sprite_v.glsl", "..\\resources\\shaders\\sprite_f.glsl", "sprite");
+    spriteShader = newShader(SPRITE_SHADER_VERTEX_PATH, SPRITE_SHADER_FRAG_PATH, SPRITE_SHADER_NAME);
 
     glGenVertexArrays(1, &spriteVAO);
     glBindVertexArray(spriteVAO);
@@ -83,10 +84,10 @@ void drawSprite(const char* texture, vec2 position, vec2 size, vec4 color, float
     glm_translate(model, position_vec3); 
     glm_rotate(model, glm_rad(rotate_degrees), rotation_axis);
     glm_scale(model, size_vec3);
-    useShader(shader);
+    useShader(spriteShader);
 
-    setShaderMat4(shader, "model", model);
-    setShaderVec4(shader, "color", color);
+    setShaderMat4(spriteShader, "model", model);
+    setShaderVec4(spriteShader, "color", color);
 
     glBindTexture(GL_TEXTURE_2D, getTexture(texture));
 

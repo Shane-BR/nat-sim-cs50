@@ -9,6 +9,7 @@
 
 #include "units.h"
 #include "population.h"
+#include "text_renderer.h"
 
 #include <stdio.h>
 #include <GLFW/glfw3.h>
@@ -17,8 +18,9 @@ int unsigned ticks = 0;
 int seed = 0;
 
 float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-float timeElapsed = 0.0f;
+
+static float lastFrame = 0.0f;
+static float timeElapsed = 0.0f;
 
 extern nation nations[NAT_AMOUNT];
 
@@ -49,7 +51,6 @@ int main(int argc, char* argv[])
     initNations();
     initSim();
     initWindow();
-
     // Handle tick events
     while (!shouldWindowClose())
     {
@@ -67,7 +68,6 @@ int main(int argc, char* argv[])
         }
 
         updateWindow();
-
     }
 
     terminateWindow();

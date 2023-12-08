@@ -9,7 +9,7 @@
 
 #define ARRAY_SIZE 512
 
-dict_node textures[ARRAY_SIZE];
+static dict_node textures[ARRAY_SIZE];
 
 unsigned int loadTexture(const char* path, const char* name)
 {

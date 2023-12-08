@@ -78,16 +78,20 @@ bool compareString(const char* str1, const char* str2)
     if (str1 == NULL || str2 == NULL)
         return false;
 
-    for (int i = 0; str1[i] != 0; i++)
+    int i = 0;
+    while (str1[i] != 0 && str2[i] != 0)
     {
-        if (str2[i] == 0)
-            return false;
-
         if (str1[i] != str2[i])
             return false;
+        i++;
     }
 
-    return true;
+    // If both strings have reached the end, they are equal
+    if (str1[i] == 0 && str2[i] == 0)
+        return true;
+
+    // If only one string has reached the end, they are not equal
+    return false;
 }
 
 bool comparePosition(position pos1, position pos2)

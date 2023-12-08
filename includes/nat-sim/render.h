@@ -6,7 +6,5 @@
 
 
 void render(void);
-position getMapPositionFromScreenPos(vec2 screenPos);
-void convertToScreenPosition(position pos, vec2* dest);
 
 #endif

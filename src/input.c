@@ -1,6 +1,6 @@
 #include "input.h"
 #include "cursor.h"
-#include "render.h"
+#include "render_utils.h"
 #include <cglm/types.h>
 
 // TODO refine in later release

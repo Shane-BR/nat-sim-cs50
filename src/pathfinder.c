@@ -42,7 +42,7 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
 
     bool found_goal = false;
 
-    // Dijkstra's algorithm
+    // A* algorithm
     while (open_list != NULL) 
     {
         cur = lowestCost(open_list, start, goal);
@@ -121,7 +121,7 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
     return head;
 }
 
-// Return the losest cost position in the open_list
+// Return the lowest cost position in the open_list
 path_node* lowestCost(list_node* list, position start, position goal)
 {
     list_node* cur = list;

@@ -1,10 +1,10 @@
 #include "map.h"
 #include "cursor.h"
 
-position cursorPos = {0, 0};
-position focusPoint = {0, 0};
-bool focusedOnPos = false;
-bool cursorPressed = false;
+static position cursorPos = {0, 0};
+static position focusPoint = {0, 0};
+static bool focusedOnPos = false;
+static bool cursorPressed = false;
 
 position getCursorPos(void)
 {

@@ -11,17 +11,14 @@
 
 #define ARRAY_SIZE 16
 
-dict_node shaders[ARRAY_SIZE];
+static dict_node shaders[ARRAY_SIZE];
 
 unsigned int newShader(const char* vertex_path, const char* frag_path, const char* name)
 {
     unsigned int id;
 
-    FILE* vertex_file;
-    FILE* frag_file;
-
-    vertex_file = fopen(vertex_path, "r");
-    frag_file = fopen(frag_path, "r");
+    FILE* vertex_file = fopen(vertex_path, "r");
+    FILE* frag_file = fopen(frag_path, "r");
 
     if (vertex_file == NULL)
         return 0;
@@ -32,7 +29,7 @@ unsigned int newShader(const char* vertex_path, const char* frag_path, const cha
     
 
     // Write strings
-    char vertex_code[512], frag_code[512];
+    char vertex_code[1024], frag_code[1024];
     int length = 0;
     char c;
     for (int i = 0; (c = fgetc(vertex_file)) != EOF; i++)
