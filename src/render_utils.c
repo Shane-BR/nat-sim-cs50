@@ -116,3 +116,14 @@ void setShaderProjectionMatrix(unsigned int shader, mat4 projection)
     useShader(shader);
     setShaderMat4(shader, "projection", projection);
 }
+
+void convertMat4(float m4[4][4], float dest[16])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            dest[(i*4)+j] = m4[i][j];
+        }
+    }
+}

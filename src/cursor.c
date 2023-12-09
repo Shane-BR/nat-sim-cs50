@@ -1,5 +1,6 @@
 #include "map.h"
 #include "cursor.h"
+#include "helpers.h"
 
 static position cursorPos = {0, 0};
 static position focusPoint = {0, 0};
@@ -51,15 +52,8 @@ position getFocusPoint(void)
 
 void setCursorFocusPoint(position pos)
 {
-    if (mouseInMapBounds)
-    {
-        focusPoint = pos;
-        focusedOnPos = true;
-    }
-    else 
-    {
-        focusedOnPos = false;
-    }
+    focusedOnPos = mouseInMapBounds;
+    focusPoint = pos;
 }
 
 bool isCursorFocused(void)

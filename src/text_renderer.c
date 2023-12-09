@@ -170,18 +170,21 @@ void renderText(const char* text, vec2 screenPos, vec4 color, float scale)
 {
     // Convert text to vertex data to push to the GPU
 
-    int len = strlen(text);
-    int vLen = len*QUAD_FLOAT_AMT;
-    float charQuads[vLen];
+    const int STR_LEN = strlen(text);
+    const int VERTICES_LEN = STR_LEN*QUAD_FLOAT_AMT;
+
+    float charQuads[VERTICES_LEN];
+    memset(charQuads, 0.0f, sizeof(charQuads));
+
     vec2 linePos = {0.0f, 0.0f};
 
-    if (len > CHARACTER_LIMIT)
+    if (STR_LEN > CHARACTER_LIMIT)
     {
         printf("Inputed text excedes the character limit of %i", CHARACTER_LIMIT);
         return;
     }
 
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < STR_LEN; i++)
     {
         char c = text[i];
         characterData charVals = characters[c];
@@ -216,14 +219,25 @@ void renderText(const char* text, vec2 screenPos, vec4 color, float scale)
     }
     // Update VBO
     glBindBuffer(GL_ARRAY_BUFFER, textVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * vLen, charQuads);
+
+    void* pBufferData = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    if(pBufferData == NULL)
+    {
+        printf("Unable to read buffer data");
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        return;
+    }
+    // This will do for now
+    memset(pBufferData, 0, sizeof(float)*CHARACTER_LIMIT*QUAD_FLOAT_AMT);
+    memcpy(pBufferData, charQuads, sizeof(charQuads));
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     useShader(textShader);
 
     glBindTexture(GL_TEXTURE_2D, getTexture(FONT_TEXTURE_NAME));
 
     glBindVertexArray(textVAO);
-    glDrawArrays(GL_TRIANGLES, 0, vLen);
+    glDrawArrays(GL_TRIANGLES, 0, VERTICES_LEN);
     glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }

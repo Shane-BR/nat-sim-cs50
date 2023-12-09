@@ -2,7 +2,7 @@
 
 #include "shaders.h"
 #include "datatypes.h"
-#include "helpers.h"
+#include "render_utils.h"
 
 #include <glad/glad.h>
 

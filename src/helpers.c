@@ -10,16 +10,6 @@
 extern nation nations[NAT_AMOUNT];
 extern tile map[MAP_SIZE][MAP_SIZE];
 
-void delay(int milliseconds)
-{
-    // Storing start time
-    clock_t start_time = clock();
- 
-    // looping till required time has passed
-    while (clock() < start_time + milliseconds)
-        ;
-}
-
 // Generates a random 32-bit integer from MIN to MAX (inclusive).
 int randomInt(int min, int max)
 {
@@ -204,16 +194,4 @@ double clamp(double val, double min, double max)
 double logistic(double x, double L, double k, double x0)
 {
     return L / (1 + exp(-k * (x - x0)));
-}
-
-// Used in graphics
-void convertMat4(float m4[4][4], float dest[16])
-{
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            dest[(i*4)+j] = m4[i][j];
-        }
-    }
 }

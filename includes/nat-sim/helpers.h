@@ -9,7 +9,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-void delay(int milliseconds);
 int randomInt(int min, int max);
 double randomDouble();
 int powerLawRandomInt(int min, int max, double tail_index);
@@ -26,6 +25,5 @@ void removeFromUnitArray(unit*** arr, int* size, unit* remove);
 int tileHash(position pos);
 double clamp(double val, double min, double max);
 double logistic(double x, double L, double k, double x0);
-void convertMat4(float m4[4][4], float dest[16]);
 
 #endif

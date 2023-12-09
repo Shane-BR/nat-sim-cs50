@@ -4,8 +4,12 @@
 #include "settlements.h"
 #include "cursor.h"
 #include "render_utils.h"
+#include "helpers.h"
+#include "sprite_renderer.h"
+#include "text_renderer.h"
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 
 
 void renderMapTile(vec2 screenPos, vec4 color, tile* tile);
@@ -13,6 +17,7 @@ void renderSettlement(vec2 screenPos, vec4 color, settlement* stl);
 void renderBorder(vec2 screenPos, vec4 color, tile* border_tile);
 void renderUnit(vec2 screenPos, vec4 color, unit* unit);
 void renderCursor();
+void renderFocusedTileText();
 
 vec2 mapOriginPos = {50.0f, 50.0f};
 
@@ -68,6 +73,9 @@ void render(void)
     }
 
     renderCursor();
+
+    if (isCursorFocused())
+        renderFocusedTileText();
 
 }
 
@@ -171,4 +179,27 @@ void renderCursor()
 
     convertToScreenPosition(getCursorPos(), &position);
     drawSprite("cursor", position, tileSize, color, 0);
+}
+
+void renderFocusedTileText()
+{
+    position pos = getCursorFocusPoint();
+    tile focus = *getMapTile(pos);
+    char tileInfo[128] = {'\0'};
+    sprintf(tileInfo, "    Tile Info\n"
+                      "Traverseability: %i/%i\n"
+                      "Survivability: %i/%i\n\n"
+                      "FOOD: %i/%i\n"
+                      "MATERIALS: %i/%i\n"
+                      "X: %i\n"
+                      "Y: %i", 
+                      focus.traversability, UINT8_MAX,
+                      focus.survivability, UINT8_MAX,
+                      focus.food_abundance, UINT8_MAX,
+                      focus.material_abundance, UINT8_MAX,
+                      pos.x,
+                      pos.y);
+    
+    vec2 v = {800, 90};
+    renderText(tileInfo, v, NULL, 1);
 }
