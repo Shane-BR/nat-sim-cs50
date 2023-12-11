@@ -11,7 +11,7 @@ void main()
     vec4 tex = texture(spriteTexture, texCoords);
     float colorMix = color.a;
 
-    if (tex.a < 0.1)
+    if (tex.a <= 0)
         discard;
 
     // Exclude pure black from color mixing

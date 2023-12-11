@@ -156,17 +156,25 @@ void initBuffers(void)
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*CHARACTER_LIMIT*QUAD_FLOAT_AMT, NULL, GL_DYNAMIC_DRAW);
 
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(2 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);   
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void renderText(const char* text, vec2 screenPos, vec4 color, float scale)
+// Use homemade escape character "^" to add color to the text that follows.
+// Use ";" to end escape sequence.
+// Format: ^"Red 0-255","Green 0-255","Blue 0-255","Alpha 0-255";
+// Failing to include one of the RGBA values will default it to zero.  
+// Use ^; to clear color for the following characters.
+void renderText(const char* text, vec2 screenPos)
 {
     // Convert text to vertex data to push to the GPU
 
@@ -184,6 +192,13 @@ void renderText(const char* text, vec2 screenPos, vec4 color, float scale)
         return;
     }
 
+    const int COLOR_CHANNELS = 4;
+    vec4 color; setColor(COLOR_NONE, &color);
+    int colorChannelIndex = 0;
+    bool readingEscapeData = false;
+    bool alphaEdited = false;
+    int mltp = 100;
+
     for (int i = 0; i < STR_LEN; i++)
     {
         char c = text[i];
@@ -191,7 +206,34 @@ void renderText(const char* text, vec2 screenPos, vec4 color, float scale)
         float xpos = (screenPos[0] + charVals.offsetX) + charVals.width * linePos[0];
         float ypos = (screenPos[1] + charVals.offsetY) + lineHeight * linePos[1];
 
-        if (c == '\n') 
+        if (readingEscapeData) 
+        {
+            if (c >= '0' && c <= '9' && mltp > 0)
+            {
+                // Needs to be 0-255.  Makes it easier to read.
+                color[colorChannelIndex] += (float)((c - 48) * mltp) / UINT8_MAX;
+                mltp = mltp / 10;
+            }
+            else if (c == ',' && colorChannelIndex < COLOR_CHANNELS)
+            {
+                mltp = 100;
+                colorChannelIndex++;
+            }
+            else if (c == ';') 
+            {
+
+                colorChannelIndex = 0;
+                readingEscapeData = false;
+            }
+            continue;
+        }
+        else if (c == '^')
+        {
+            readingEscapeData = true;
+            setColor(COLOR_NONE, &color); // Reset color data
+            continue;
+        }
+        else if (c == '\n') 
         {
             linePos[1]++;
             linePos[0] = 0;
@@ -207,7 +249,7 @@ void renderText(const char* text, vec2 screenPos, vec4 color, float scale)
             float textureDimensions[] = {charVals.texWidth, charVals.texHeight};
             float textureResFloat[] = {(float)textureRes[0], (float)textureRes[1]};
 
-            constructTexturedQuad(quadScreenPos, quadScreenDimensions, texturePos, textureDimensions, textureResFloat, quad);
+            constructTexturedQuad(quadScreenPos, quadScreenDimensions, texturePos, textureDimensions, textureResFloat, color, quad);
         
             for (int j = 0; j < QUAD_FLOAT_AMT; j++)
             {

@@ -1,6 +1,7 @@
 #include "constants.h"
 #include "helpers.h"
 #include "sprite_renderer.h"
+#include <stdint.h>
 
 tile map[MAP_SIZE][MAP_SIZE];
 
@@ -10,10 +11,10 @@ void initMapStats(void)
     {
         for (int x = 0; x < MAP_SIZE; x++)
         {
-            map[y][x].food_abundance = randomInt(0, 255);
-            map[y][x].material_abundance = randomInt(0, 255);
-            map[y][x].traversability = randomInt(1, 4);
-            map[y][x].survivability = randomInt(0, 255);
+            map[y][x].food_abundance = randomInt(0, UINT8_MAX);
+            map[y][x].material_abundance = randomInt(0, UINT8_MAX);
+            map[y][x].traversability = randomInt(1, MAX_TRAVERSABILITY);
+            map[y][x].survivability = randomInt(0, UINT8_MAX);
             map[y][x].ruling_nation = -1;
 
             // Set the tiles position stat

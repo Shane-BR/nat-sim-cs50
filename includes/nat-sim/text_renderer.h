@@ -12,6 +12,6 @@
 #define FONT_TEXTURE_NAME "font"
 
 void loadFont();
-void renderText(const char* text, vec2 position, vec4 color, float scale);
+void renderText(const char* text, vec2 position);
 
 #endif

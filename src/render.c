@@ -1,3 +1,4 @@
+#define _CRT_NONSTDC_NO_WARNINGS
 #include "render.h"
 #include "constants.h"
 #include "map.h"
@@ -17,11 +18,22 @@ void renderSettlement(vec2 screenPos, vec4 color, settlement* stl);
 void renderBorder(vec2 screenPos, vec4 color, tile* border_tile);
 void renderUnit(vec2 screenPos, vec4 color, unit* unit);
 void renderCursor();
+void renderDateAndTime();
 void renderFocusedTileText();
+void renderLogBox();
+
+extern int ticks;
 
 vec2 mapOriginPos = {50.0f, 50.0f};
 
 vec2 tileSize = {20.0f, 20.0f};
+
+static vec2 tileInfoPos = {700.0f, 90.0f};
+static vec2 stlInfoPos = {700.0f, 350.0f};
+static vec2 dateTimePos = {5.0f, 5.0f};
+
+static vec2 logBoxSize = {165.0f, 64.0f};
+static vec2 logBoxPos = {850.0f, 610.0f};
 
 void render(void)
 {
@@ -74,8 +86,13 @@ void render(void)
 
     renderCursor();
 
+    // Text
+    renderDateAndTime();
+
     if (isCursorFocused())
         renderFocusedTileText();
+
+    renderLogBox();
 
 }
 
@@ -181,25 +198,80 @@ void renderCursor()
     drawSprite("cursor", position, tileSize, color, 0);
 }
 
+void renderDateAndTime()
+{
+    int day = (ticks / TICKS_PER_DAY) % 365;
+    int year = (ticks / TICKS_PER_DAY) / 365;
+
+    char dateTime[64] = {'\0'};
+    sprintf(dateTime, "Nat-Sim          Day: %i     Year: %i", day, year);
+    renderText(dateTime, dateTimePos);
+}
+
 void renderFocusedTileText()
 {
     position pos = getCursorFocusPoint();
     tile focus = *getMapTile(pos);
-    char tileInfo[128] = {'\0'};
+    
+    char tileInfo[256] = {'\0'};
+
+    char* natName = strdup(getNationName(focus.ruling_nation));
+    
+    if (natName != NULL) 
+        natName[0] = natName[0] >= 'a' ? natName[0] - 32 : natName[0];
+
+    vec4 natColor; 
+    getNationColor(focus.ruling_nation, &natColor, 0.8f);
     sprintf(tileInfo, "    Tile Info\n"
                       "Traverseability: %i/%i\n"
                       "Survivability: %i/%i\n\n"
-                      "FOOD: %i/%i\n"
-                      "MATERIALS: %i/%i\n"
+                      "Food Abundance: %i/%i\n"
+                      "Material Abundance: %i/%i\n"
+                      "Ruling Nation: ^%i,%i,%i,%i;%s^;\n"
                       "X: %i\n"
                       "Y: %i", 
-                      focus.traversability, UINT8_MAX,
+                      focus.traversability, MAX_TRAVERSABILITY,
                       focus.survivability, UINT8_MAX,
                       focus.food_abundance, UINT8_MAX,
                       focus.material_abundance, UINT8_MAX,
+                      (int)(natColor[0]*UINT8_MAX), 
+                            (int)(natColor[1]*UINT8_MAX), 
+                            (int)(natColor[2]*UINT8_MAX), 
+                            (int)(natColor[3]*UINT8_MAX), 
+                      natName == NULL ? "None" : natName,
                       pos.x,
                       pos.y);
-    
-    vec2 v = {800, 90};
-    renderText(tileInfo, v, NULL, 1);
+
+    renderText(tileInfo, tileInfoPos); 
+    free(natName);
+
+    settlement* stl = getSettlementFromPosition(pos);
+    if (stl != NULL && stl->active)
+    {  
+        char stlInfo[256] = {'\0'};
+        sprintf(stlInfo, "    Settlement Statistics\n"
+                                "Settlement Level: %i\n"
+                                "Population: %i\n"
+                                "Food: %i\n"
+                                "Materials: %i\n"
+                                "Infrastructure: %i/%i\n"
+                                "Morale: %i/%i\n"
+                                "Cultivation Efficiency: %i/%i",
+                                stl->level,
+                                stl->local_population,
+                                (int)stl->food,
+                                (int)stl->materials,
+                                (int)stl->local_infrastructure, UINT8_MAX,
+                                stl->local_morale, UINT8_MAX,
+                                stl->cultivation_efficiency, UINT8_MAX);
+
+        renderText(stlInfo, stlInfoPos);
+
+    }
+}
+
+void renderLogBox()
+{
+    // Render the box
+    drawSprite("text_box", logBoxPos, logBoxSize, (float*)COLOR_NONE, 0);
 }

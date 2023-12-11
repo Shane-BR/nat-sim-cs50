@@ -112,7 +112,7 @@ void initSim(void)
 
     position start_pos = newPosition(8, 8);
 
-    addRandomCitizens(15, start_pos, &cits, &size);
+    addRandomCitizens(100, start_pos, &cits, &size);
 
     unit* new = newUnit(start_pos, 1, SETTLER, NULL, 1, cits, size);
     addToUnitArray(&nations[1].units, &nations[1].units_amt, new);
@@ -141,9 +141,4 @@ position initSettlementPosition(int8_t nation_index)
     }
 
     return newPosition(0, 0);
-}
-
-float getDeltaTime()
-{
-    return deltaTime;
 }

@@ -17,13 +17,16 @@ tile getBestSettlerTile(position origin, int unit_nat);
 
 extern tile map[MAP_SIZE][MAP_SIZE];
 
+static int foodForWeek = MEALS_PER_DAY*TICKS_PER_DAY*7;
+
+
 // Decision tree based system for managing food.
 // food_net = food netted this tick.  Negitive if demand outways supply.
 // food_net is also after food traded
-void manageFood(settlement* stl, int food_net)
+void manageFood(settlement* stl, int foodNet)
 {
     // if food intake not meeting demand and cannot reorginise workers
-    if (food_net < 0 && !organiseMoreFoodWorkers(stl, -food_net))
+    if (foodNet < 0 && !organiseMoreFoodWorkers(stl, -foodNet) && stl->food < foodForWeek)
     {
         // If nation has more than one settlement
             // Request food in next trade caravan
@@ -33,10 +36,10 @@ void manageFood(settlement* stl, int food_net)
             // Disband a settlement party to a better location
     }
 
-    // If too many workers gathering food (Over 15 intake than needed)
-    else if (food_net > 15) 
+    // If too many workers gathering food
+    else if (foodNet > 0) 
     {
-        organiseSurplusWorkersFromBorders(stl, food_net, FOOD);
+        organiseSurplusWorkersFromBorders(stl, foodNet, FOOD);
     }
 }
 
@@ -119,10 +122,11 @@ void manageSettlementWorkers(settlement* stl)
     // Find all NONE citizens
     for (int i = 0; i < stl->local_population; i++)
     {
-        if (stl->citizens[i]->citizen_class == NONE && stl->citizens[i]->age >= MIN_WORKING_AGE)
+        citizen* cit = stl->citizens[i];
+        if (cit->citizen_class == NONE && cit->age >= MIN_WORKING_AGE && cit->disease.severity < DEBILITATING_DISEASE_SEVERITY)
         {
             // Convert to CRAFTSMEN
-            stl->citizens[i]->citizen_class = CRAFTSMAN;
+            cit->citizen_class = CRAFTSMAN;
         }
     }
 }
@@ -196,6 +200,10 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
             if (cit->age < MIN_WORKING_AGE || cit->age >= MAX_WORKING_AGE)
                 continue;
 
+            // If too sick
+            if (cit->disease.severity > DEBILITATING_DISEASE_SEVERITY)
+                continue;
+
             bool already_assigned = false;
             for (int j = 0; j < border_tile->workers_count; j++)
             {
@@ -245,7 +253,8 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
 void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t resource_type)
 {
     bool can_reduce_workers = true; // False when removing any more workers will result in a resource deficit.
-    while (surplus > 0 && can_reduce_workers)
+    // We can still reorginise workers if total food is greater than a weeks worth
+    while (surplus > 0 && (can_reduce_workers || stl->food > foodForWeek))
     {
         // Get worst border with workers
         border* worst = worstProducingBorder(stl, resource_type);

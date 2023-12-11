@@ -10,7 +10,7 @@ static const int MID = 75;
 static const int HIGH = 150;
 static const int EXTREME = 200;
 
-static const int DAMAGE_DIVISOR_MIN = 10, DAMAGE_DIVISOR_MAX = 28;
+static const int DAMAGE_DIVISOR_MIN = 8, DAMAGE_DIVISOR_MAX = 24;
 
 extern unsigned int ticks;
 

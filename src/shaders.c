@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "shaders.h"
 #include "datatypes.h"
 #include "render_utils.h"
@@ -29,7 +27,8 @@ unsigned int newShader(const char* vertex_path, const char* frag_path, const cha
     
 
     // Write strings
-    char vertex_code[1024], frag_code[1024];
+    const int BUF_SIZE = 1024;
+    char vertex_code[BUF_SIZE], frag_code[BUF_SIZE];
     int length = 0;
     char c;
     for (int i = 0; (c = fgetc(vertex_file)) != EOF; i++)
@@ -55,7 +54,7 @@ unsigned int newShader(const char* vertex_path, const char* frag_path, const cha
 
     unsigned int vertex, fragment;
     int success;
-    char info_log[512];
+    char info_log[BUF_SIZE];
 
     // Vertex Shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -66,7 +65,7 @@ unsigned int newShader(const char* vertex_path, const char* frag_path, const cha
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        glGetShaderInfoLog(vertex, 512, NULL, info_log);
+        glGetShaderInfoLog(vertex, BUF_SIZE, NULL, info_log);
         printf("Vertex Shader: %s\n\n", info_log);
     }
 
@@ -79,7 +78,7 @@ unsigned int newShader(const char* vertex_path, const char* frag_path, const cha
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        glGetShaderInfoLog(fragment, 512, NULL, info_log);
+        glGetShaderInfoLog(fragment, BUF_SIZE, NULL, info_log);
         printf("Fragment Shader: %s\n\n", info_log);
     }
 
@@ -92,7 +91,7 @@ unsigned int newShader(const char* vertex_path, const char* frag_path, const cha
     glGetShaderiv(id, GL_LINK_STATUS, &success); 
     if(!success)
     {
-        glGetShaderInfoLog(id, 512, NULL, info_log);
+        glGetShaderInfoLog(id, BUF_SIZE, NULL, info_log);
         printf("Linking failed: %s\n\n", info_log);
     }
 

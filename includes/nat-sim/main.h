@@ -6,4 +6,3 @@
 void initNations(void);
 void initSim(void);
 position initSettlementPosition(int8_t nation_index); // Use for initialization only
-float getDeltaTime();

@@ -51,7 +51,7 @@ settlement initSettlement(position pos, char* ruling_nation, citizen** citizens,
 
     if (citizens == NULL)
     {
-        int numOfCitizens = 10;
+        int numOfCitizens = 5;
 
         s.citizens = malloc(sizeof(citizen*) * numOfCitizens);
 
@@ -221,7 +221,7 @@ int getBorderArea(settlement stl)
 
 int getEstimateNetFoodProduced(settlement stl)
 {
-    int food_demand = stl.local_population*MEALS_PER_DAY; 
+    int food_demand = (stl.local_population*MEALS_PER_DAY) / TICKS_PER_DAY; 
     int food_produced = getGrossResourceProduced(stl, FOOD);
 
     return food_produced - food_demand;

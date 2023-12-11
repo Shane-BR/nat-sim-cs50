@@ -2,14 +2,17 @@
 out vec4 fragColor;
 
 in vec2 texCoords;
+in vec4 color;
 
 uniform sampler2D textTexture;
-uniform vec4 color;
 
 void main()
 {
     vec4 tex = texture(textTexture, texCoords);
     float colorMix = color.a;
 
-    fragColor = mix(tex, vec4(color.rgb, 1.0), colorMix);
+    if (tex.a <= 0)
+        discard;
+
+    fragColor = mix(tex, vec4(color.rgb, tex.a), colorMix);
 }

@@ -32,7 +32,7 @@ void updateSettlementBorders(settlement* stl, int prev_border_radius)
 
 // Please note: this will casue a segmentation fault if grid[] doesn't have enough space for all the tiles.
 // Sets borders for settlement.
-// TODO Handle contested borders and border.
+// TODO Handle contested borders.
 // FIXME Access violation when not assigning the max number of borders.
 // TODO Eventually redo this whole system.
 void setBorders (int radius, int prev_radius, settlement* stl)

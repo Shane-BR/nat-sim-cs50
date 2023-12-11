@@ -99,7 +99,6 @@ void calcSettlementStats(void)
         canChangeSettlementLevel(s);
 
         // Set stats at nation level 
-        // TODO REDO
         int n = s->nation;
         nations[n].population           += s->local_population;
         nations[n].morale               += s->local_morale;

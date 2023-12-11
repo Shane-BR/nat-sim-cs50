@@ -155,15 +155,15 @@ void calcMetToday(citizen* cit, settlement* stl)
 void healthCheck(citizen* cit, settlement* stl)
 {
     uint8_t overall_health = overallHealth(cit, stl->local_morale);
-    
+    float div = 1000;
+
     if (citInfected(cit)) // NOT cit->disease.active because this function also updates the incubation period // TODO Change to something more readable later
     {
         updateDisease(cit);
-
     }
     // Randommly insert diseases into the settlement
     // TODO redo this so it's A LOT less random.
-    else if (runProbability((float)(UINT8_MAX-overall_health) / UINT8_MAX / 1000))
+    else if (runProbability((float)(UINT8_MAX-overall_health) / UINT8_MAX / div))
     {
         infectCitizen(cit, randomDisease(overall_health));
         // if(cit->disease.type != NULL && stl->nation == 1)
@@ -283,12 +283,12 @@ void updateRelationship(citizen* cit, settlement* stl)
 
 void calcPregnancy(citizen* cit, settlement* stl)
 {
-    int calc_period = 1095*TICKS_PER_DAY; // DAYS
+    int calc_period = 500*TICKS_PER_DAY; // DAYS
 
     if (cit->gender != FEMALE)
         return;
 
-    if (cit->partner == NULL) // TODO handle affairs MAYYYBE
+    if (cit->partner == NULL)
         return;
 
     if (cit->children != NULL && cit->children[cit->child_num-1]->age < 1) // Already has a child younger than one
