@@ -13,12 +13,12 @@ static const vec4 COLOR_NONE   =  {0.0f, 0.0f, 0.0f, 0.0f};
 
 static const int QUAD_FLOAT_AMT = 48;
 
-void getNationColor(uint8_t nation, vec4* dest, float mix);
+void getNationColor(const uint8_t nation, vec4* dest, const float mix);
 void setColor(const vec4 color, vec4* dest);
 float getTileStride();
-void convertToScreenPosition(position pos, vec2* dest);
-position getMapPositionFromScreenPos(vec2 screenPos);
-void constructTexturedQuad(vec2 screenPos, vec2 screenDimensions, vec2 texturePos, vec2 textureDimensions, vec2 textureFullRes, vec4 color, float dest[QUAD_FLOAT_AMT]);
-void setShaderProjectionMatrix(unsigned int shader, mat4 projection);
-void convertMat4(float m4[4][4], float dest[16]);
+void convertToScreenPosition(const position pos, vec2* dest);
+position getMapPositionFromScreenPos(const vec2 screenPos);
+void constructTexturedQuad(const vec2 screenPos, const vec2 screenDimensions, const vec2 texturePos, const vec2 textureDimensions, const vec2 textureFullRes, const vec4 color, float dest[QUAD_FLOAT_AMT]);
+void setShaderProjectionMatrix(const unsigned int shader, const mat4 projection);
+void convertMat4(const float m4[4][4], float dest[16]);
 #endif

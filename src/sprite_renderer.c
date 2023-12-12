@@ -75,7 +75,7 @@ void loadSpriteTextures()
     loadTexture("..\\resources\\textures\\text_box.png", "text_box");
 }
 
-void drawSprite(const char* texture, vec2 position, vec2 size, vec4 color, float rotate_degrees)
+void drawSprite(const char* texture, const vec2 position, const vec2 size, const vec4 color, const float rotate_degrees)
 {
     mat4 model;             glm_mat4_identity(model);
     vec3 position_vec3  =   {position[0], position[1], 0.0f};

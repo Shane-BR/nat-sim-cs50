@@ -125,27 +125,27 @@ unsigned int getShader(const char* name)
     return shaders[dictFind(shaders, ARRAY_SIZE, name)].value;
 }
 
-void useShader(unsigned int ID)
+void useShader(const unsigned int ID)
 {
     glUseProgram(ID);
 }
 
-void setShaderBool(unsigned int shader_id, const char* name, bool value)
+void setShaderBool(const unsigned int shader_id, const char* name, const bool value)
 {         
     glUniform1i(glGetUniformLocation(shader_id, name), (int)value); 
 }
 
-void setShaderInt(unsigned int shader_id, const char* name, int value)
+void setShaderInt(const unsigned int shader_id, const char* name, const int value)
 { 
     glUniform1i(glGetUniformLocation(shader_id, name), value); 
 }
 
-void setShaderFloat(unsigned int shader_id, const char* name, float value)
+void setShaderFloat(const unsigned int shader_id, const char* name, const float value)
 { 
     glUniform1f(glGetUniformLocation(shader_id, name), value); 
 } 
 
-void setShaderMat4(unsigned int shader_id, const char* name, mat4 value)
+void setShaderMat4(const unsigned int shader_id, const char* name, const mat4 value)
 { 
     float val_converted[16]; convertMat4(value, val_converted);
     unsigned int loc = glGetUniformLocation(shader_id, name);
@@ -153,12 +153,12 @@ void setShaderMat4(unsigned int shader_id, const char* name, mat4 value)
     glUniformMatrix4fv(loc, 1, GL_FALSE, val_converted); 
 } 
 
-void setShaderVec3(unsigned int shader_id, const char* name, vec3 value)
+void setShaderVec3(const unsigned int shader_id, const char* name, const vec3 value)
 {
     glUniform3fv(glGetUniformLocation(shader_id, name), 1, value); 
 }
 
-void setShaderVec4(unsigned int shader_id, const char* name, vec4 value)
+void setShaderVec4(const unsigned int shader_id, const char* name, const vec4 value)
 {
     glUniform4fv(glGetUniformLocation(shader_id, name), 1, value); 
 }

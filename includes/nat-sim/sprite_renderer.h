@@ -9,5 +9,5 @@
 #define SPRITE_SHADER_NAME "sprite"
 
 void initSpriteRenderer(void);
-void drawSprite(const char* texture, vec2 position, vec2 size, vec4 color, float rotate_degrees);
+void drawSprite(const char* texture, const vec2 position, const vec2 size, const vec4 color, const float rotate_degrees);
 #endif

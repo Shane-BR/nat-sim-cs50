@@ -3,8 +3,8 @@
 #include "text_renderer.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <glad/glad.h>
+#include "constants.h"
 
 #include "datatypes.h"
 #include "textures.h"
@@ -26,8 +26,6 @@ typedef struct
     int offsetX;
     int offsetY;
 } characterData;
-
-static const int CHARACTER_LIMIT = 1000;
 
 static characterData characters[128];
 static int lineHeight = 0;
@@ -154,7 +152,7 @@ void initBuffers(void)
     glGenBuffers(1, &textVBO);
     glBindBuffer(GL_ARRAY_BUFFER, textVBO);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*CHARACTER_LIMIT*QUAD_FLOAT_AMT, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*UI_CHARACTER_LIMIT*QUAD_FLOAT_AMT, NULL, GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -172,9 +170,10 @@ void initBuffers(void)
 // Use homemade escape character "^" to add color to the text that follows.
 // Use ";" to end escape sequence.
 // Format: ^"Red 0-255","Green 0-255","Blue 0-255","Alpha 0-255";
-// Failing to include one of the RGBA values will default it to zero.  
+// Failing to include one of the RGBA values will default it to 0.  
 // Use ^; to clear color for the following characters.
-void renderText(const char* text, vec2 screenPos)
+// xConstraint sets the MAX x value before the text moves down in the y. set to 0 for none.
+void renderText(const char* text, const vec2 screenPos)
 {
     // Convert text to vertex data to push to the GPU
 
@@ -186,9 +185,9 @@ void renderText(const char* text, vec2 screenPos)
 
     vec2 linePos = {0.0f, 0.0f};
 
-    if (STR_LEN > CHARACTER_LIMIT)
+    if (STR_LEN > UI_CHARACTER_LIMIT)
     {
-        printf("Inputed text excedes the character limit of %i", CHARACTER_LIMIT);
+        printf("Inputed text excedes the character limit of %i", UI_CHARACTER_LIMIT);
         return;
     }
 
@@ -270,7 +269,7 @@ void renderText(const char* text, vec2 screenPos)
         return;
     }
     // This will do for now
-    memset(pBufferData, 0, sizeof(float)*CHARACTER_LIMIT*QUAD_FLOAT_AMT);
+    memset(pBufferData, 0, sizeof(float)*UI_CHARACTER_LIMIT*QUAD_FLOAT_AMT);
     memcpy(pBufferData, charQuads, sizeof(charQuads));
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

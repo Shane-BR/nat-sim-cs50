@@ -3,6 +3,8 @@
 
 #define VERSION "1.0.0-alpha1"
 
+#define UI_CHARACTER_LIMIT 1000
+
 #define MAP_SIZE 16 // 16 km2
 #define NAT_AMOUNT 4 // 4
 #define START_SPREAD 15 // Minimum distance apart settlements must be on startup.

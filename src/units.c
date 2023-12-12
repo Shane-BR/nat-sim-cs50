@@ -21,6 +21,7 @@ unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* pat
 
     new->path = NULL;
     updatePath(new, path);
+    new->current_traversability = 0;
 
     new->move_speed = move_speed;
     new->citizens = citizens;

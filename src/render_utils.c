@@ -2,10 +2,10 @@
 #include "shaders.h"
 #include <math.h>
 
-extern vec2 mapOriginPos;
-extern vec2 tileSize;
+extern const vec2 MAP_ORIGIN_POS;
+extern const vec2 TILE_SIZE;
 
-void getNationColor(uint8_t nation, vec4* dest, float mix)
+void getNationColor(const uint8_t nation, vec4* dest, const float mix)
 {
     switch (nation) 
     {
@@ -44,22 +44,22 @@ void setColor(const vec4 color, vec4* dest)
 
 float getTileStride()
 {
-    return tileSize[0] >= tileSize[1] ? tileSize[0]*2 : tileSize[1]*2;
+    return TILE_SIZE[0] >= TILE_SIZE[1] ? TILE_SIZE[0]*2 : TILE_SIZE[1]*2;
 }
 
-void convertToScreenPosition(position pos, vec2* dest)
+void convertToScreenPosition(const position pos, vec2* dest)
 {
     float stride = getTileStride();
-    (*dest)[0] = mapOriginPos[0] + (stride*pos.x);
-    (*dest)[1] = mapOriginPos[1] + (stride*pos.y);
+    (*dest)[0] = MAP_ORIGIN_POS[0] + (stride*pos.x);
+    (*dest)[1] = MAP_ORIGIN_POS[1] + (stride*pos.y);
 }
 
-position getMapPositionFromScreenPos(vec2 screenPos)
+position getMapPositionFromScreenPos(const vec2 screenPos)
 {
     position pos;
     float stride = getTileStride();
-    pos.x = round((screenPos[0] - mapOriginPos[0]) / stride);
-    pos.y = round((screenPos[1] - mapOriginPos[1]) / stride);
+    pos.x = round((screenPos[0] - MAP_ORIGIN_POS[0]) / stride);
+    pos.y = round((screenPos[1] - MAP_ORIGIN_POS[1]) / stride);
     return pos;
 }
 
@@ -73,7 +73,7 @@ position getMapPositionFromScreenPos(vec2 screenPos)
  * @param textureFullRes Full resolution of the texture.
  * @param dest Array where the quad data will be stored.
  */
-void constructTexturedQuad(vec2 quadPos, vec2 quadDimensions, vec2 texturePortionPos, vec2 texturePortionDimensions, vec2 textureFullRes, vec4 color, float dest[QUAD_FLOAT_AMT])
+void constructTexturedQuad(const vec2 quadPos, const vec2 quadDimensions, const vec2 texturePortionPos, const vec2 texturePortionDimensions, const vec2 textureFullRes, const vec4 color, float dest[QUAD_FLOAT_AMT])
 {
     
     // TODO Verrrry ugly fix later, for loop or some shit
@@ -139,13 +139,13 @@ void constructTexturedQuad(vec2 quadPos, vec2 quadDimensions, vec2 texturePortio
     dest[47] = color[3];
 } 
 
-void setShaderProjectionMatrix(unsigned int shader, mat4 projection)
+void setShaderProjectionMatrix(const unsigned int shader, const mat4 projection)
 {
     useShader(shader);
     setShaderMat4(shader, "projection", projection);
 }
 
-void convertMat4(float m4[4][4], float dest[16])
+void convertMat4(const float m4[4][4], float dest[16])
 {
     for (int i = 0; i < 4; i++)
     {

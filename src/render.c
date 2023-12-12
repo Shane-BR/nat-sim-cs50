@@ -6,6 +6,7 @@
 #include "cursor.h"
 #include "render_utils.h"
 #include "helpers.h"
+#include "sim_log.h"
 #include "sprite_renderer.h"
 #include "text_renderer.h"
 #include <math.h>
@@ -24,20 +25,21 @@ void renderLogBox();
 
 extern int ticks;
 
-vec2 mapOriginPos = {50.0f, 50.0f};
+const vec2 MAP_ORIGIN_POS = {50.0f, 50.0f};
 
-vec2 tileSize = {20.0f, 20.0f};
+const vec2 TILE_SIZE = {20.0f, 20.0f};
 
-static vec2 tileInfoPos = {700.0f, 90.0f};
-static vec2 stlInfoPos = {700.0f, 350.0f};
-static vec2 dateTimePos = {5.0f, 5.0f};
+const static vec2 TILE_INFO_POS = {700.0f, 90.0f};
+const static vec2 STL_INFO_POS = {700.0f, 350.0f};
+const static vec2 DATE_TIME_POS = {5.0f, 5.0f};
 
-static vec2 logBoxSize = {165.0f, 64.0f};
-static vec2 logBoxPos = {850.0f, 610.0f};
+const static vec2 LOG_BOX_SIZE = {165.0f, 72.0f};
+const static vec2 LOG_BOX_POS = {850.0f, 600.0f};
+const static vec2 LOG_MSG_POS = {700.0f, 540.0f};
 
 void render(void)
 {
-    vec2 tilePos = {mapOriginPos[0], mapOriginPos[1]}; 
+    vec2 tilePos = {MAP_ORIGIN_POS[0], MAP_ORIGIN_POS[1]}; 
     vec4 color;   
     for (int y = 0; y < MAP_SIZE; y++)
     { 
@@ -65,7 +67,7 @@ void render(void)
             tilePos[0] += getTileStride();
         }
         tilePos[1] += getTileStride();
-        tilePos[0] = mapOriginPos[0];
+        tilePos[0] = MAP_ORIGIN_POS[0];
     }
 
     // Render units
@@ -109,7 +111,7 @@ void renderMapTile(vec2 screenPos, vec4 color, tile* tile)
     char texture[7] = "tile_0"; // Leave me alone
     texture[5] = (tile->traversability-1)+48;
 
-    drawSprite(texture, screenPos, tileSize, color, 
+    drawSprite(texture, screenPos, TILE_SIZE, color, 
             possible_rotations[(tile->position.x + tile->position.y) % 4]
         );
 
@@ -118,7 +120,7 @@ void renderMapTile(vec2 screenPos, vec4 color, tile* tile)
 void renderSettlement(vec2 screenPos, vec4 color, settlement* stl)
 {
     char* texture = stl->level == CITY ? "city" : "town";
-    drawSprite(texture, screenPos, tileSize, color, 0);
+    drawSprite(texture, screenPos, TILE_SIZE, color, 0);
 }
 
 void renderBorder(float* screenPos, vec4 color, tile* border_tile)
@@ -152,7 +154,7 @@ void renderBorder(float* screenPos, vec4 color, tile* border_tile)
 
         if (nt == NULL || nt->ruling_nation != border_tile->ruling_nation)
         {
-            drawSprite("border", screenPos, tileSize, color, orderedRotations[i]);
+            drawSprite("border", screenPos, TILE_SIZE, color, orderedRotations[i]);
         }
     }
 }
@@ -175,7 +177,7 @@ void renderUnit(vec2 screenPos, vec4 color, unit* unit)
             break;
     }
 
-    drawSprite(texture, screenPos, tileSize, color, 0);
+    drawSprite(texture, screenPos, TILE_SIZE, color, 0);
 }
 
 void renderCursor()
@@ -191,11 +193,11 @@ void renderCursor()
     if (isCursorFocused())
     {
         convertToScreenPosition(getCursorFocusPoint(), &position);
-        drawSprite("cursor_focus", position, tileSize, (float*)COLOR_NONE, 0);
+        drawSprite("cursor_focus", position, TILE_SIZE, (float*)COLOR_NONE, 0);
     }
 
     convertToScreenPosition(getCursorPos(), &position);
-    drawSprite("cursor", position, tileSize, color, 0);
+    drawSprite("cursor", position, TILE_SIZE, color, 0);
 }
 
 void renderDateAndTime()
@@ -205,7 +207,7 @@ void renderDateAndTime()
 
     char dateTime[64] = {'\0'};
     sprintf(dateTime, "Nat-Sim          Day: %i     Year: %i", day, year);
-    renderText(dateTime, dateTimePos);
+    renderText(dateTime, DATE_TIME_POS);
 }
 
 void renderFocusedTileText()
@@ -242,7 +244,7 @@ void renderFocusedTileText()
                       pos.x,
                       pos.y);
 
-    renderText(tileInfo, tileInfoPos); 
+    renderText(tileInfo, TILE_INFO_POS); 
     free(natName);
 
     settlement* stl = getSettlementFromPosition(pos);
@@ -265,7 +267,7 @@ void renderFocusedTileText()
                                 stl->local_morale, UINT8_MAX,
                                 stl->cultivation_efficiency, UINT8_MAX);
 
-        renderText(stlInfo, stlInfoPos);
+        renderText(stlInfo, STL_INFO_POS);
 
     }
 }
@@ -273,5 +275,21 @@ void renderFocusedTileText()
 void renderLogBox()
 {
     // Render the box
-    drawSprite("text_box", logBoxPos, logBoxSize, (float*)COLOR_NONE, 0);
+    drawSprite("text_box", LOG_BOX_POS, LOG_BOX_SIZE, (float*)COLOR_NONE, 0);
+
+    // Loop through all logs and render them with gaps
+    int yOffset = 15;
+    vec2 curLogMsgPos = {LOG_MSG_POS[0], LOG_MSG_POS[1]};
+    for (int i = 0; i < MAX_SIM_LOGS; i++)
+    {
+        char* log = getLog(i);
+        
+
+        if (log == NULL)
+            continue;
+
+        renderText(log, curLogMsgPos);
+        curLogMsgPos[1] += yOffset;
+    }
+
 }

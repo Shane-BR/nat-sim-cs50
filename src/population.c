@@ -4,6 +4,7 @@
 #include "disease.h"
 #include "borders.h"
 #include "settlements.h"
+#include "sim_log.h"
 
 #include <limits.h>
 #include <stdbool.h>
@@ -114,6 +115,9 @@ void removeCitizen(citizen* cit, settlement* stl)
 
     // Remove from border if possible
     removeCitFromBorder(cit, stl);
+
+    // Log death
+    addLog("Citizen died");
 
 }
 
@@ -446,6 +450,8 @@ void updatePregnancy(citizen* cit, settlement* stl)
 // The mother should be the first element.
 void giveBirth(citizen* parents[2], settlement* stl, uint8_t mother_overall_health)
 {
+
+    addLog("Citizen born");
 
     // If the cit is pregnant then we can assume that the last child in the list is not yet born.
     citizen* child = parents[0]->unborn_child;
