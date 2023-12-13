@@ -1,5 +1,5 @@
-#ifndef CURSOR
-#define CURSOR
+#ifndef NS_CURSOR
+#define NS_CURSOR
 
 #include "datatypes.h"
 

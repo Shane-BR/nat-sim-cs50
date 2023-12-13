@@ -1,5 +1,5 @@
-#ifndef UNITS
-#define UNITS
+#ifndef NS_UNITS
+#define NS_UNITS
 #include "datatypes.h"
 
 

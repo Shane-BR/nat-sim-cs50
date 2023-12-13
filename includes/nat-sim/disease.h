@@ -1,5 +1,5 @@
-#ifndef DISEASE
-#define DISEASE
+#ifndef NS_DISEASE
+#define NS_DISEASE
 
 #include "datatypes.h"
 #include <stdint.h>

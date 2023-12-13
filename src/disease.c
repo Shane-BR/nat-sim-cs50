@@ -1,6 +1,7 @@
 #include "helpers.h"
 #include "disease.h"
 #include "constants.h"
+#include "population.h"
 #include <stdint.h>
 #include <math.h>
 
@@ -54,7 +55,7 @@ void updateDisease(citizen* cit)
         {
             cit->disease.days_to_recover--;
 
-            cit->health -= cit->disease.damage;
+            damageCitizen(cit, cit->disease.damage, DISEASE);
 
             if (cit->disease.days_to_recover <= 0)
             {

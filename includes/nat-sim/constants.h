@@ -1,5 +1,5 @@
-#ifndef CONSTANTS
-#define CONSTANTS
+#ifndef NS_CONSTANTS
+#define NS_CONSTANTS
 
 #define VERSION "1.0.0-alpha1"
 
@@ -9,7 +9,7 @@
 #define NAT_AMOUNT 4 // 4
 #define START_SPREAD 15 // Minimum distance apart settlements must be on startup.
 #define TICKS_PER_DAY 2
-#define TPS 60 // Ticks per second, each tick is half a day (12hrs) in simulation time
+#define TPS 500 // Ticks per second, each tick is half a day (12hrs) in simulation time
 
 #define MAX_TRAVERSABILITY 4
 

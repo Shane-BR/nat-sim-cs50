@@ -21,16 +21,18 @@ position newPosition(int x, int y)
     return pos;
 }
 
-citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2])
+citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2], const position pos)
 {
     citizen* c = malloc(sizeof(citizen));
     c->age = age;
     c->gender = gender;
     c->health = UINT8_MAX;
+    c->last_damage_source = NATURAL;
     c->meals_eaten_day = 0;
     c->living_conditions = 127;
     c->pregnant = false;
     c->days_pregnant = 0;
+    c->position = pos;
 
     c->disease = noDisease();
 

@@ -1,5 +1,5 @@
-#ifndef HELPERS
-#define HELPERS
+#ifndef NS_HELPERS
+#define NS_HELPERS
 
 #include "datatypes.h"
 

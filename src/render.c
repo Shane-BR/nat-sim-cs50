@@ -33,8 +33,8 @@ const static vec2 TILE_INFO_POS = {700.0f, 90.0f};
 const static vec2 STL_INFO_POS = {700.0f, 350.0f};
 const static vec2 DATE_TIME_POS = {5.0f, 5.0f};
 
-const static vec2 LOG_BOX_SIZE = {165.0f, 72.0f};
-const static vec2 LOG_BOX_POS = {850.0f, 600.0f};
+const static vec2 LOG_BOX_SIZE = {230.0f, 72.0f};
+const static vec2 LOG_BOX_POS = {915.0f, 600.0f};
 const static vec2 LOG_MSG_POS = {700.0f, 540.0f};
 
 void render(void)

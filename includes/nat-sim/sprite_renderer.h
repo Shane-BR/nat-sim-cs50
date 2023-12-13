@@ -1,5 +1,5 @@
-#ifndef SPRITE_RENDERER
-#define SPRITE_RENDERER
+#ifndef NS_SPRITE_RENDERER
+#define NS_SPRITE_RENDERER
 
 #include <cglm/types.h>
 

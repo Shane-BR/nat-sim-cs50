@@ -1,5 +1,5 @@
-#ifndef MAP
-#define MAP
+#ifndef NS_MAP
+#define NS_MAP
 
 #include "datatypes.h"
 

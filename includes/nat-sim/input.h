@@ -1,5 +1,5 @@
-#ifndef INPUT
-#define INPUT
+#ifndef NS_INPUT
+#define NS_INPUT
 
 #include <GLFW/glfw3.h>
 

@@ -1,5 +1,5 @@
-#ifndef SHADER
-#define SHADER
+#ifndef NS_SHADER
+#define NS_SHADER
 
 #include <cglm/mat4.h>
 #include <cglm/types.h>

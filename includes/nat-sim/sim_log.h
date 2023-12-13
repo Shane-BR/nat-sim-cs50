@@ -1,5 +1,5 @@
-#ifndef SIM_LOG
-#define SIM_LOG
+#ifndef NS_SIM_LOG
+#define NS_SIM_LOG
 
 #define MAX_SIM_LOGS 8
 

@@ -1,5 +1,5 @@
-#ifndef NAT_AI
-#define NAT_AI
+#ifndef NS_NAT_AI
+#define NS_NAT_AI
 
 #include "datatypes.h"
 

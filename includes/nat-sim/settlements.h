@@ -1,5 +1,5 @@
-#ifndef STL
-#define STL
+#ifndef NS_STL
+#define NS_STL
 
 #include "datatypes.h"
 

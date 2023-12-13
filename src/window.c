@@ -14,8 +14,8 @@
 #include <cglm/mat4.h>
 #include <cglm/types.h>
 
-#define START_RES_W 1024
-#define START_RES_H 768
+#define START_RES_W 1280
+#define START_RES_H 720
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void errorCallback(int code, const char* error);

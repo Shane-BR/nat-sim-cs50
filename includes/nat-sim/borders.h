@@ -1,5 +1,5 @@
-#ifndef BORDERS
-#define BORDERS
+#ifndef NS_BORDERS
+#define NS_BORDERS
 
 #include "datatypes.h"
 #include <stdint.h>

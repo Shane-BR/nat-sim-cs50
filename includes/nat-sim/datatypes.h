@@ -1,5 +1,5 @@
-#ifndef DATATYPES
-#define DATATYPES
+#ifndef NS_DATATYPES
+#define NS_DATATYPES
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -53,12 +53,18 @@ typedef enum
     NONE, CRAFTSMAN, WARRIOR, GATHERER
 } CitClass;
 
+typedef enum
+{
+    NATURAL, DISEASE, STARVATION, INJURY, CHILDBIRTH, STILLBIRTH
+} CitDamageSource;
+
 typedef struct citizen
 {
     uint8_t age;
     position position;
 
     float health;
+    CitDamageSource last_damage_source;
     uint8_t meals_eaten_day; // How many meals eaten this day?
 
     disease disease;
@@ -125,7 +131,7 @@ typedef struct
     uint8_t nation;
     position position;
 
-    uint8_t level; // 0 = TOWN, 1 = CITY
+    uint8_t level; // 0 = TOWN, 1 = CITY // TODO replace with enum
 
     // A bool that indicates if the settlement is active.  Used for protection against listing non-existant settlements in the settlements hash table
     bool active;
@@ -172,7 +178,7 @@ typedef struct
 } nation;
 
 position newPosition(int x, int y);
-citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2]);
+citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2], position pos);
 void addDictNode(dict_node** dict, int* dict_size, const char* key, int value);
 void eraseDict(dict_node* dict, int* dict_size);
 int dictFind(dict_node* dict, int dict_size, const char* key);

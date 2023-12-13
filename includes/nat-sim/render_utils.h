@@ -1,5 +1,5 @@
-#ifndef RENDER_UTILS
-#define RENDER_UTILS
+#ifndef NS_RENDER_UTILS
+#define NS_RENDER_UTILS
 
 #include <cglm/types.h>
 #include "datatypes.h"

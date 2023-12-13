@@ -1,5 +1,5 @@
-#ifndef TEXT_RENDERER
-#define TEXT_RENDERER
+#ifndef NS_TEXT_RENDERER
+#define NS_TEXT_RENDERER
 
 #include <cglm/types.h>
 
