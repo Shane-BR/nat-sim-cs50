@@ -22,6 +22,7 @@ void renderCursor();
 void renderDateAndTime();
 void renderFocusedTileText();
 void renderLogBox();
+void renderBorderWorkerCount(const settlement stl);
 
 extern int ticks;
 
@@ -33,14 +34,15 @@ const static vec2 TILE_INFO_POS = {700.0f, 90.0f};
 const static vec2 STL_INFO_POS = {700.0f, 350.0f};
 const static vec2 DATE_TIME_POS = {5.0f, 5.0f};
 
-const static vec2 LOG_BOX_SIZE = {230.0f, 72.0f};
-const static vec2 LOG_BOX_POS = {915.0f, 600.0f};
+const static vec2 LOG_BOX_SIZE = {260.0f, 72.0f};
+const static vec2 LOG_BOX_POS = {935.0f, 600.0f};
 const static vec2 LOG_MSG_POS = {700.0f, 540.0f};
 
 void render(void)
 {
     vec2 tilePos = {MAP_ORIGIN_POS[0], MAP_ORIGIN_POS[1]}; 
     vec4 color;   
+    // TODO redo this with batch renderering and the like
     for (int y = 0; y < MAP_SIZE; y++)
     { 
         for (int x = 0; x < MAP_SIZE; x++)

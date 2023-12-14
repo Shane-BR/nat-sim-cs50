@@ -17,29 +17,32 @@ tile getBestSettlerTile(position origin, int unit_nat);
 
 extern tile map[MAP_SIZE][MAP_SIZE];
 
-static int foodForWeek = MEALS_PER_DAY*TICKS_PER_DAY*7;
-
-
 // Decision tree based system for managing food.
 // food_net = food netted this tick.  Negitive if demand outways supply.
 // food_net is also after food traded
-void manageFood(settlement* stl, int foodNet)
+void manageFood(settlement* stl, int food_net)
 {
+    int month_of_food = stl->local_population * 28;
+
     // if food intake not meeting demand and cannot reorginise workers
-    if (foodNet < 0 && !organiseMoreFoodWorkers(stl, -foodNet) && stl->food < foodForWeek)
+    if (food_net < 0 && stl->food < month_of_food)
     {
-        // If nation has more than one settlement
-            // Request food in next trade caravan
-        // Else if One of the other nations isn't at war with this nation
-            // Request to trade food for other goods
-        // Else
-            // Disband a settlement party to a better location
+        if (!organiseMoreFoodWorkers(stl, -food_net)) 
+        {
+        
+            // If nation has more than one settlement
+                // Request food in next trade caravan
+            // Else if One of the other nations isn't at war with this nation
+                // Request to trade food for other goods
+            // Else
+                // Disband a settlement party to a better location
+        }
     }
 
     // If too many workers gathering food
-    else if (foodNet > 0) 
+    else if (food_net > 1 && stl->food > month_of_food) 
     {
-        organiseSurplusWorkersFromBorders(stl, foodNet, FOOD);
+        organiseSurplusWorkersFromBorders(stl, food_net, FOOD);
     }
 }
 
@@ -49,7 +52,7 @@ void manageSettlerUnit(unit* settler)
     if (settler->unit_class != SETTLER)
         return;
 
-    // TODO This is a simplified version.
+    // FIXME This is a simplified version.
     // I need to get this done damn it.
 
     if (settler->path == NULL)
@@ -197,13 +200,6 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
             if (border_tile->workers_count >= MAX_BORDER_WORKERS)
                 return;
 
-            if (cit->age < MIN_WORKING_AGE || cit->age >= MAX_WORKING_AGE)
-                continue;
-
-            // If too sick
-            if (cit->disease.severity > DEBILITATING_DISEASE_SEVERITY)
-                continue;
-
             bool already_assigned = false;
             for (int j = 0; j < border_tile->workers_count; j++)
             {
@@ -214,31 +210,32 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
                 }
             }
 
-            if (already_assigned)
-                continue;
-
-            // prioritize NONE classes first
-            // NONE - CRAFTSMAN - MILITARY - GATHERER
-
-            // Add to worker array
-            if (cit->citizen_class == class_priority)
+            if (!already_assigned && 
+                cit->disease.severity < DEBILITATING_DISEASE_SEVERITY &&
+                (cit->age >= MIN_WORKING_AGE || cit->age <= MAX_WORKING_AGE))
             {
-                if (cit->citizen_class != GATHERER)
-                    cit->citizen_class = GATHERER;
-                else 
+
+                // prioritize NONE classes first
+                // NONE - CRAFTSMAN - MILITARY - GATHERER
+
+                // Add to worker array
+                if (cit->citizen_class == class_priority)
                 {
-                    // Move from old border tile to new
-                    removeCitFromBorder(cit, stl);
+                    if (cit->citizen_class != GATHERER)
+                        cit->citizen_class = GATHERER;
+                    else 
+                    {
+                        // Move from old border tile to new
+                        removeCitFromBorder(cit, stl);
+                    }
+
+                    border_tile->workers[border_tile->workers_count++] = cit;
+                    cit->position = border_tile->tile->position;
                 }
-
-                border_tile->workers[border_tile->workers_count++] = cit;
-                cit->position = border_tile->tile->position;
-
-                break;
             }
 
             // Lazy approach fuck you
-            if (i == stl->local_population && class_priority < max_class_priority)
+            if (i == stl->local_population-1 && class_priority < max_class_priority)
             {
                 class_priority++;
                 i = 0;
@@ -254,7 +251,7 @@ void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t res
 {
     bool can_reduce_workers = true; // False when removing any more workers will result in a resource deficit.
     // We can still reorginise workers if total food is greater than a weeks worth
-    while (surplus > 0 && (can_reduce_workers || stl->food > foodForWeek))
+    while (surplus > 0 && can_reduce_workers)
     {
         // Get worst border with workers
         border* worst = worstProducingBorder(stl, resource_type);

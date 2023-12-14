@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+// FIXME Magic Numbers (YUP)
+
 extern unsigned int ticks;
 extern tile map[MAP_SIZE][MAP_SIZE];
 
@@ -22,7 +24,7 @@ static citizen* people_met[30];
 void calcMetToday(citizen* cit, settlement* stl);
 void meetPartner(citizen* cit, citizen* partner, int local_morale, int num_people_met);
 void spreadDisease(citizen* carrier, citizen* suspect);
-bool ofConceptionAge(int age);
+bool ofConceptionAge(const int age);
 void passiveHeal(citizen* cit, uint8_t overall_health);
 void calcPregnancy(citizen* cit, settlement* stl);
 void calcBreakup(citizen* cit);
@@ -158,6 +160,10 @@ void healthCheck(citizen* cit, settlement* stl)
     uint8_t overall_health = overallHealth(cit, stl->local_morale);
     float div = 1000;
 
+    int chance_to_eat_if_hungry = stl->food > stl->local_population ? 100 :
+        (((float)stl->food / stl->local_population * UINT8_MAX) +
+        (float)cit->hunger / (float)(UINT_MAX*2)) * 100; // Ugly as hell but it does the job
+
     if (citInfected(cit)) // NOT cit->disease.active because this function also updates the incubation period // TODO Change to something more readable later
     {
         updateDisease(cit);
@@ -167,8 +173,6 @@ void healthCheck(citizen* cit, settlement* stl)
     else if (runProbability((float)(UINT8_MAX-overall_health) / UINT8_MAX / div))
     {
         infectCitizen(cit, randomDisease(overall_health));
-        // if(cit->disease.type != NULL && stl->nation == 1)
-        //     printf("RAND INFECT CIT AGED %i\n", cit->age);
     }
 
     // Check if dead
@@ -179,10 +183,13 @@ void healthCheck(citizen* cit, settlement* stl)
         return;
     }
 
-    // Eat
-    if (stl->food > 0)
+    // Increase hunger
+    cit->hunger = clamp(cit->hunger + HUNGER_INCREASE_RATE, 0, UINT8_MAX);
+
+    // Eat if hungry
+    if (stl->food > 1 && cit->hunger > FOOD_TO_HUNGER && runProbability(chance_to_eat_if_hungry))
     {
-        cit->meals_eaten_day++;
+        cit->hunger = clamp(cit->hunger -= FOOD_TO_HUNGER, 0, UINT8_MAX);
         stl->food--;
     }
 
@@ -195,13 +202,9 @@ void healthCheck(citizen* cit, settlement* stl)
         updatePregnancy(cit, stl);
 
     // Check starvation
-    if (ticks % TICKS_PER_DAY) 
+    if (cit->hunger >= UINT8_MAX) 
     {
-        if (cit->meals_eaten_day <= 0)
-        {
-            damageCitizen(cit, UINT8_MAX / STARVE_PERIOD, STARVATION);
-        }
-        cit->meals_eaten_day = 0;
+        damageCitizen(cit, UINT8_MAX / (STARVE_PERIOD / 2), STARVATION);
     }
 
     passiveHeal(cit, overall_health);
@@ -252,7 +255,7 @@ void passiveHeal(citizen* cit, uint8_t overall_health)
         overall_health > 50 &&
         !cit->disease.active &&
         cit->disease.immunity_period <= 0 &&
-        cit->meals_eaten_day >= MEALS_PER_DAY
+        cit->hunger < 50;
         ;
 
     int min_rand_div = 90;
@@ -533,7 +536,7 @@ uint8_t getAgeHealthCurve(uint8_t age)
     return age <= peak_age ? age * growth_rate + min : UINT8_MAX - (age - peak_age) * decline_rate;
 }
 
-bool ofConceptionAge(int age)
+bool ofConceptionAge(const int age)
 {
     return age >= MIN_CONCEPTION_AGE && age <= MAX_CONCEPTION_AGE;
 }
@@ -557,7 +560,8 @@ uint8_t overallHealth(citizen* cit, uint8_t stl_local_morale)
 
 void breakup(citizen* cit)
 {
-    if (cit->partner != NULL) {
+    if (cit->partner != NULL) 
+    {
         cit->partner->days_in_relationship = 0;
         cit->partner->partner = NULL; // What the actual fuck
     } 

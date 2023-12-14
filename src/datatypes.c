@@ -28,7 +28,7 @@ citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2], const posi
     c->gender = gender;
     c->health = UINT8_MAX;
     c->last_damage_source = NATURAL;
-    c->meals_eaten_day = 0;
+    c->hunger = 0.0f;
     c->living_conditions = 127;
     c->pregnant = false;
     c->days_pregnant = 0;

@@ -28,8 +28,9 @@
 #define MAX_CONCEPTION_AGE 55
 #define MIN_WORKING_AGE 14
 #define MAX_WORKING_AGE 70
-#define MEALS_PER_DAY 2
-#define STARVE_PERIOD 30 // How many days before DEATH by starvation
+#define STARVE_PERIOD 30 // How many days before DEATH by starvation one half is "pre-starve" and the other half is when the citizen starts taking damage
+#define HUNGER_INCREASE_RATE 255.0f / STARVE_PERIOD / 2.0f
+#define FOOD_TO_HUNGER HUNGER_INCREASE_RATE + HUNGER_INCREASE_RATE*(1.0f/8.0f)
 #define MAX_FOOD_PRODUCED_PER_WORKER 4 // Per tick
 #define MAX_MAT_PRODUCED_PER_WORKER 10 // Per tick
 #define DEBILITATING_DISEASE_SEVERITY 100

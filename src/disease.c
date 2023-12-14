@@ -78,7 +78,7 @@ void updateDisease(citizen* cit)
 // Use cit.disease.active for active disease only.
 bool citInfected(citizen* cit)
 {
-    return cit->disease.active || cit->disease.immunity_period > 0;
+    return cit->disease.active || cit->disease.incubation_period > 0;
 }
 
 disease noDisease()

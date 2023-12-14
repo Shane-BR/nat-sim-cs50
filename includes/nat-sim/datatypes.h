@@ -64,8 +64,8 @@ typedef struct citizen
     position position;
 
     float health;
+    float hunger;
     CitDamageSource last_damage_source;
-    uint8_t meals_eaten_day; // How many meals eaten this day?
 
     disease disease;
     int med_history_size;
