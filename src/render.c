@@ -10,6 +10,7 @@
 #include "sprite_renderer.h"
 #include "text_renderer.h"
 #include "sim_time.h"
+#include "borders.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -23,7 +24,7 @@ void renderCursor();
 void renderDateAndTime();
 void renderFocusedTileText();
 void renderLogBox();
-void renderBorderWorkerCount(const settlement stl);
+void renderBorderWorkerCount(const border b);
 
 extern int ticks;
 
@@ -47,6 +48,9 @@ void render(void)
     vec2 tilePos = {MAP_ORIGIN_POS[0], MAP_ORIGIN_POS[1]}; 
     vec4 color;   
     // TODO redo this with batch renderering and the like
+    // Possibly rather than getting everything EVERY frame and rendering that,
+    // use a system in which each "new thing" call updates a static array, "render queue".
+    // It would save a lot of CPU cycles.
     for (int y = 0; y < MAP_SIZE; y++)
     { 
         for (int x = 0; x < MAP_SIZE; x++)
@@ -58,16 +62,22 @@ void render(void)
 
             renderMapTile(tilePos, (float*)COLOR_NONE, tile);
 
+            if (tile->ruling_nation != -1)
+            {
+                renderBorder(tilePos, color, tile);
+
+                border* b;
+                if ((b = getBorderFromPosition(pos)) != NULL)
+                {
+                    renderBorderWorkerCount(*b);
+                }
+            }
+
             // Is there a settlement or unit there
             settlement* stl = getSettlementFromPosition(pos);
             if (stl != NULL && stl->active)
             {
                 renderSettlement(tilePos, color, stl);
-            }
-
-            if (tile->ruling_nation != -1)
-            {
-                renderBorder(tilePos, color, tile);
             }
 
             tilePos[0] += getTileStride();
@@ -304,5 +314,21 @@ void renderLogBox()
         renderText(log, curLogMsgPos);
         curLogMsgPos[1] += yOffset;
     }
+
+}
+
+void renderBorderWorkerCount(const border b)
+{
+    char num[3] = {'\0'};
+    const vec2 offset = {-3.0f, -8.0f};
+    vec2 pos; 
+
+    sprintf(num, "%i", b.workers_count);
+
+    convertToScreenPosition(b.tile->position, &pos);
+    pos[0] += offset[0];
+    pos[1] += offset[1];
+
+    renderText(num, pos);
 
 }

@@ -40,7 +40,7 @@ void manageFood(settlement* stl, int food_net)
     }
 
     // If too many workers gathering food
-    else if (food_net > 1 && stl->food > month_of_food) 
+    else if (food_net > 0 && stl->food > month_of_food) 
     {
         organiseSurplusWorkersFromBorders(stl, food_net, FOOD);
     }
@@ -210,28 +210,28 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
                 }
             }
 
+            bool added_cit = false;
             if (!already_assigned && 
                 cit->disease.severity < DEBILITATING_DISEASE_SEVERITY &&
-                (cit->age >= MIN_WORKING_AGE || cit->age <= MAX_WORKING_AGE))
+                (cit->age >= MIN_WORKING_AGE || cit->age <= MAX_WORKING_AGE) &&
+                cit->citizen_class == class_priority)
             {
 
                 // prioritize NONE classes first
                 // NONE - CRAFTSMAN - MILITARY - GATHERER
 
                 // Add to worker array
-                if (cit->citizen_class == class_priority)
+                if (cit->citizen_class != GATHERER)
+                    cit->citizen_class = GATHERER;
+                else 
                 {
-                    if (cit->citizen_class != GATHERER)
-                        cit->citizen_class = GATHERER;
-                    else 
-                    {
-                        // Move from old border tile to new
-                        removeCitFromBorder(cit, stl);
-                    }
-
-                    border_tile->workers[border_tile->workers_count++] = cit;
-                    cit->position = border_tile->tile->position;
+                    // Move from old border tile to new
+                    removeCitFromBorder(cit, stl);
                 }
+
+                border_tile->workers[border_tile->workers_count++] = cit;
+                cit->position = border_tile->tile->position;
+                added_cit = true;
             }
 
             // Lazy approach fuck you
@@ -240,6 +240,9 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
                 class_priority++;
                 i = 0;
             }
+
+            if (added_cit)
+                break;
 
         }
     }
