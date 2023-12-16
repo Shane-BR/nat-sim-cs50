@@ -115,6 +115,9 @@ int8_t getNationIndex(char* nation_name)
 
 char* getNationName(int8_t index)
 {
+    if (index < 0 || index >= NAT_AMOUNT)
+        return NULL;
+
     return nations[index].name;
 }
 
@@ -168,7 +171,7 @@ void removeFromUnitArray(unit*** arr, int* size, unit* remove)
 
     if (!found) return;
 
-    *arr = realloc(*arr, sizeof(unit *) * (--*size));
+    *arr = realloc(*arr, sizeof(unit *) * (--(*size)));
 }
 
 // Returns a unique hash code for every possible position on the map

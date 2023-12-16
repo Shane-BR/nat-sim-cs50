@@ -28,8 +28,8 @@ void runSim(void)
         for (int j = 0; j < nations[i].units_amt; j++)
         {
             unit* unit = nations[i].units[j];
-            updateUnit(unit);
             manageSettlerUnit(unit);
+            updateUnit(unit);
         }
     }
 }

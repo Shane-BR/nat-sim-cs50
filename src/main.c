@@ -10,17 +10,15 @@
 #include "units.h"
 #include "population.h"
 #include "text_renderer.h"
+#include "sim_log.h"
+#include "sim_time.h"
 
 #include <stdio.h>
-#include <GLFW/glfw3.h>
 
 int unsigned ticks = 0;
 int seed = 0;
 
-float deltaTime = 0.0f;
-
-static float lastFrame = 0.0f;
-static float timeElapsed = 0.0f;
+static float tick_timer = 0.0f;
 
 extern nation nations[NAT_AMOUNT];
 
@@ -47,29 +45,27 @@ int main(int argc, char* argv[])
 
     srand(seed);
 
+    initWindow();
     initMapStats();
     initNations();
     initSim();
-    initWindow();
+    
     // Handle tick events
     while (!shouldWindowClose())
     {
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame; 
 
-        timeElapsed += deltaTime;        
+        tick_timer += calcDeltaTime();        
         
-        if (timeElapsed >= (1.0f / TPS))
+        if (tick_timer >= (1.0f / TPS))
         {
             runSim();
-            timeElapsed -= (1.0f / TPS);
+            tick_timer -= (1.0f / TPS);
             ticks++;
         }
 
         updateWindow();
     }
-
+    printToLogsFile();
     terminateWindow();
     return 0;
 }
@@ -107,12 +103,13 @@ void initSim(void)
     //}
 
     unsigned int size = 0;
-    citizen** cits = malloc(sizeof(citizen*)*size);
+    unsigned int amount_cits = 15;
+    citizen** cits = malloc(sizeof(citizen*)*amount_cits);
     if (cits == NULL) exit(1);
 
     position start_pos = newPosition(8, 8);
 
-    addRandomCitizens(15, start_pos, &cits, &size);
+    addRandomCitizens(amount_cits, start_pos, &cits, &size, &amount_cits);
 
     unit* new = newUnit(start_pos, 1, SETTLER, NULL, 1, cits, size);
     addToUnitArray(&nations[1].units, &nations[1].units_amt, new);

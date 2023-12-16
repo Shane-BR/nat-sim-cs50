@@ -53,16 +53,19 @@ settlement initSettlement(position pos, char* ruling_nation, citizen** citizens,
     {
         int numOfCitizens = 5;
 
-        s.citizens = malloc(sizeof(citizen*) * numOfCitizens);
+        s.population_capacity = numOfCitizens*4;
+
+        s.citizens = malloc(sizeof(citizen*) * s.population_capacity);
 
         if (s.citizens == NULL) exit(1);
     
-        addRandomCitizens(numOfCitizens, s.position, &s.citizens, &s.local_population);
+        addRandomCitizens(numOfCitizens, s.position, &s.citizens, &s.local_population, &s.population_capacity);
     }
     else 
     {
         s.citizens = citizens;
         s.local_population = cit_size;
+        s.population_capacity = cit_size;
     }
 
     return s;

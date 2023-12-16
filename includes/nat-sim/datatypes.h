@@ -144,6 +144,7 @@ typedef struct
     list_node* death_list; // A linked list containing pointers to the dead population
 
     unsigned int local_population;
+    unsigned int population_capacity;
 
     double food;
     double materials;

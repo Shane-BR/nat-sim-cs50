@@ -9,6 +9,7 @@
 #include "sim_log.h"
 #include "sprite_renderer.h"
 #include "text_renderer.h"
+#include "sim_time.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -37,6 +38,9 @@ const static vec2 DATE_TIME_POS = {5.0f, 5.0f};
 const static vec2 LOG_BOX_SIZE = {260.0f, 72.0f};
 const static vec2 LOG_BOX_POS = {935.0f, 600.0f};
 const static vec2 LOG_MSG_POS = {700.0f, 540.0f};
+const static unsigned int MAX_MSG_DISPLAYED = 8;
+
+static const float TEXT_UPDATE_DELAY = 0.5f;
 
 void render(void)
 {
@@ -252,22 +256,30 @@ void renderFocusedTileText()
     settlement* stl = getSettlementFromPosition(pos);
     if (stl != NULL && stl->active)
     {  
-        char stlInfo[256] = {'\0'};
-        sprintf(stlInfo, "    Settlement Statistics\n"
-                                "Settlement Level: %i\n"
-                                "Population: %i\n"
-                                "Food: %i\n"
-                                "Materials: %i\n"
-                                "Infrastructure: %i/%i\n"
-                                "Morale: %i/%i\n"
-                                "Cultivation Efficiency: %i/%i",
-                                stl->level,
-                                stl->local_population,
-                                (int)stl->food,
-                                (int)stl->materials,
-                                (int)stl->local_infrastructure, UINT8_MAX,
-                                stl->local_morale, UINT8_MAX,
-                                stl->cultivation_efficiency, UINT8_MAX);
+        static float delay = 0.0f;
+        static char stlInfo[256] = {'\0'};
+
+        // Update cur_food and cur_mat every DELAY_R
+        if ((delay -= getDeltaTime()) <= 0.0f)
+        {
+            sprintf(stlInfo, "    Settlement Statistics\n"
+                                    "Settlement Level: %i\n"
+                                    "Population: %i\n"
+                                    "Food: %i\n"
+                                    "Materials: %i\n"
+                                    "Infrastructure: %i/%i\n"
+                                    "Morale: %i/%i\n"
+                                    "Cultivation Efficiency: %i/%i",
+                                    stl->level,
+                                    stl->local_population,
+                                    (int)stl->food,
+                                    (int)stl->materials,
+                                    (int)stl->local_infrastructure, UINT8_MAX,
+                                    stl->local_morale, UINT8_MAX,
+                                    stl->cultivation_efficiency, UINT8_MAX);
+
+            delay = TEXT_UPDATE_DELAY;
+        }
 
         renderText(stlInfo, STL_INFO_POS);
 
@@ -282,11 +294,10 @@ void renderLogBox()
     // Loop through all logs and render them with gaps
     int yOffset = 15;
     vec2 curLogMsgPos = {LOG_MSG_POS[0], LOG_MSG_POS[1]};
-    for (int i = 0; i < MAX_SIM_LOGS; i++)
+    for (int i = 0; i < MAX_MSG_DISPLAYED; i++)
     {
         char* log = getLog(i);
         
-
         if (log == NULL)
             continue;
 

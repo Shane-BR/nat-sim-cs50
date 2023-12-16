@@ -37,7 +37,7 @@ void breakup(citizen* cit);
 void logCitizenDeath(citizen* cit, CitDamageSource cause);
 
 // Adds a bunch of random citizens between the ages of 18 and 50
-void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int* cur_size)
+void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int* cur_size, unsigned int* mem_block_size)
 {
     int minAge = 18;
     int maxAge = 50;
@@ -50,17 +50,18 @@ void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int*
         
         citizen* c = newCitizen(age, gender, NULL, init_pos);
 
-        addCitizen(c, arr, cur_size);
+        addCitizen(c, arr, cur_size, mem_block_size);
 
     }
 }
 
 // Add a citizen to current population
-void addCitizen(citizen* cit, citizen*** arr, unsigned int* size)
+void addCitizen(citizen* cit, citizen*** arr, unsigned int* size, unsigned int* mem_block_size)
 {
     citizen** tmp = *arr;
 
-    *arr = realloc(*arr, sizeof(citizen * ) * (++(*size)));
+    if (++(*size) > (*mem_block_size))
+        *arr = realloc(*arr, sizeof(citizen * ) * (*(mem_block_size)*=2));
         
     if (*arr == NULL)
     {
@@ -100,19 +101,8 @@ bool removeCitizen(citizen* cit, settlement* stl)
     }
 
     // Remove citizen
-    stl->citizens[stl->local_population-1] = NULL;
+    stl->citizens[(stl->local_population)-1] = NULL;
     stl->local_population--;
-
-    // Realloc memory for array
-    if(stl->local_population > 0)
-        stl->citizens = realloc(stl->citizens, sizeof(citizen * ) * stl->local_population); // This fucking cunt of an array is making me lose my fucking mind EDIT: nvm fixed it
-
-    if (stl->citizens == NULL)
-    {
-        printf("Failed to Re-allocate memory when removing a citizen");
-        stl->citizens = tmp;
-        return false;
-    }
 
     // Remove from border if possible
     removeCitFromBorder(cit, stl);
@@ -456,7 +446,7 @@ void giveBirth(citizen* parents[2], settlement* stl, uint8_t mother_overall_heal
     citizen* child = parents[0]->unborn_child;
 
     // Add citizen to this settlements population
-    addCitizen(child, &stl->citizens, &stl->local_population);
+    addCitizen(child, &stl->citizens, &stl->local_population, &stl->population_capacity);
 
     parents[0]->unborn_child = NULL;
 

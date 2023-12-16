@@ -84,7 +84,11 @@ void followPath(unit* unit)
         {
             position next_pos = *(position*)(unit->path->data);
             unit->position = next_pos;
+            
+            list_node* last_path = unit->path;
             unit->path = unit->path->next;
+            free(last_path);
+
             unit->current_traversability = getMapTile(next_pos)->traversability;
 
             // Move citizens if any
@@ -98,6 +102,5 @@ void followPath(unit* unit)
     if (unit->path == NULL) 
     {
         settleOnPosition(unit);
-        eraseLinkedList(unit->path);
     }
 }
