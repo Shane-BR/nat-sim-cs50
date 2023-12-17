@@ -73,6 +73,7 @@ void loadSpriteTextures()
     loadTexture("..\\resources\\textures\\cursor.png", "cursor");
     loadTexture("..\\resources\\textures\\cursor_focus.png", "cursor_focus");
     loadTexture("..\\resources\\textures\\text_box.png", "text_box");
+    loadTexture("..\\resources\\textures\\button.png", "button");
 }
 
 void drawSprite(const char* texture, const vec2 position, const vec2 size, const vec4 color, const float rotate_degrees)

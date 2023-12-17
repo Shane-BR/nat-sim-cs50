@@ -64,6 +64,10 @@ void initWindow(void)
     initSpriteRenderer();
     loadFont();
     setProjectionMatrix();
+    initRenderer();
+
+    // Init key binds
+    initBindings();
 }
 
 int shouldWindowClose(void)

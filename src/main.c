@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 
-int unsigned ticks = 0;
 int seed = 0;
 
 static float tick_timer = 0.0f;
@@ -56,11 +55,12 @@ int main(int argc, char* argv[])
 
         tick_timer += calcDeltaTime();        
         
-        if (tick_timer >= (1.0f / TPS))
+        if (tick_timer >= (1.0f / getTPS()))
         {
             runSim();
-            tick_timer -= (1.0f / TPS);
-            ticks++;
+
+            tick_timer -= (1.0f / getTPS());
+            incrementTicks();
         }
 
         updateWindow();

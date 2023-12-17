@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include "borders.h"
 #include "population.h"
+#include "sim_time.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -11,7 +12,7 @@
 
 extern tile map[MAP_SIZE][MAP_SIZE];
 extern nation nations[NAT_AMOUNT];
-extern unsigned int ticks;
+
 settlement settlements[MAP_SIZE*MAP_SIZE]; // Simple hash table of settlements
 
 int getGrossResourceProduced(settlement stl, int resource_type);
@@ -107,7 +108,7 @@ void runPopulationChecks(settlement* stl)
         citizen* cit = stl->citizens[i]; 
 
         // Age population
-        if (ticks % (365*TICKS_PER_DAY) == 0)
+        if (getTicks() % (365*TICKS_PER_DAY) == 0)
             cit->age++;
 
         // Update relationship stats and calc breakup

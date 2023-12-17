@@ -11,6 +11,8 @@
 #include "text_renderer.h"
 #include "sim_time.h"
 #include "borders.h"
+#include "sim_time.h"
+#include "buttons.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -26,8 +28,6 @@ void renderFocusedTileText();
 void renderLogBox();
 void renderBorderWorkerCount(const border b);
 
-extern int ticks;
-
 const vec2 MAP_ORIGIN_POS = {50.0f, 50.0f};
 
 const vec2 TILE_SIZE = {20.0f, 20.0f};
@@ -42,6 +42,14 @@ const static vec2 LOG_MSG_POS = {700.0f, 540.0f};
 const static unsigned int MAX_MSG_DISPLAYED = 8;
 
 static const float TEXT_UPDATE_DELAY = 0.5f;
+
+static const vec2 SPEED_BUTTON_POS = {1195.0f, 50.0f};
+
+void initRenderer()
+{
+    // Add speed adjust button
+    addButton("TPS", "button", SPEED_BUTTON_POS, TILE_SIZE, COLOR_NONE, updateTPS);
+}
 
 void render(void)
 {
@@ -111,6 +119,8 @@ void render(void)
         renderFocusedTileText();
 
     renderLogBox();
+
+    renderButtons();
 
 }
 
@@ -199,25 +209,20 @@ void renderUnit(vec2 screenPos, vec4 color, unit* unit)
 void renderCursor()
 {
     vec2 position;
-    vec4 color;
-
-    if (isCursorPressed())
-        setColor(COLOR_GRAY, &color);
-    else
-        setColor(COLOR_NONE, &color);
 
     if (isCursorFocused())
     {
         convertToScreenPosition(getCursorFocusPoint(), &position);
-        drawSprite("cursor_focus", position, TILE_SIZE, (float*)COLOR_NONE, 0);
+        drawSprite("cursor_focus", position, TILE_SIZE, COLOR_NONE, 0);
     }
 
     convertToScreenPosition(getCursorPos(), &position);
-    drawSprite("cursor", position, TILE_SIZE, color, 0);
+    drawSprite("cursor", position, TILE_SIZE, COLOR_NONE, 0);
 }
 
 void renderDateAndTime()
 {
+    unsigned int ticks = getTicks();
     int day = (ticks / TICKS_PER_DAY) % 365;
     int year = (ticks / TICKS_PER_DAY) / 365;
 

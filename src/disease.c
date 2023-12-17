@@ -2,6 +2,7 @@
 #include "disease.h"
 #include "constants.h"
 #include "population.h"
+#include "sim_time.h"
 #include <stdint.h>
 #include <math.h>
 
@@ -13,7 +14,6 @@ static const int EXTREME = 200;
 
 static const int DAMAGE_DIVISOR_MIN = 8, DAMAGE_DIVISOR_MAX = 24;
 
-extern unsigned int ticks;
 
 // Infect citizen if he does not already have immunity.
 void infectCitizen(citizen* cit, disease disease)
@@ -23,7 +23,7 @@ void infectCitizen(citizen* cit, disease disease)
     {
         // Infect
         cit->disease = disease;
-        addDictNode(&cit->medical_history, &cit->med_history_size, disease.type, ticks);
+        addDictNode(&cit->medical_history, &cit->med_history_size, disease.type, getTicks());
     }
 }
 
@@ -34,7 +34,7 @@ bool citizenImmune(dict_node* med_history, int med_history_size, disease disease
 
     if (i != -1)
     {
-        if ((ticks-med_history[i].value) >= tick_immunity_period)
+        if ((getTicks()-med_history[i].value) >= tick_immunity_period)
         {
             return false;
         }
@@ -49,7 +49,7 @@ bool citizenImmune(dict_node* med_history, int med_history_size, disease disease
 
 void updateDisease(citizen* cit)
 {
-    if (ticks % TICKS_PER_DAY == 0) 
+    if (getTicks() % TICKS_PER_DAY == 0) 
     {
         if (cit->disease.active) 
         {

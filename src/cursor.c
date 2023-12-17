@@ -1,5 +1,6 @@
 #include "map.h"
 #include "cursor.h"
+#include "render_utils.h"
 #include "helpers.h"
 
 static position cursorPos = {0, 0};
@@ -45,15 +46,10 @@ void decrementCursorY(void)
     setCursorPosition(newPos);
 }
 
-position getFocusPoint(void)
-{
-    return focusPoint;
-}
-
-void setCursorFocusPoint(position pos)
+void setCursorFocusPoint(void)
 {
     focusedOnPos = mouseInMapBounds;
-    focusPoint = pos;
+    focusPoint = cursorPos;
 }
 
 bool isCursorFocused(void)
@@ -61,18 +57,7 @@ bool isCursorFocused(void)
     return focusedOnPos;
 }
 
-bool isCursorPressed(void)
-{
-    return cursorPressed;
-}
-
 position getCursorFocusPoint(void)
 {
     return focusPoint;
-}
-
-void setCursorPressedState(bool pressed)
-{
-    cursorPressed = pressed;
-    setCursorFocusPoint(cursorPos);
 }

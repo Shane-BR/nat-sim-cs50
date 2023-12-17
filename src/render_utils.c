@@ -1,6 +1,7 @@
 #include "render_utils.h"
 #include "shaders.h"
 #include <math.h>
+#include <string.h>
 
 extern const vec2 MAP_ORIGIN_POS;
 extern const vec2 TILE_SIZE;
@@ -10,36 +11,28 @@ void getNationColor(const uint8_t nation, vec4* dest, const float mix)
     switch (nation) 
     {
         case 0:
-            setColor(COLOR_CYAN, dest);
+            memcpy(dest, COLOR_CYAN, sizeof(vec4));
             break;
                 
         case 1:
-            setColor(COLOR_BLUE, dest);
+            memcpy(dest, COLOR_BLUE, sizeof(vec4));
             break;
                 
         case 2:
-            setColor(COLOR_GREEN, dest);
+            memcpy(dest, COLOR_GREEN, sizeof(vec4));
             break;
 
         case 3:
-            setColor(COLOR_RED, dest);
+            memcpy(dest, COLOR_RED, sizeof(vec4));
             break;
 
         default:
-            setColor(COLOR_NONE, dest);
+            memcpy(dest, COLOR_NONE, sizeof(vec4));
             break;
     }
 
     if ((*dest)[3] > 0)
         (*dest)[3] = mix;
-}
-
-void setColor(const vec4 color, vec4* dest)
-{
-    (*dest)[0] = color[0];
-    (*dest)[1] = color[1];
-    (*dest)[2] = color[2];
-    (*dest)[3] = color[3];
 }
 
 float getTileStride()

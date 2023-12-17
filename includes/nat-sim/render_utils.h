@@ -14,7 +14,6 @@ static const vec4 COLOR_NONE   =  {0.0f, 0.0f, 0.0f, 0.0f};
 static const int QUAD_FLOAT_AMT = 48;
 
 void getNationColor(const uint8_t nation, vec4* dest, const float mix);
-void setColor(const vec4 color, vec4* dest);
 float getTileStride();
 void convertToScreenPosition(const position pos, vec2* dest);
 position getMapPositionFromScreenPos(const vec2 screenPos);

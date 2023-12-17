@@ -6,6 +6,7 @@
 #include "borders.h"
 #include "settlements.h"
 #include "sim_log.h"
+#include "sim_time.h"
 
 #include <limits.h>
 #include <stdbool.h>
@@ -16,7 +17,6 @@
 
 // FIXME Magic Numbers (YUP)
 
-extern unsigned int ticks;
 extern tile map[MAP_SIZE][MAP_SIZE];
 
 static citizen* people_met[30]; 
@@ -267,7 +267,7 @@ void updateRelationship(citizen* cit, settlement* stl)
     if (cit->partner != NULL) 
     {
         // Update days in relationship
-        if (ticks % TICKS_PER_DAY == 0)
+        if (getTicks() % TICKS_PER_DAY == 0)
             cit->days_in_relationship++;
 
         calcPregnancy(cit, stl);
@@ -389,7 +389,7 @@ void calcBreakup(citizen* cit)
 
 void updatePregnancy(citizen* cit, settlement* stl)
 {
-    if (ticks % TICKS_PER_DAY != 0)
+    if (getTicks() % TICKS_PER_DAY != 0)
         return;
 
     cit->days_pregnant++;
@@ -494,7 +494,7 @@ void oldAgeDeath(citizen* cit, settlement* stl, uint8_t overall_health)
     {
         // Probability of random death this year.  Increases by 20% with every year
 
-        if (ticks*TICKS_PER_DAY % 365 != 0)
+        if (getTicks()*TICKS_PER_DAY % 365 != 0)
             return;
 
         float growth = 0.2f;

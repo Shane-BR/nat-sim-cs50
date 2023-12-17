@@ -192,7 +192,7 @@ void renderText(const char* text, const vec2 screenPos)
     }
 
     const int COLOR_CHANNELS = 4;
-    vec4 color; setColor(COLOR_NONE, &color);
+    vec4 color; memcpy(&color, COLOR_NONE, sizeof(vec4));
     int colorChannelIndex = 0;
     bool readingEscapeData = false;
     bool alphaEdited = false;
@@ -229,7 +229,7 @@ void renderText(const char* text, const vec2 screenPos)
         else if (c == '^')
         {
             readingEscapeData = true;
-            setColor(COLOR_NONE, &color); // Reset color data
+            memcpy(&color, COLOR_NONE, sizeof(vec4)); // Reset color data
             continue;
         }
         else if (c == '\n') 
