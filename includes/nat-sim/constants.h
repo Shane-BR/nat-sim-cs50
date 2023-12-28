@@ -1,7 +1,7 @@
 #ifndef NS_CONSTANTS
 #define NS_CONSTANTS
 
-#define NS_VERSION "cs50-alpha"
+#define NS_VERSION "CS50 DEMO"
 
 #define UI_CHARACTER_LIMIT 1000
 

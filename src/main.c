@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
     
     // Introduction log
     char welcome[64] = {'\0'};
-    sprintf(welcome, "        WELCOME TO NAT-SIM V%s", NS_VERSION);
+    sprintf(welcome, "        WELCOME TO NAT-SIM %s", NS_VERSION);
 
     addLog("----------------------------------------------");
     addLog("----------------------------------------------");
