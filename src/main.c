@@ -6,6 +6,7 @@
 #include "borders.h"
 
 #include "window.h"
+#include "input.h"
 
 #include "units.h"
 #include "population.h"
@@ -20,6 +21,8 @@ int seed = 0;
 static float tick_timer = 0.0f;
 
 extern nation nations[NAT_AMOUNT];
+
+void cleanUp(void);
 
 int main(int argc, char* argv[])
 {   
@@ -49,12 +52,21 @@ int main(int argc, char* argv[])
     initNations();
     initSim();
     
+    // Introduction log
+    char welcome[64] = {'\0'};
+    sprintf(welcome, "        WELCOME TO NAT-SIM V%s", NS_VERSION);
+
+    addLog("----------------------------------------------");
+    addLog("----------------------------------------------");
+    addLog(welcome);
+    addLog("----------------------------------------------");
+    addLog("----------------------------------------------");
+
     // Handle tick events
     while (!shouldWindowClose())
     {
 
         tick_timer += calcDeltaTime();        
-        
         if (tick_timer >= (1.0f / getTPS()))
         {
             runSim();
@@ -65,6 +77,10 @@ int main(int argc, char* argv[])
 
         updateWindow();
     }
+
+    // Free heap
+    cleanUp();
+
     printToLogsFile();
     terminateWindow();
     return 0;
@@ -72,10 +88,10 @@ int main(int argc, char* argv[])
 
 void initNations(void)
 {
-    nations[0].name = "elves";
-    nations[1].name = "men";
-    nations[2].name = "goblins";
-    nations[3].name = "dwarves";
+    nations[0].name = "Elves";
+    nations[1].name = "Men";
+    nations[2].name = "Goblins";
+    nations[3].name = "Dwarves";
 
     for (int i = 0; i < NAT_AMOUNT; i++)
     {
@@ -90,6 +106,22 @@ void initNations(void)
         nations[i].military = 10;
         nations[i].money = 20;
         nations[i].artifacts = 0;
+
+        nations[i].death_list = NULL;
+
+        // Units
+        unsigned int mem_cap = 128;
+
+        nations[i].units_amt = 0;
+        nations[i].units_mem_capacity = mem_cap;
+
+        nations[i].units = malloc(sizeof(unit*)*mem_cap);
+        if (nations[i].units == NULL)
+        {
+            printf("Unable to allocate memory for nations units array.");
+            exit(1);
+        }
+
     }
 
 }
@@ -107,35 +139,40 @@ void initSim(void)
     citizen** cits = malloc(sizeof(citizen*)*amount_cits);
     if (cits == NULL) exit(1);
 
-    position start_pos = newPosition(8, 8);
+    position start_pos = {8, 8};
 
     addRandomCitizens(amount_cits, start_pos, &cits, &size, &amount_cits);
 
     unit* new = newUnit(start_pos, 1, SETTLER, NULL, 1, cits, size);
-    addToUnitArray(&nations[1].units, &nations[1].units_amt, new);
+    addToDynamicPointerArray((void***)&nations[1].units, &nations[1].units_amt, new, &nations[1].units_mem_capacity);
 }
 
-// TODO A bit lazy, maybe try something else for final release
-position initSettlementPosition(int8_t nation_index)
+void cleanUp(void)
 {
-    char* name = getNationName(nation_index);
+    // Clean up any units
+    for (int n = 0; n < NAT_AMOUNT; n++)
+    {
+        for (int u = 0; u < nations[n].units_amt; n++)
+        {
+            freeUnit(nations[n].units[u]);
+        }
 
-    if (compareString(name, "elves"))
-    {
-        return newPosition(MAP_SIZE/4, MAP_SIZE/4);
-    }
-    else if (compareString(name, "men"))
-    {
-        return newPosition((MAP_SIZE-1)-(MAP_SIZE/4), MAP_SIZE/4);
-    }
-    else if (compareString(name, "goblins")) 
-    {
-        return newPosition(MAP_SIZE/4, (MAP_SIZE-1)-(MAP_SIZE/4));
-    }
-    else if (compareString(name, "dwarves")) 
-    {
-        return newPosition((MAP_SIZE-1)-(MAP_SIZE/4), (MAP_SIZE-1)-(MAP_SIZE/4));
+        free(nations[n].units);
+
+        // Free death list
+        eraseLinkedList(&nations[n].death_list, true);
     }
 
-    return newPosition(0, 0);
+    // Clean up settlements
+    for (int i = 0; i < MAP_SIZE*MAP_SIZE; i++)
+    {
+        settlement* stl = getSettlementFromIndex(i);
+
+        if (stl == NULL)
+            continue;
+
+        removeSettlement(stl);
+    }
+
+    freeBindings();
 }

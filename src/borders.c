@@ -41,17 +41,21 @@ void setBorders (int radius, int prev_radius, settlement* stl)
     // If decreasing border radius
     if (radius < prev_radius)
     {
-        int target_arr_size = radius*radius-1;
+        int target_arr_size = (radius*radius)-1;
 
-        for (int i = prev_radius*prev_radius-2; i >= target_arr_size; i--)
+        for (int i = (prev_radius*prev_radius)-2; i >= target_arr_size; i--)
         {
             // Reset tile
-            stl->borders[i]->tile->ruling_nation = -1;
+            border* b = stl->borders[i];
+            if (b == NULL)
+                continue;
+
+           b->tile->ruling_nation = -1;
 
             // Reassign workers
-            for (int j = 0; j < stl->borders[i]->workers_count; j++)
+            for (int j = 0; j < b->workers_count; j++)
             {
-                citizen* worker = stl->borders[i]->workers[j];
+                citizen* worker = b->workers[j];
 
                 if (worker != NULL) removeCitFromBorder(worker, stl);
             }
@@ -61,14 +65,18 @@ void setBorders (int radius, int prev_radius, settlement* stl)
     // Then realloc border array
     stl->borders = realloc(stl->borders, sizeof(border)*((radius*radius)-1));
 
-    if (stl->borders == NULL) exit(1);
+    if (stl->borders == NULL)
+    {
+        printf("Unable to reallocate memory for borders array.");
+        return;
+    }
 
     // If increasing border radius
     if (radius > prev_radius)
     {
         position center = stl->position;
-        position tl_corner = newPosition(center.x - radius/2, center.y - radius/2);
-        position br_corner = newPosition(center.x + radius/2, center.y + radius/2);
+        position tl_corner = {center.x - radius/2, center.y - radius/2};
+        position br_corner = {center.x + radius/2, center.y + radius/2};
 
         int cur = prev_radius > 0 ? (prev_radius*prev_radius-1) : 0;
 
@@ -77,7 +85,7 @@ void setBorders (int radius, int prev_radius, settlement* stl)
             for (int x = tl_corner.x; x <= br_corner.x; x++) 
             {
 
-                position pos = newPosition(x, y);
+                position pos = {x, y};
 
                 // Is already in border array?
                 if (prev_radius > 0)
@@ -85,7 +93,11 @@ void setBorders (int radius, int prev_radius, settlement* stl)
                     bool skip_tile = false;
                     for (int i = 0; i < prev_radius*prev_radius-1; i++)
                     {
-                        if (comparePosition(stl->borders[i]->tile->position, pos))
+                        border* b = stl->borders[i];
+                        if (b == NULL)
+                            continue;
+
+                        if (comparePosition(b->tile->position, pos))
                         {
                             skip_tile = true;
                             break;
@@ -110,6 +122,13 @@ void setBorders (int radius, int prev_radius, settlement* stl)
                 {
                     t->ruling_nation = stl->nation;
                     new_border = malloc(sizeof(border));
+
+                    if (new_border == NULL)
+                    {
+                        printf("Unable to allocate memory for a new border.");
+                        continue;
+                    }
+
                     new_border->tile = t;
                     new_border->workers_count = 0;
                 }
@@ -144,33 +163,22 @@ border* getBorderFromPosition(position pos)
     if (!inMapBounds(pos))
         return NULL;
 
-    int search_radious = (CITY_BORDER_RADIUS*CITY_BORDER_RADIUS);
-    position search_pos;
-
-    for (int i = 0; i < search_radious; i++)
+    for (int i = 0; i < MAP_SIZE*MAP_SIZE; i++)
     {
+        settlement* stl = getSettlementFromIndex(i);
 
-        search_pos.x = pos.x-CITY_BORDER_RADIUS/2 + i % CITY_BORDER_RADIUS;
-        search_pos.y = pos.y-CITY_BORDER_RADIUS/2 + i / CITY_BORDER_RADIUS; 
-
-        if(!inMapBounds(search_pos))
+        if (stl == NULL)
             continue;
 
-        settlement* stl = getSettlementFromPosition(search_pos);
-        if (stl != NULL && stl->active && map[search_pos.y][search_pos.x].ruling_nation == stl->nation)
+        for (int j = 0; j < getBorderArea(*stl); j++)
         {
+            border* b = stl->borders[j];
+            if (b == NULL)
+                continue;
 
-            for (int j = 0; j < getBorderArea(*stl); j++)
+            if (comparePosition(pos, b->tile->position))
             {
-                border* b = stl->borders[j];
-                
-                if (b == NULL || b->tile == NULL)
-                    continue;
-
-                if (comparePosition(b->tile->position, pos))
-                {
-                    return b;
-                }
+                return stl->borders[j];
             }
         }
     }

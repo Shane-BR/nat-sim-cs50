@@ -17,15 +17,39 @@ void addLog(const char* str)
     if (logs_size >= ULONG_MAX)
         return;
 
-    if (logs_size <= 0)
+    if (logs_size <= 0) 
+    {
         logs = calloc(logs_max, sizeof(char*));
 
+        if (logs == NULL)
+        {
+            printf("Unable to allocate memory for logs array.");
+            return;
+        }
+    }
+
     char* log = calloc(UI_CHARACTER_LIMIT, sizeof(char));
+
+    if (log == NULL)
+    {
+        printf("Unable to allocate memory for new log entry.");
+        return;
+    }
+
     sprintf(log, "* %s", str);
 
     // Relloc
     if (++logs_size > logs_max)
+    {
         logs = realloc(logs, sizeof(char*)*clamp(logs_max *= 2, 0, ULONG_MAX));
+    
+        if (logs == NULL)
+        {
+            printf("Unable to reallocate memory for logs array.");
+            free(log);
+            return;
+        }
+    }
 
     // Shuffle
     for(int i = logs_size-2; i >= 0; i--)
@@ -34,7 +58,6 @@ void addLog(const char* str)
     }
 
     // Add log
-
     logs[0] = log;
 }
 

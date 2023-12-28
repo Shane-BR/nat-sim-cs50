@@ -4,12 +4,14 @@
 #include "datatypes.h"
 #include <stdint.h>
 
+bool removeCitizen(citizen* cit, settlement* stl);
+
 void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int* size, unsigned int* mem_block_size);
-void addCitizen(citizen* cit, citizen*** arr, unsigned int* size, unsigned int* mem_block_size);
 void calcMetToday(citizen* cit, settlement* stl);
 void healthCheck(citizen* cit, settlement* stl); // Runs chances for disease and injury
 void updateRelationship(citizen *cit, settlement* stl);
 uint8_t getAgeHealthCurve(uint8_t age);
 void damageCitizen(citizen *cit, uint8_t amt, CitDamageSource cause);
+bool canCitizenWork(citizen* cit);
 
 #endif

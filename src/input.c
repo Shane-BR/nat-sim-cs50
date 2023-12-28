@@ -40,6 +40,14 @@ void addBinding(int bind, const binding_callback_func callback)
     addLinkedListNode(&binding_callbacks[bind], callback);
 }
 
+void freeBindings(void)
+{
+    for (int b = 0; b < GLFW_KEY_LAST; b++)
+    {
+        eraseLinkedList(&binding_callbacks[b], false);
+    }
+}
+
 void callBind(int bind)
 {
     // Navigate each binding callback AND FUCKING CALLLL IT!!!!

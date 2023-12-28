@@ -4,6 +4,8 @@
 #include "borders.h"
 #include "population.h"
 #include "sim_time.h"
+#include "units.h"
+#include "map.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -27,6 +29,33 @@ void addSettlement(char* nation, position pos, citizen** citizens, int cit_size)
     updateSettlementBorders(&settlements[tileHash(pos)], 0);
 }
 
+void removeSettlement(settlement* stl)
+{
+    if (stl == NULL)
+        return;
+
+
+    // Free any remaining citizens
+    for (int i = 0; i < stl->local_population; i++)
+    {
+        removeCitizen(stl->citizens[i], stl); // FIXME inefficient because removeCitizen() searches for the citizen again.
+    }
+
+    // Set borders and stl back to neutral
+    // Free all heap memory from stl
+    for (int i = 0; i < getBorderArea(*stl); i++)
+    {
+        if (stl->borders[i] == NULL)
+            continue;
+
+        stl->borders[i]->tile->ruling_nation = -1;
+        free(stl->borders[i]);
+    }
+
+    getMapTile(stl->position)->ruling_nation = -1;
+    free(stl->borders);
+}
+
 settlement initSettlement(position pos, char* ruling_nation, citizen** citizens, int cit_size)
 {
     settlement s;
@@ -47,8 +76,9 @@ settlement initSettlement(position pos, char* ruling_nation, citizen** citizens,
     s.cultivation_efficiency = 0;
     s.food = 140; // Lasts 3.5 days at population of 10
 
+    s.last_settler_tick = 0;
+
     s.borders = NULL;
-    s.death_list = NULL;
 
     if (citizens == NULL)
     {
@@ -58,9 +88,14 @@ settlement initSettlement(position pos, char* ruling_nation, citizen** citizens,
 
         s.citizens = malloc(sizeof(citizen*) * s.population_capacity);
 
-        if (s.citizens == NULL) exit(1);
-    
-        addRandomCitizens(numOfCitizens, s.position, &s.citizens, &s.local_population, &s.population_capacity);
+        if (s.citizens == NULL)
+        {
+            printf("Unable to allocate memory for settlement citizens array.");
+        }
+        else 
+        {
+            addRandomCitizens(numOfCitizens, s.position, &s.citizens, &s.local_population, &s.population_capacity);
+        }
     }
     else 
     {
@@ -76,23 +111,13 @@ settlement initSettlement(position pos, char* ruling_nation, citizen** citizens,
 settlement* getSettlementFromPosition(position pos)
 {
     int hash_code = tileHash(pos);
-    return settlements[hash_code].active ? &settlements[hash_code] : NULL;
+    return getSettlementFromIndex(hash_code);
 }
 
 // Free after use
-settlement** getAllSettlements(int8_t nation_index)
+settlement* getSettlementFromIndex(const int index)
 {
-    int len = MAP_SIZE*MAP_SIZE;
-    settlement** stls = malloc(sizeof(settlement*)*len);
-
-    for (int i = 0, stls_count = 0; i < len; i++)
-    {
-        if (nation_index == settlements[i].nation)
-        {
-            stls[stls_count++] = &settlements[i];
-        }
-    }  
-    return stls;
+    return settlements[index].active ? &settlements[index] : NULL;
 }
 
 void calcCultivationEfficiency(settlement* stl)
@@ -213,6 +238,7 @@ void removeCitFromBorder(citizen* cit, settlement* stl)
     b->workers_count--;
 }
 
+
 int getBorderRadius(settlement stl)
 {
     return (stl.level == 0 ? TOWN_BORDER_RADIUS : stl.level == 1 ? CITY_BORDER_RADIUS : 0);
@@ -244,6 +270,110 @@ int getGrossResourceProduced(settlement stl, int resource_type)
     }
 
     return produce;
+}
+
+unsigned int countAllSettlements()
+{
+    unsigned int counter = 0;
+    for (int i = 0; i < MAP_SIZE*MAP_SIZE; i++)
+    {
+        if(settlements[i].active) counter++;
+    }
+
+    return counter;
+}
+
+void launchSettlerUnitFromSettlement(settlement* stl)
+{
+
+    const int POP_MIN = 250, FOOD_COST = 5000, TICK_COOLDOWN = (365*TICKS_PER_DAY)*20;
+
+    if (stl->local_population > POP_MIN && 
+        stl->food > FOOD_COST && 
+        stl->last_settler_tick + TICK_COOLDOWN < getTicks())
+    {
+
+
+        if (countAllSettlements() >= MAX_SETTLEMENTS)
+        {
+            stl->last_settler_tick = getTicks();
+            return;
+        }
+
+        // Assign the first 15 citizens of age and health to go.
+        int amount_needed = 15;
+        int size = amount_needed;
+        int amt = 0;
+        citizen** cits = malloc(sizeof(citizen*)*size);
+
+        if (cits == NULL)
+        {
+            printf("Unable to allocate memory for unit citizens array.");
+            return;
+        }
+
+        for (int i = 0; i < stl->local_population && amt < amount_needed; i++)
+        {
+            citizen* cit = stl->citizens[i];
+            if (canCitizenWork(cit))
+            {
+                // add cit
+                cits[amt++] = cit;
+
+                removeCitizen(cit, stl);
+
+                // Add this cit his partner/children (if applicable/young enough)
+                // realloc array if needed
+                if (cit->partner != NULL)
+                {
+                    if (amt >= size)
+                    {
+                        cits = realloc(cits, sizeof(citizen*)*(++size));
+                        if (cits == NULL)
+                        {
+                            printf("Unable to reallocate memory for units citizen array (partner)");
+                            continue;
+                        }
+                    }
+
+                    cits[amt++] = cit->partner;
+                    
+                    removeCitizen(cit->partner, stl);
+                }
+
+                for (int i = 0; i < cit->child_num; i++)
+                {
+                    if (amt >= size)
+                    {
+                        cits = realloc(cits, sizeof(citizen*)*(size += cit->child_num));
+                        if (cits == NULL)
+                        {
+                            printf("Unable to reallocate memory for units citizen array (children)");
+                            continue;  
+                        }
+                    }  
+
+                    // Add only if child isn't DEAD or older than working age
+                    citizen* child = cit->children[i];
+
+                    if (child->health <= 0 && child->age >= MIN_WORKING_AGE)
+                        continue;
+
+
+                    cits[amt++] = child;                  
+                
+                    removeCitizen(cit->children[i], stl);
+                }
+            }
+        }
+
+        stl->food -= FOOD_COST;
+
+        // create unit
+        unit* new = newUnit(stl->position, stl->nation, SETTLER, NULL, 1, cits, amt);
+        addToDynamicPointerArray((void***)&nations[stl->nation].units, &nations[stl->nation].units_amt, new, &nations[stl->nation].units_mem_capacity);
+        stl->last_settler_tick = getTicks();
+    }
 }
 
 // Checks to see if the settlement can upgrade/downgrade

@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 void initBindings(void);
+void freeBindings(void);
 
 void processInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void processMousePositionCallback(GLFWwindow* window, double xpos, double ypos);

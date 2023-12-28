@@ -12,7 +12,7 @@ static const int MID = 75;
 static const int HIGH = 150;
 static const int EXTREME = 200;
 
-static const int DAMAGE_DIVISOR_MIN = 8, DAMAGE_DIVISOR_MAX = 24;
+static int DAMAGE_DIVISOR_MIN = 12, DAMAGE_DIVISOR_MAX = 25;
 
 
 // Infect citizen if he does not already have immunity.
@@ -29,12 +29,12 @@ void infectCitizen(citizen* cit, disease disease)
 
 bool citizenImmune(dict_node* med_history, int med_history_size, disease disease)
 {
-    int tick_immunity_period = disease.immunity_period*TICKS_PER_DAY;
+    const int IMMUNITY_PERIOD = disease.immunity_period*TICKS_PER_DAY;
     int i = dictFind(med_history, med_history_size, disease.type);
 
     if (i != -1)
     {
-        if ((getTicks()-med_history[i].value) >= tick_immunity_period)
+        if ((getTicks()-med_history[i].value) >= IMMUNITY_PERIOD)
         {
             return false;
         }
@@ -51,6 +51,7 @@ void updateDisease(citizen* cit)
 {
     if (getTicks() % TICKS_PER_DAY == 0) 
     {
+        // Is disease active?
         if (cit->disease.active) 
         {
             cit->disease.days_to_recover--;
@@ -62,6 +63,8 @@ void updateDisease(citizen* cit)
                 cit->disease = noDisease();
             }
         }
+
+        // Or still incubating?
         else if (cit->disease.type != NULL) 
         {
             cit->disease.incubation_period--;
@@ -95,35 +98,38 @@ disease noDisease()
     return out;
 }
 
+// Can be dirty because we are getting rid of this function in later release
 disease randomDisease(uint8_t overall_health)
 {
-    int i = powerLawRandomInt(0, 4, 0.2f);
+    disease d_flu = flu(overall_health);
+    disease d_typhoid = typhoid(overall_health);
+    disease d_scarlet_fever = scarletFever(overall_health);
+    disease d_pox = pox(overall_health);
+    disease d_plague = plague(overall_health);
 
-    switch (i) 
+    // yucko
+    if (runProbability(((float)d_flu.infectivity_rate / UINT8_MAX) * 100))
     {
-        case 0:
-            return flu(overall_health);
-            break;
-
-        case 1:
-            return typhoid(overall_health);
-            break;
-
-        case 2:
-            return scarletFever(overall_health);
-            break;
-
-        case 3:
-            return pox(overall_health);
-            break;
-
-        case 4:
-            return plague(overall_health);
-            break;
-        
-        default:
-            return noDisease();
-            break;
+        return d_flu;
+    }
+    else if (runProbability(((float)d_typhoid.infectivity_rate / UINT8_MAX) * 100))
+    {
+        return d_typhoid;
+    }
+    else if(runProbability(((float)d_scarlet_fever.infectivity_rate / UINT8_MAX) * 100))
+    {
+        return d_scarlet_fever;
+    }
+    else if (runProbability(((float)d_pox.infectivity_rate / UINT8_MAX) * 100))
+    {
+        return d_pox;
+    }
+    else if (runProbability(((float)d_plague.infectivity_rate / UINT8_MAX) * 100)){
+        return d_plague;
+    }
+    else 
+    {
+        return d_flu;
     }
 }
 

@@ -18,7 +18,7 @@ void initMapStats(void)
             map[y][x].ruling_nation = -1;
 
             // Set the tiles position stat
-            map[y][x].position = newPosition(x, y); // May look dumb, but it allows us to get the position if we only have acess to the tile.
+            map[y][x].position = (position){x, y}; // May look dumb, but it allows us to get the position if we only have acess to the tile.
         }
     }
 }

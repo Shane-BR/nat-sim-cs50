@@ -140,8 +140,8 @@ typedef struct
 
     // Local stats
     citizen** citizens; // Dynamic array of pointers to citizens
-    
-    list_node* death_list; // A linked list containing pointers to the dead population
+
+    unsigned long long last_settler_tick;
 
     unsigned int local_population;
     unsigned int population_capacity;
@@ -160,11 +160,14 @@ typedef struct
     char* name;
 
     unit** units;
-    int units_amt;
+    unsigned int units_amt;
+    unsigned int units_mem_capacity;
 
     unsigned int population;
 
     unsigned int money;
+
+    list_node* death_list; // A linked list containing pointers to the dead population
 
     uint8_t health;
     uint8_t trade;
@@ -178,13 +181,12 @@ typedef struct
 
 } nation;
 
-position newPosition(int x, int y);
 citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2], position pos);
 void addDictNode(dict_node** dict, int* dict_size, const char* key, int value);
 void eraseDict(dict_node* dict, int* dict_size);
 int dictFind(dict_node* dict, int dict_size, const char* key);
 void addLinkedListNode(list_node** head, void* data);
-void removeLinkedListNode(list_node** head, list_node* remove, bool free_pointer);
-void eraseLinkedList(list_node* head);
+void removeLinkedListNode(list_node** head, list_node* remove, bool free_data);
+void eraseLinkedList(list_node** head, bool free_data);
 
 #endif

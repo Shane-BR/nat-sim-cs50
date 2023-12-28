@@ -3,7 +3,9 @@
 #include "map.h"
 #include "pathfinder.h"
 #include "settlements.h"
+#include "sim_log.h"
 
+#include <stdio.h>
 #include <stdint.h>
 
 void followPath(unit* unit);
@@ -15,6 +17,13 @@ extern nation nations[NAT_AMOUNT];
 unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* path, int move_speed, citizen** citizens, unsigned int cit_amt)
 {
     unit* new = malloc(sizeof(unit));
+
+    if (new == NULL)
+    {
+        printf("Unable to allocate memory for new unit");
+        return NULL;
+    }
+
     new->position = pos;
     new->nation = nation;
     new->unit_class = unit_class;
@@ -28,6 +37,17 @@ unit* newUnit(position pos, uint8_t nation, UnitClass unit_class, list_node* pat
     new->cits_amt = cit_amt;
 
     return new;
+}
+
+void freeUnit(unit* p_unit)
+{
+    // Free path
+    eraseLinkedList(&p_unit->path, true);
+
+    // Free citizens array
+    eraseDynamicPointerArray((void***)&p_unit->citizens, &p_unit->cits_amt, true);
+
+    free(p_unit);
 }
 
 void updateUnit(unit* unit)
@@ -48,7 +68,7 @@ void updatePath(unit* unit, list_node* path)
     {
         if (unit->path != NULL) 
         {
-            eraseLinkedList(unit->path);
+            eraseLinkedList(&unit->path, true);
             unit->path = NULL;
         }
 
@@ -68,7 +88,9 @@ void settleOnPosition(unit* unit)
         addSettlement(getNationName(unit->nation), unit->position, unit->citizens, unit->cits_amt);
     
         // Remove unit
-        removeFromUnitArray(&nations[unit->nation].units, &nations[unit->nation].units_amt, unit);
+        removeFromDynamicPointerArray((void***)&nations[unit->nation].units, &nations[unit->nation].units_amt, unit, false);
+
+        addLog("-NEW SETTLEMENT FOUNDED-");
     }
 }
 

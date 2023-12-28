@@ -12,18 +12,16 @@
 extern settlement settlements[MAP_SIZE*MAP_SIZE]; // Simple hash table of settlements
 nation nations[NAT_AMOUNT];
 
-// Constructer-like function for getting a new position
-position newPosition(int x, int y)
-{
-    position pos;
-    pos.x = x;
-    pos.y = y;
-    return pos;
-}
-
 citizen* newCitizen(uint8_t age, uint8_t gender, citizen* parents[2], const position pos)
 {
     citizen* c = malloc(sizeof(citizen));
+
+    if (c == NULL)
+    {
+        printf("Unable to allocate memory when creating a new citizen.");
+        return NULL;
+    }
+
     c->age = age;
     c->gender = gender;
     c->health = UINT8_MAX;
@@ -65,8 +63,8 @@ void addDictNode(dict_node** dict, int* dict_size, const char* key, int value)
 
     if(*dict == NULL)
     {
-        printf("Unable to add dict_node to dictonary");
-        exit(1);
+        printf("Unable to reallocate memory for new dictonary node.");
+        return;
     }
 
     (*dict)[(*dict_size)-1] = node;
@@ -102,7 +100,8 @@ void addLinkedListNode(list_node** head, void* data)
 
     if (new == NULL)
     {
-        exit(1);
+        printf("Unable to allocate memory for linked list node.");
+        return;
     }
 
     new->data = data;
@@ -110,29 +109,37 @@ void addLinkedListNode(list_node** head, void* data)
     *head = new;
 }
 
-void removeLinkedListNode(list_node** head, list_node* remove, bool free_pointer)
+void removeLinkedListNode(list_node** head, list_node* remove, bool free_data)
 {
     if (*head == NULL) return;
 
     if (*head == remove) 
     {
         *head = remove->next;
-        if(free_pointer) free(remove);
+        if(free_data) free(remove->data);
+        free(remove);
         return;
     }
     else if ((*head)->next != NULL && (*head)->next == remove) 
     {
         (*head)->next = remove->next;
-        if(free_pointer) free(remove);
+        if(free_data) free(remove->data);
+        free(remove);
         return;
     }
 
-    removeLinkedListNode(&((*head)->next), remove, free_pointer);
+    removeLinkedListNode(&((*head)->next), remove, free_data);
 }
 
-void eraseLinkedList(list_node* head)
+void eraseLinkedList(list_node** head, bool free_data)
 {
-    if (head == NULL) return;
-    eraseLinkedList(head->next);
-    free(head);
+    while(*head != NULL)
+    {
+        list_node* temp = *head;
+        *head = temp->next;
+
+        if(free_data) free(temp->data);
+        free(temp);
+    }
+    *head = NULL;
 }

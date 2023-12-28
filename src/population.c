@@ -34,7 +34,7 @@ void citizenDie(citizen* cit, settlement* stl, CitDamageSource cause);
 void oldAgeDeath(citizen* cit, settlement* stl, uint8_t overall_health);
 uint8_t overallHealth(citizen* cit, uint8_t stl_local_morale);
 void breakup(citizen* cit);
-void logCitizenDeath(citizen* cit, CitDamageSource cause);
+void logCitizenDeath(CitDamageSource cause, const char* disease_name, const unsigned int citizen_age);
 
 // Adds a bunch of random citizens between the ages of 18 and 50
 void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int* cur_size, unsigned int* mem_block_size)
@@ -50,72 +50,26 @@ void addRandomCitizens(int num, position init_pos, citizen*** arr, unsigned int*
         
         citizen* c = newCitizen(age, gender, NULL, init_pos);
 
-        addCitizen(c, arr, cur_size, mem_block_size);
+        addToDynamicPointerArray((void***)arr, cur_size, c, mem_block_size);
 
     }
-}
-
-// Add a citizen to current population
-void addCitizen(citizen* cit, citizen*** arr, unsigned int* size, unsigned int* mem_block_size)
-{
-    citizen** tmp = *arr;
-
-    if (++(*size) > (*mem_block_size))
-        *arr = realloc(*arr, sizeof(citizen * ) * (*(mem_block_size)*=2));
-        
-    if (*arr == NULL)
-    {
-        printf("Failed to Re-allocate memory when adding a citizen");
-        *arr = tmp;
-        return;
-    }
-
-    (*arr)[(*size)-1] = cit;
 }
 
 // Returns false if no citizen found
 bool removeCitizen(citizen* cit, settlement* stl)
 {    
-    int index = -1;
-
-    citizen** tmp = stl->citizens;
-
-    // Find citizen in settlement
-    for (int i = 0; i < stl->local_population; i++)
-    {
-        if (cit == stl->citizens[i])
-        {
-            index = i;
-            break;
-        }
-    }
-
-    // Return if not found
-    if (index == -1)
-        return false;
-
-    // Shuffle citizen to the end of the array
-    for (int i = index; i < stl->local_population-1; i++)
-    {
-        stl->citizens[i] = stl->citizens[i+1];
-    }
-
-    // Remove citizen
-    stl->citizens[(stl->local_population)-1] = NULL;
-    stl->local_population--;
-
-    // Remove from border if possible
+    bool out = removeFromDynamicPointerArray((void***)&stl->citizens, &stl->local_population, cit, false);
     removeCitFromBorder(cit, stl);
-
-    return true;
+    return out;
 }
 
 // Calculate the amount of people met this half-day by this citizen.
 // Handle calculations that involve people that the citizen met.
 void calcMetToday(citizen* cit, settlement* stl)
 {
-    int max_people_met = stl->local_population < 30 ? stl->local_population-1 : stl->local_population/10+30;
-    int num_people_met = randomInt(0, max_people_met);
+    const int MAX_PEOPLE_MET = stl->local_population < 30 ? stl->local_population-1 : stl->local_population/12+30;
+    
+    int num_people_met = randomInt(0, MAX_PEOPLE_MET);
 
     // Meet half as many people if the cit has a disease
     num_people_met = cit->disease.active ? num_people_met/2 : num_people_met;
@@ -147,8 +101,8 @@ void calcMetToday(citizen* cit, settlement* stl)
 // Further flesh out this function later
 void healthCheck(citizen* cit, settlement* stl)
 {
-    uint8_t overall_health = overallHealth(cit, stl->local_morale);
-    float div = 1000;
+    const uint8_t OVERALL_HEALTH = overallHealth(cit, stl->local_morale);
+    const float DIVISOR = 1000;
 
     int chance_to_eat_if_hungry = stl->food > stl->local_population ? 100 :
         (((float)stl->food / stl->local_population * UINT8_MAX) +
@@ -160,9 +114,9 @@ void healthCheck(citizen* cit, settlement* stl)
     }
     // Randommly insert diseases into the settlement
     // TODO redo this so it's A LOT less random.
-    else if (runProbability((float)(UINT8_MAX-overall_health) / UINT8_MAX / div))
+    else if (runProbability((float)(UINT8_MAX-OVERALL_HEALTH) / UINT8_MAX / DIVISOR))
     {
-        infectCitizen(cit, randomDisease(overall_health));
+        infectCitizen(cit, randomDisease(OVERALL_HEALTH));
     }
 
     // Check if dead
@@ -185,7 +139,7 @@ void healthCheck(citizen* cit, settlement* stl)
 
     // Update hunger
     // Elderly death calculations
-    oldAgeDeath(cit, stl, overall_health);
+    oldAgeDeath(cit, stl, OVERALL_HEALTH);
 
     // Update pregnancy if applicable
     if (cit->pregnant)
@@ -197,18 +151,24 @@ void healthCheck(citizen* cit, settlement* stl)
         damageCitizen(cit, UINT8_MAX / (STARVE_PERIOD / 2), STARVATION);
     }
 
-    passiveHeal(cit, overall_health);
+    // Can still work?
+    if (!canCitizenWork(cit))
+    {
+        if(cit->citizen_class == GATHERER) removeCitFromBorder(cit, stl);
+
+        if(cit->citizen_class != NONE) cit->citizen_class = NONE;
+    }
+
+    passiveHeal(cit, OVERALL_HEALTH);
 }
 
 void spreadDisease(citizen* carrier, citizen* suspect)
 {
-    float max_inf = 10.0f; // MAX PERCENTAGE
-    float infectivity = ((float)carrier->disease.infectivity_rate / UINT8_MAX)*max_inf;
-    if (runProbability(infectivity))
+    const float MAX_INFECTIVITY_PERCENT = 2.0f; // MAX PERCENTAGE
+    float infectivity_percent = ((float)carrier->disease.infectivity_rate / UINT8_MAX)*MAX_INFECTIVITY_PERCENT;
+    if (runProbability(infectivity_percent))
     {
         infectCitizen(suspect, carrier->disease);
-        // if(suspect->disease.type != NULL)
-        //     printf("Cit age %i just infected Cit aged %i   DISEASE: %s\n", carrier->age, suspect->age, carrier->disease.type);
     }
 }
 
@@ -248,11 +208,11 @@ void passiveHeal(citizen* cit, uint8_t overall_health)
         cit->hunger < 50;
         ;
 
-    int min_rand_div = 90;
-    int max_rand_div = 120;
+    const int MIN_RAND_DIV = 90;
+    const int MAX_RAND_DIV = 120;
 
     if (allow_heal)
-        cit->health += ((float)overall_health / randomInt(min_rand_div, max_rand_div));
+        cit->health += ((float)overall_health / randomInt(MIN_RAND_DIV, MAX_RAND_DIV));
 }
 
 void damageCitizen(citizen *cit, uint8_t amt, CitDamageSource cause)
@@ -278,7 +238,7 @@ void updateRelationship(citizen* cit, settlement* stl)
 
 void calcPregnancy(citizen* cit, settlement* stl)
 {
-    int calc_period = 365*TICKS_PER_DAY; // DAYS
+    const int CALC_PERIOD = (365*TICKS_PER_DAY)*2; // DAYS
 
     if (cit->gender != FEMALE)
         return;
@@ -294,41 +254,41 @@ void calcPregnancy(citizen* cit, settlement* stl)
         citizen* partner = cit->partner;
 
         // Chance of the current females partner being the father of this child
-        int partner_father_chance;
+        int partner_father_chance; // FIXME not used at the momento
         int min_pf_chance = 80; // PERCENTAGE
 
         // (Stats that factor into pregnancy rate) / 255*n (n = num of factors)
 
         // Min health OF BOTH PARTNERS for pregnancy
-        int min_health = 50;
+        const int MIN_HEALTH = 50;
 
         // Max infliction OF BOTH PARTNERS severity for pregnancy
-        int max_inf_sev = 150;
+        const int MAX_INFLICTION_SEVERITY = 150;
 
-        if ((cit->health < min_health || partner->health < min_health) || 
-        ((cit->disease.active && cit->disease.severity > max_inf_sev) 
-        || (cit->disease.active && partner->disease.severity > max_inf_sev)))
+        if ((cit->health < MIN_HEALTH || partner->health < MIN_HEALTH) || 
+        ((cit->disease.active && cit->disease.severity > MAX_INFLICTION_SEVERITY) 
+        || (cit->disease.active && partner->disease.severity > MAX_INFLICTION_SEVERITY)))
             return;
 
         // Average stats between both partners
-        uint8_t avg_health = (cit->health+partner->health)/2;
-        uint8_t avg_inf_sev = (UINT8_MAX - (cit->disease.severity+partner->disease.severity)/2);
-        uint8_t avg_age = (cit->age + partner->age)/2;
+        const uint8_t AVG_HEALTH = (cit->health+partner->health)/2;
+        const uint8_t AVG_INF_SEV = (UINT8_MAX - (cit->disease.severity+partner->disease.severity)/2);
+        const uint8_t AVG_AGE = (cit->age + partner->age)/2;
 
         // Max days before dur_clamped_1byte is maxed out (1825 = 5 years)
-        int max_dur = 1825;
+        const int MAX_DURATION = 1825;
 
         // Used for calculating rate factors
-        uint8_t dur_clamped_1byte = (uint8_t)(cit->days_in_relationship/max_dur) * UINT8_MAX;
+        const uint8_t MAX_DUR_NORM = (uint8_t)(cit->days_in_relationship/MAX_DURATION) * UINT8_MAX;
 
         // Max children before child_factor is maxed out
-        uint8_t max_children = 4;
-        uint8_t child_factor = UINT8_MAX - (uint8_t)(cit->child_num/max_children)*UINT8_MAX;
+        const uint8_t MAX_CHILDREN = 4;
+        const uint8_t CHILD_FACTOR = UINT8_MAX - (uint8_t)(cit->child_num/MAX_CHILDREN)*UINT8_MAX;
     
-        int factors = (avg_health + avg_inf_sev + dur_clamped_1byte + getAgeHealthCurve(avg_age) + child_factor);
-        float preg_rate = ((float)factors / (UINT8_MAX*5) * 100) / calc_period; // PERCENTAGE
+        const int FACTORS = (AVG_HEALTH + AVG_INF_SEV + MAX_DUR_NORM + getAgeHealthCurve(AVG_AGE) + CHILD_FACTOR);
+        const float PREGNANCY_RATE = ((float)FACTORS / (UINT8_MAX*5) * 100) / CALC_PERIOD; // PERCENTAGE
 
-        if(runProbability(preg_rate)) 
+        if(runProbability(PREGNANCY_RATE)) 
         {
             citizen* parents[2] = {cit, partner};
 
@@ -342,33 +302,33 @@ void calcPregnancy(citizen* cit, settlement* stl)
 
 void calcBreakup(citizen* cit)
 {
-    int tick_year = 365*TICKS_PER_DAY;
+    const int TICK_YEAR = 365*TICKS_PER_DAY;
 
     float probability; // PERCENTAGE
         
     if (cit->age <= 20)
     {
-        probability = 70./tick_year;
+        probability = 70./TICK_YEAR;
     }
     else if (cit->age <= 28)
     {
-        probability = 50./tick_year;
+        probability = 50./TICK_YEAR;
     }
     else if (cit->age > 28)
     {
-        probability = 20./tick_year;
+        probability = 20./TICK_YEAR;
     }
 
-    // if with child or child under 2 take away 0.25 for each child already over 2 - 2x probability
-    uint8_t max_child_age_high_prob = 2;
-    if ((cit->pregnant || cit->partner->pregnant) || (cit->children != NULL && cit->children[cit->child_num-1]->age < max_child_age_high_prob)) 
+    // if with child or, child under 2, take away 0.25 for each child already over 2 - 2x probability
+    const uint8_t MAX_CHILDREN_FACTOR = 2;
+    if ((cit->pregnant || cit->partner->pregnant) || (cit->children != NULL && cit->children[cit->child_num-1]->age < MAX_CHILDREN_FACTOR)) 
     {
         // Work our way down from the end of the array until we see a child above max age
         // Fewer steps to the same sum
         int children_over_age_count = 0;
         for (int i = cit->child_num-1; i > 0; i--)
         {
-            if (cit->children[i]->age > max_child_age_high_prob) 
+            if (cit->children[i]->age > MAX_CHILDREN_FACTOR) 
             {
                 break;
             }
@@ -376,8 +336,8 @@ void calcBreakup(citizen* cit)
             children_over_age_count = cit->child_num - (i+1);
         }
 
-        float mltp = children_over_age_count > 4 ? 1 : 2 - (children_over_age_count * 0.25f);
-        probability = probability * mltp;
+        const float FACTOR_MULTIPLIER = children_over_age_count > 4 ? 1 : 2 - (children_over_age_count * 0.25f);
+        probability = probability * FACTOR_MULTIPLIER;
         // TODO handle affairs
     }
 
@@ -446,45 +406,47 @@ void giveBirth(citizen* parents[2], settlement* stl, uint8_t mother_overall_heal
     citizen* child = parents[0]->unborn_child;
 
     // Add citizen to this settlements population
-    addCitizen(child, &stl->citizens, &stl->local_population, &stl->population_capacity);
+    addToDynamicPointerArray((void***)&stl->citizens, &stl->local_population, child, &stl->population_capacity);
 
     parents[0]->unborn_child = NULL;
 
-    uint8_t survivability = map[stl->position.y][stl->position.x].survivability;
-    float comb_stats = ((float)mother_overall_health + survivability) / (UINT8_MAX*2);
+    const uint8_t SURVIVABILITY = map[stl->position.y][stl->position.x].survivability;
+    float COMBINED_STATS = ((float)mother_overall_health + SURVIVABILITY) / (UINT8_MAX*2);
     float max_rate = 20.0f; // PERCENTAGE
 
     // Handle chance of stillbirth
-    float stillbirth_rate = max_rate - comb_stats * max_rate;
+    const float STILLBIRTH_RATE = max_rate - COMBINED_STATS * max_rate;
 
     // Kill the child if probability accepts
-    if (runProbability(stillbirth_rate)) 
+    if (runProbability(STILLBIRTH_RATE)) 
         citizenDie(child, stl, STILLBIRTH);
-    else
-         addLog("Citizen born");
 
     // Handle chance of the mother dying upon birth of the child
     max_rate = 5.0f; // PERCENTAGE
-    float dib_rate = max_rate - comb_stats * max_rate;
+    const float CHILDBIRTH_DEATH_RATE = max_rate - COMBINED_STATS * max_rate;
 
     // Kill the mother if probability accepts
-    if (runProbability(dib_rate)) 
+    if (runProbability(CHILDBIRTH_DEATH_RATE)) 
         citizenDie(parents[0], stl, CHILDBIRTH);
 }
 
 void citizenDie(citizen* cit, settlement* stl, CitDamageSource cause)
 {
     // Is DISEASE cause still ative
+
+    char* disease_name = cit->disease.active ? cit->disease.type : NULL;
+
     if (cause == DISEASE && !cit->disease.active)
     {
-        cause = NATURAL;
+        // Get last disease in medical history
+        disease_name = (char*)cit->medical_history[cit->med_history_size-1].key;
     }
 
     if(removeCitizen(cit, stl))
     {
         // Update death_list
-        addLinkedListNode(&stl->death_list, cit);
-        logCitizenDeath(cit, cause);
+        addLinkedListNode(&getNation(stl->nation)->death_list, cit);
+        logCitizenDeath(cause, disease_name, cit->age);
     }
 }
 
@@ -560,7 +522,15 @@ void breakup(citizen* cit)
     cit->partner = NULL;
 }
 
-void logCitizenDeath(citizen* cit, CitDamageSource cause)
+
+
+bool canCitizenWork(citizen* cit)
+{
+    return cit->disease.severity < DEBILITATING_DISEASE_SEVERITY && (cit->age >= MIN_WORKING_AGE || cit->age <= MAX_WORKING_AGE);
+}
+
+// Leave char* null if no disease
+void logCitizenDeath(CitDamageSource cause, const char* disease_name, const unsigned int citizen_age)
 {
     char cause_str[128] = {'\0'};
     switch (cause) 
@@ -570,7 +540,7 @@ void logCitizenDeath(citizen* cit, CitDamageSource cause)
             break;
         case DISEASE:
             strcpy(cause_str, "from disease: \0");
-            strcat(cause_str, cit->disease.type);
+            strcat(cause_str, disease_name);
             break;
         case STARVATION:
             strcpy(cause_str, "from starvation");
@@ -587,6 +557,6 @@ void logCitizenDeath(citizen* cit, CitDamageSource cause)
     }
 
     char death_log[128];
-    sprintf(death_log, "Citizen died aged %i, %s.", cit->age, cause_str);
+    sprintf(death_log, "Citizen died aged %i, %s.", citizen_age, cause_str);
     addLog(death_log);
 }

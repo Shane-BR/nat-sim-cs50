@@ -64,30 +64,15 @@ void calcSettlementStats(void)
     {
         settlement* s = &settlements[i];
 
-        // active this tick?
-        bool was_active = s->active;
+        if (s == NULL || !s->active)
+            continue;
 
         // Should settlement be active?
         s->active = s->local_population > 0;
 
         if (!s->active)
         {
-            if (was_active)
-            {
-                // Set borders and stl back to neutral
-                // Free all heap memory from stl
-                for (int i = 0; i < getBorderArea(*s); i++)
-                {
-                    if (s->borders[i] == NULL)
-                        continue;
-
-                    s->borders[i]->tile->ruling_nation = -1;
-                    free(s->borders[i]);
-                }
-                getMapTile(s->position)->ruling_nation = -1;
-                free(s->borders);
-                free(s->citizens);
-            }
+            removeSettlement(s);
             continue;
         }
 
@@ -96,6 +81,7 @@ void calcSettlementStats(void)
         calcCultivationEfficiency(s);
         runNationManagerAI(s);
         updateSettlementStats(s);
+        launchSettlerUnitFromSettlement(s);
         canChangeSettlementLevel(s);
 
         // Set stats at nation level 

@@ -1,7 +1,7 @@
 #ifndef NS_CONSTANTS
 #define NS_CONSTANTS
 
-#define VERSION "1.0.0-alpha1"
+#define NS_VERSION "cs50-alpha"
 
 #define UI_CHARACTER_LIMIT 1000
 
@@ -9,6 +9,7 @@
 #define NAT_AMOUNT 4 // 4
 #define START_SPREAD 15 // Minimum distance apart settlements must be on startup.
 #define TICKS_PER_DAY 2
+#define MAX_SETTLEMENTS 7
 
 #define MAX_TRAVERSABILITY 4
 
@@ -32,7 +33,7 @@
 #define FOOD_TO_HUNGER HUNGER_INCREASE_RATE + HUNGER_INCREASE_RATE*(1.0f/8.0f)
 #define MAX_FOOD_PRODUCED_PER_WORKER 4 // Per tick
 #define MAX_MAT_PRODUCED_PER_WORKER 10 // Per tick
-#define DEBILITATING_DISEASE_SEVERITY 100
+#define DEBILITATING_DISEASE_SEVERITY 150
 
 // Units
 #define MAX_SETTLER_CAPACITY 15

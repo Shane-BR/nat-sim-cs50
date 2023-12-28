@@ -140,38 +140,100 @@ bool runProbability(float percent_chance)
     return rand_num <= percent_chance;
 }
 
-// Add unit to unit array
-void addToUnitArray(unit*** arr, int* size, unit* add)
+/**
+ * addToDynamicPointerArray - Adds an element to a dynamic pointer array.
+ * @param arr: A pointer to the dynamic pointer array.
+ * @param size: The current size of the dynamic pointer array.
+ * @param add: The element to be added to the dynamic pointer array.
+ * @param mem_block_size: The current memory block size of the dynamic pointer array.
+ *
+ * This function adds an element to a dynamic pointer array. If the size of the array
+ * exceeds the current memory block size, it reallocates memory to double the current
+ * memory block size. If memory reallocation fails, it reverts the changes and returns.
+ */
+void addToDynamicPointerArray(void*** arr, unsigned int* size, void* add, unsigned int* mem_block_size)
 {
-    *arr = realloc(*arr, sizeof(unit *) * (++*size));
-    *arr[(*size)-1] = add;
-}
+    void** tmp = *arr;
 
-// Add unit to unit array
-void removeFromUnitArray(unit*** arr, int* size, unit* remove)
-{
-    
-    // Find the unit to remove
-
-    bool found = false;
-    for (int i = 0; i < *size; i++)
+    if (++(*size) > (*mem_block_size))
     {
-        if (*arr[i] == remove)
+        *arr = realloc(*arr, sizeof(citizen * ) * ((*mem_block_size)*=2));
+
+        if ((*arr) == NULL)
         {
-            // Move to front
-            // Don't shuffle all units. Order in the array doesn't matter
-            unit* swap = *arr[i];
-            *arr[i] = *arr[(*size)-1];
-            *arr[(*size)-1] = swap;
-            free(swap); // TODO Might not free so we can record unit info
-            found = true;
-            break;
+            printf("Unable to reallocate memory for dynamic array");
+            *arr = tmp;
+            --(*size);
+            return;
         }
     }
 
-    if (!found) return;
+    (*arr)[(*size)-1] = add;
+}
 
-    *arr = realloc(*arr, sizeof(unit *) * (--(*size)));
+/**
+ * removeFromDynamicPointerArray - Removes an element from a dynamic pointer array.
+ * Returns false if the element is not found.
+ * @param arr: A pointer to the dynamic pointer array.
+ * @param size: The current size of the dynamic pointer array.
+ * @param remove: The element to be removed from the dynamic pointer array.
+ *
+ * This function removes an element from a dynamic pointer array. It does this by swapping
+ * the element to be removed with the last element in the array, then freeing it.
+ * Finally decrementing the size of the array.
+ */
+bool removeFromDynamicPointerArray(void*** arr, unsigned int* size, void* remove, bool free_data)
+{
+    for (int i = 0; i < *size; i++)
+    {
+        if ((*arr)[i] == remove)
+        {
+            return removeFromDynamicPointerArrayAtIndex(arr, size, i, free_data);
+        }
+    }
+
+    return false;
+}
+
+bool removeFromDynamicPointerArrayAtIndex(void*** arr, unsigned int* size, int removeIndex, bool free_data)
+{
+    if (removeIndex < *size && removeIndex >= 0 && (*arr)[removeIndex] != NULL)
+    {
+        // Move to front
+        // Don't shuffle. Order in the array doesn't matter
+        void* swap = (*arr)[removeIndex];
+        (*arr)[removeIndex] = (*arr)[(*size)-1];
+
+        (*arr)[(*size)-1] = NULL;
+        if(free_data) free(swap);
+
+        (*size)--;
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * eraseDynamicPointerArray - Frees all elements in a dynamic pointer array.
+ * @param arr: A pointer to the dynamic pointer array.
+ * @param size: The current size of the dynamic pointer array.
+ *
+ * This function frees all elements in a dynamic pointer array and sets the size of the
+ * array to 0.
+ */
+void eraseDynamicPointerArray(void*** arr, unsigned int* size, bool free_data)
+{
+    while ((*size)-- > 0)
+    {
+        void* block = (*arr)[(*size)];
+
+        if (block != NULL) 
+        {
+            (*arr)[(*size)] = NULL;
+            if (free_data) free(block);
+        }
+    }
 }
 
 // Returns a unique hash code for every possible position on the map

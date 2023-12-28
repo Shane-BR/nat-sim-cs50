@@ -1,7 +1,7 @@
 #include "sim_time.h"
 #include <GLFW/glfw3.h>
 
-const unsigned int MAX_TPS = 1024;
+const unsigned int MAX_TPS = 256;
 const unsigned int START_TPS = 4;
 
 static float delta_time = 0.0f;
@@ -34,12 +34,22 @@ unsigned long getTicks(void)
     return ticks;
 }
 
-void updateTPS()
+void updateTPS(void)
 {
-    TPS = TPS*TPS > MAX_TPS ? START_TPS : TPS*TPS;
+    TPS = TPS*8 > MAX_TPS ? START_TPS : TPS*8;
 }
 
-unsigned int getTPS()
+void setTPS(const unsigned int new_val)
+{
+    TPS = new_val;
+}
+
+unsigned int getTPS(void)
 {
     return TPS;
+}
+
+float getFPS(void)
+{
+    return 1 / getDeltaTime();
 }

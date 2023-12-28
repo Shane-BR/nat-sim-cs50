@@ -7,38 +7,46 @@
 #include <stdlib.h>
 
 path_node* lowestCost(list_node* list, position start, position goal);
-list_node* getListNodeFromData(list_node* head, void* data);
+list_node* getListNodeFromPosData(list_node* head, void* data);
+void freeNonPathNodesFromClosedList(list_node* closed_list, list_node* final_path);
 
 // Erase and free the path list after use please
 list_node* getPath(position start, position goal, int search_area_size, tile search_area[search_area_size][search_area_size])
 {
 
-    path_node start_node;
-    start_node.pos = start;
-    start_node.prev_node = NULL;
+    path_node* start_node = malloc(sizeof(path_node));
+
+    if (start_node == NULL)
+    {
+        printf("Unable to allocate memory for path node.");
+        return NULL;
+    }
+
+    start_node->pos = start;
+    start_node->prev_node = NULL;
 
     const int DIRECTIONS_SIZE = 8;
     const position DIRECTIONS[] = 
     {
-        newPosition(-1, -1),
-        newPosition(0, -1),
-        newPosition(1, -1),
-        newPosition(-1, 0),
-        newPosition(1, 0),
-        newPosition(-1, 1),
-        newPosition(0, 1),
-        newPosition(1, 1)
+        {-1, -1},
+        {0, -1},
+        {1, -1},
+        {-1, 0},
+        {1, 0},
+        {-1, 1},
+        {0, 1},
+        {1, 1}
     };
     
-    // A closed node is one that has already been discovered by the algorithm.
+    // A closed node is one that has already been searched.
     // An open node is one that is on the edge of the searched area.
     list_node* open_list = NULL; 
     list_node* closed_list = NULL;
 
-    path_node* cur = &start_node;
+    path_node* cur = start_node;
 
     // Add the start node to the open_list
-    addLinkedListNode(&open_list, &start_node);
+    addLinkedListNode(&open_list, start_node);
 
     bool found_goal = false;
 
@@ -46,7 +54,7 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
     while (open_list != NULL) 
     {
         cur = lowestCost(open_list, start, goal);
-        removeLinkedListNode(&open_list, getListNodeFromData(open_list, cur), false);
+        removeLinkedListNode(&open_list, getListNodeFromPosData(open_list, cur), false);
         addLinkedListNode(&closed_list, cur);
 
         if (comparePosition(cur->pos, goal))
@@ -61,11 +69,18 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
             position direction = DIRECTIONS[i];
 
             path_node* neighbor = malloc(sizeof(path_node));
+
+            if (start_node == NULL)
+            {
+                printf("Unable to allocate memory for path node.");
+                continue;
+            }
+
             neighbor->pos.x = cur->pos.x + direction.x;
             neighbor->pos.y = cur->pos.y + direction.y;
 
             // Check if already searched
-            if (getListNodeFromData(closed_list, neighbor) != NULL) 
+            if (getListNodeFromPosData(closed_list, neighbor) != NULL) 
             {    
                 free(neighbor);
                 continue;
@@ -87,7 +102,7 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
                 continue;
             }
 
-            if (getListNodeFromData(open_list, neighbor) == NULL)
+            if (getListNodeFromPosData(open_list, neighbor) == NULL)
             {
                 addLinkedListNode(&open_list, neighbor);
             }
@@ -99,25 +114,33 @@ list_node* getPath(position start, position goal, int search_area_size, tile sea
         }
     }
 
-    // Clear lists
-    eraseLinkedList(open_list);
-    eraseLinkedList(closed_list);
-
     if (!found_goal) return NULL;
 
     // Create path
     list_node* head = NULL;
 
     // write the path to the linked list
-    while (!comparePosition(cur->pos, start))
+    do
     {
-        // By default linked list nodes are added to the FRONT of the list.
-        // We are also getting the path positions in reverse order.
-        // So, by nature our linked list should arrange itself in the correct order.
-        // finally! some fucking convenience for once.
+        /* 
+            By default linked list nodes are added to the FRONT of the list.
+            We are also getting the path positions in reverse order.
+            So, by nature our linked list should arrange itself in the correct order.
+            finally! some fucking convenience for once.
+        */
+
         addLinkedListNode(&head, &cur->pos);
         cur = cur->prev_node;
-    }
+    } 
+    while (cur != NULL && !comparePosition(cur->pos, start));
+
+    // Free open list entirely
+    eraseLinkedList(&open_list, true);
+
+    // Free nodes not in the path from the closed list
+    freeNonPathNodesFromClosedList(closed_list, head);
+
+
     return head;
 }
 
@@ -148,7 +171,7 @@ path_node* lowestCost(list_node* list, position start, position goal)
     return lowest;
 }
 
-list_node* getListNodeFromData(list_node* head, void* data)
+list_node* getListNodeFromPosData(list_node* head, void* data)
 {
     while (head != NULL)
     {
@@ -161,4 +184,20 @@ list_node* getListNodeFromData(list_node* head, void* data)
     }
 
     return NULL;
+}
+
+void freeNonPathNodesFromClosedList(list_node* closed_list, list_node* final_path)
+{
+    list_node* cur = closed_list;
+    while (cur != NULL)
+    {
+        list_node* next = cur->next;
+
+        if (getListNodeFromPosData(final_path, cur->data) == NULL)
+        {
+            removeLinkedListNode(&closed_list, cur, true);
+        }
+        
+        cur = next;
+    }
 }

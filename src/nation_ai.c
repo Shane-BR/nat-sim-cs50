@@ -5,6 +5,7 @@
 #include "helpers.h"
 #include "map.h"
 #include "pathfinder.h"
+#include "population.h"
 #include "units.h"
 #include <stdint.h>
 
@@ -70,7 +71,6 @@ void manageSettlerUnit(unit* settler)
 
 tile getBestSettlerTile(position origin, int unit_nat)
 {
-
     tile best;
     int cur_best = 0;
 
@@ -79,7 +79,7 @@ tile getBestSettlerTile(position origin, int unit_nat)
     {
         for (int x = 0; x < MAP_SIZE; x++) 
         {
-            tile* search_tile = getMapTile(newPosition(x, y));
+            tile* search_tile = getMapTile((position){x, y});
 
             if (search_tile == NULL) continue;
 
@@ -90,7 +90,7 @@ tile getBestSettlerTile(position origin, int unit_nat)
             {
                 int tx = x + ((i % CITY_BORDER_RADIUS) - CITY_BORDER_RADIUS/2);
                 int ty = y + ((i / CITY_BORDER_RADIUS) - CITY_BORDER_RADIUS/2);
-                tile* t = getMapTile(newPosition(tx, ty));
+                tile* t = getMapTile((position){tx, ty});
 
                 if (t == NULL || t->ruling_nation != -1)
                     continue;
@@ -126,7 +126,7 @@ void manageSettlementWorkers(settlement* stl)
     for (int i = 0; i < stl->local_population; i++)
     {
         citizen* cit = stl->citizens[i];
-        if (cit->citizen_class == NONE && cit->age >= MIN_WORKING_AGE && cit->disease.severity < DEBILITATING_DISEASE_SEVERITY)
+        if (cit->citizen_class == NONE && canCitizenWork(cit))
         {
             // Convert to CRAFTSMEN
             cit->citizen_class = CRAFTSMAN;
@@ -212,8 +212,7 @@ void assignCitizensToWorkBorder(settlement* stl, int amount, border* border_tile
 
             bool added_cit = false;
             if (!already_assigned && 
-                cit->disease.severity < DEBILITATING_DISEASE_SEVERITY &&
-                (cit->age >= MIN_WORKING_AGE || cit->age <= MAX_WORKING_AGE) &&
+                canCitizenWork(cit) &&
                 cit->citizen_class == class_priority)
             {
 
@@ -311,6 +310,9 @@ border* worstProducingBorder(settlement* stl, uint8_t resource_type)
     {
         int tile_resources = -1;
         border* border = stl->borders[i];
+
+        if (border == NULL)
+            continue;
 
         // TODO make this more dynamic
         if (resource_type == FOOD)
