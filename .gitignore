@@ -17,13 +17,13 @@
 *.pch
 
 # Libraries
-*.lib
+# *.lib
 *.a
 *.la
 *.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
+# *.dll
 *.so
 *.so.*
 *.dylib
@@ -51,6 +51,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-#Libraries folder
-/lib
+#Logs folder
 /logs
