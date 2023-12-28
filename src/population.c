@@ -288,7 +288,7 @@ void calcPregnancy(citizen* cit, settlement* stl)
         const int FACTORS = (AVG_HEALTH + AVG_INF_SEV + MAX_DUR_NORM + getAgeHealthCurve(AVG_AGE) + CHILD_FACTOR);
         const float PREGNANCY_RATE = ((float)FACTORS / (UINT8_MAX*5) * 100) / CALC_PERIOD; // PERCENTAGE
 
-        if(runProbability(PREGNANCY_RATE)) 
+        if(runProbability(PREGNANCY_RATE) && stl->local_population <= TEMP_MAX_CITIZENS) 
         {
             citizen* parents[2] = {cit, partner};
 

@@ -90,7 +90,9 @@ void settleOnPosition(unit* unit)
         // Remove unit
         removeFromDynamicPointerArray((void***)&nations[unit->nation].units, &nations[unit->nation].units_amt, unit, false);
 
+        addLog("");
         addLog("-NEW SETTLEMENT FOUNDED-");
+        addLog("");
     }
 }
 

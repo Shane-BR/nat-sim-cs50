@@ -56,11 +56,14 @@ int main(int argc, char* argv[])
     char welcome[64] = {'\0'};
     sprintf(welcome, "        WELCOME TO NAT-SIM %s", NS_VERSION);
 
+    addLog("");
+    addLog("");
     addLog("----------------------------------------------");
     addLog("----------------------------------------------");
     addLog(welcome);
     addLog("----------------------------------------------");
     addLog("----------------------------------------------");
+    addLog("");
 
     // Handle tick events
     while (!shouldWindowClose())

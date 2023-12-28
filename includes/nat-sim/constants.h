@@ -28,6 +28,7 @@
 #define MAX_CONCEPTION_AGE 55
 #define MIN_WORKING_AGE 14
 #define MAX_WORKING_AGE 70
+#define TEMP_MAX_CITIZENS 700 // Per Settlement //TODO remove
 #define STARVE_PERIOD 30 // How many days before DEATH by starvation one half is "pre-starve" and the other half is when the citizen starts taking damage
 #define HUNGER_INCREASE_RATE 255.0f / STARVE_PERIOD / 2.0f
 #define FOOD_TO_HUNGER HUNGER_INCREASE_RATE + HUNGER_INCREASE_RATE*(1.0f/8.0f)

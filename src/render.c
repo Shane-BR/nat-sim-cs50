@@ -39,8 +39,8 @@ const static vec2 STL_INFO_POS = {700.0f, 350.0f};
 const static vec2 DATE_TIME_POS = {5.0f, 5.0f};
 const static vec2 TOTAL_POP_POS = {500.0f, 5.0f};
 
-const static vec2 LOG_BOX_SIZE = {260.0f, 72.0f};
-const static vec2 LOG_BOX_POS = {935.0f, 600.0f};
+const static vec2 LOG_BOX_SIZE = {280.0f, 72.0f};
+const static vec2 LOG_BOX_POS = {955.0f, 600.0f};
 const static vec2 LOG_MSG_POS = {700.0f, 540.0f};
 const static unsigned int MAX_MSG_DISPLAYED = 8;
 

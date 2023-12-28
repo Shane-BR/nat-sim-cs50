@@ -12,7 +12,7 @@ static const int MID = 75;
 static const int HIGH = 150;
 static const int EXTREME = 200;
 
-static int DAMAGE_DIVISOR_MIN = 12, DAMAGE_DIVISOR_MAX = 25;
+static int DAMAGE_DIVISOR_MIN = 10, DAMAGE_DIVISOR_MAX = 20;
 
 
 // Infect citizen if he does not already have immunity.
