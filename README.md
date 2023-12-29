@@ -11,7 +11,10 @@ Your population changes due to birth, death, migration, and marriage. Each citiz
 
 Nat-Sim is a fantasy nation simulator that is still in development. More features and improvements are planned for the future.
 
-#Libraries
+# Libraries
+
 GLFW and glad: GLFW is a library that provides a simple API for creating windows, contexts and surfaces, receiving input and events12. glad is a library that loads OpenGL functions at runtime.
+
 cglm: cglm is a library that provides highly optimized 2D and 3D math operations for graphics, such as vector, matrix, quaternion, and affine transformations3.
+
 stb_image: stb_image is a library that can load, decode and write images from file or memory. It supports most popular file formats, such as JPG, PNG, TGA, BMP, PSD, GIF, HDR, and PIC.
