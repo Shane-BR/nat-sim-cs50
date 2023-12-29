@@ -265,7 +265,8 @@ void organiseSurplusWorkersFromBorders(settlement* stl, int surplus, uint8_t res
         int r_per_worker =  getBorderWorkerProduction(*stl, *worst, resource_type);
 
         // Remove enough workers to reduce surplus or empty border area
-        int amt_workers_to_remove = surplus / r_per_worker > worst->workers_count ? 
+        int amt_workers_to_remove = surplus / r_per_worker > worst->workers_count || 
+            r_per_worker < 1 ? 
             worst->workers_count :
             surplus / r_per_worker;
 

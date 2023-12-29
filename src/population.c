@@ -102,7 +102,7 @@ void calcMetToday(citizen* cit, settlement* stl)
 void healthCheck(citizen* cit, settlement* stl)
 {
     const uint8_t OVERALL_HEALTH = overallHealth(cit, stl->local_morale);
-    const float DIVISOR = 1000;
+    const float DIVISOR = 1200;
 
     int chance_to_eat_if_hungry = stl->food > stl->local_population ? 100 :
         (((float)stl->food / stl->local_population * UINT8_MAX) +
@@ -164,7 +164,7 @@ void healthCheck(citizen* cit, settlement* stl)
 
 void spreadDisease(citizen* carrier, citizen* suspect)
 {
-    const float MAX_INFECTIVITY_PERCENT = 2.0f; // MAX PERCENTAGE
+    const float MAX_INFECTIVITY_PERCENT = 3.0f; // MAX PERCENTAGE
     float infectivity_percent = ((float)carrier->disease.infectivity_rate / UINT8_MAX)*MAX_INFECTIVITY_PERCENT;
     if (runProbability(infectivity_percent))
     {
@@ -238,7 +238,7 @@ void updateRelationship(citizen* cit, settlement* stl)
 
 void calcPregnancy(citizen* cit, settlement* stl)
 {
-    const int CALC_PERIOD = (365*TICKS_PER_DAY)*2; // DAYS
+    const int CALC_PERIOD = (365*TICKS_PER_DAY)*3; // DAYS
 
     if (cit->gender != FEMALE)
         return;
